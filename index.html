@@ -80,7 +80,7 @@
             font-size: 16px;
         }
 
-        select, input[type="month"], input[type="date"] {
+        select, input[type="month"], input[type="date"], input[type="text"] {
             padding: 15px 20px;
             border: 2px solid #28a745;
             border-radius: 10px;
@@ -94,6 +94,32 @@
             outline: none;
             border-color: #20c997;
             box-shadow: 0 0 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .landscape-controls {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .landscape-controls select {
+            flex: 1;
+        }
+
+        .add-landscape-btn {
+            padding: 15px;
+            background: #20c997;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            min-height: 50px;
+        }
+
+        .add-landscape-btn:hover {
+            background: #17a2b8;
         }
 
         .view-toggle {
@@ -210,6 +236,29 @@
         .dot-amber { background: #ffc107; }
         .dot-red { background: #dc3545; }
         .dot-none { background: #f8f9fa; border-style: dashed; }
+
+        .percentage-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .percentage-info h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .percentage-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .percentage-info li {
+            padding: 5px 0;
+            font-weight: 500;
+        }
 
         .summary-cards {
             display: grid;
@@ -428,7 +477,7 @@
             margin-top: 5px;
         }
 
-        /* Modal Styles - FIXED FOR RESPONSIVENESS */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -747,7 +796,12 @@
                 width: 100%;
             }
 
-            select, input[type="month"], input[type="date"] {
+            .landscape-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            select, input[type="month"], input[type="date"], input[type="text"] {
                 font-size: 20px;
                 padding: 18px 22px;
                 min-height: 55px;
@@ -810,7 +864,7 @@
     <div class="main-container">
         <div class="header">
             <h1>📊 Enhanced Operations Dashboard</h1>
-            <p>Daily & Monthly Status Tracking with Performance Analytics</p>
+            <p>Daily & Monthly Status Tracking with Automatic Performance Analytics</p>
         </div>
 
         <div class="content">
@@ -819,13 +873,12 @@
                 <div class="control-row">
                     <div class="control-group">
                         <label>🌍 Landscape:</label>
-                        <select id="landscapeSelect">
-                            <option value="Europe">Europe</option>
-                            <option value="NAM">NAM</option>
-                            <option value="IA">IA</option>
-                            <option value="SEA">SEA</option>
-                            <option value="Global">Global</option>
-                        </select>
+                        <div class="landscape-controls">
+                            <select id="landscapeSelect">
+                                <!-- Dynamically populated -->
+                            </select>
+                            <button class="add-landscape-btn" onclick="addNewLandscape()" title="Add New Landscape">➕</button>
+                        </div>
                     </div>
 
                     <div class="control-group" id="monthControl">
@@ -857,25 +910,35 @@
                 </div>
             </div>
 
+            <!-- Auto-Percentage Info -->
+            <div class="percentage-info">
+                <h4>🤖 Automatic Percentage Calculation</h4>
+                <ul>
+                    <li>🟢 <strong>Green Status:</strong> Automatically calculates to 100% (Normal Operations)</li>
+                    <li>🟡 <strong>Amber Status:</strong> Automatically calculates to 75% (Attention Required)</li>
+                    <li>🔴 <strong>Red Status:</strong> Automatically calculates to 25% (Critical Issue)</li>
+                </ul>
+            </div>
+
             <!-- Legend -->
             <div class="legend-section">
                 <div class="legend">
                     <strong style="color: #28a745; font-size: 18px;">📌 Status Guide:</strong>
                     <div class="legend-item">
                         <div class="legend-dot dot-green"></div>
-                        <span>Green - Normal Operations</span>
+                        <span>Green - Normal Operations (100%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-amber"></div>
-                        <span>Amber - Attention Required</span>
+                        <span>Amber - Attention Required (75%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-red"></div>
-                        <span>Red - Critical Issue</span>
+                        <span>Red - Critical Issue (25%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-none"></div>
-                        <span>No Status Set</span>
+                        <span>No Status Set (0%)</span>
                     </div>
                 </div>
             </div>
@@ -980,16 +1043,16 @@
             </div>
 
             <div class="form-group">
-                <label>⭐ Status:</label>
+                <label>⭐ Status (Percentage Auto-Calculated):</label>
                 <div class="status-selection">
                     <div class="status-button btn-green-select" onclick="setModalStatus('green')">
-                        🟢 Green
+                        🟢 Green (100%)
                     </div>
                     <div class="status-button btn-amber-select" onclick="setModalStatus('amber')">
-                        🟡 Amber
+                        🟡 Amber (75%)
                     </div>
                     <div class="status-button btn-red-select" onclick="setModalStatus('red')">
-                        🔴 Red
+                        🔴 Red (25%)
                     </div>
                 </div>
             </div>
@@ -1012,8 +1075,9 @@
             </div>
 
             <div class="form-group">
-                <label>📊 Completion Percentage:</label>
-                <input type="number" id="modalPercentage" min="0" max="100" placeholder="0-100%" style="width: 200px;">
+                <label>📊 Completion Percentage (Auto-Calculated):</label>
+                <input type="number" id="modalPercentage" readonly style="background: #f8f9fa; cursor: not-allowed;">
+                <small style="color: #666; margin-top: 5px; display: block;">Percentage is automatically set based on status selection above.</small>
             </div>
 
             <div class="modal-actions">
@@ -1036,11 +1100,7 @@
                 <button class="btn btn-success" onclick="exportHistoryToExcel()">📊 Export History to Excel</button>
                 <select id="historyFilter" onchange="filterHistory()" style="padding: 10px;">
                     <option value="">All Landscapes</option>
-                    <option value="Europe">Europe</option>
-                    <option value="NAM">NAM</option>
-                    <option value="IA">IA</option>
-                    <option value="SEA">SEA</option>
-                    <option value="Global">Global</option>
+                    <!-- Dynamically populated -->
                 </select>
             </div>
 
@@ -1067,6 +1127,26 @@
         </div>
     </div>
 
+    <!-- Add Landscape Modal -->
+    <div id="addLandscapeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🌍 Add New Landscape</h3>
+                <button class="close-btn" onclick="closeAddLandscapeModal()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>🏷️ Landscape Name:</label>
+                <input type="text" id="newLandscapeName" placeholder="Enter landscape name (e.g., APAC, EMEA)">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="saveNewLandscape()">💾 Add Landscape</button>
+                <button class="btn btn-primary" onclick="closeAddLandscapeModal()">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden File Input -->
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
@@ -1084,6 +1164,19 @@
             'BPM Stock Reconciliation'
         ];
 
+        // Enhanced Landscapes with dynamic addition
+        let landscapesList = JSON.parse(localStorage.getItem('landscapesList')) || [
+            'Europe', 'NAM', 'IA', 'SEA', 'Global'
+        ];
+
+        // Auto-percentage mapping
+        const statusPercentages = {
+            'green': 100,
+            'amber': 75,
+            'red': 25,
+            'none': 0
+        };
+
         let currentView = 'monthly';
         let currentLandscape = 'Europe';
         let currentMonth = new Date().toISOString().substring(0, 7);
@@ -1093,13 +1186,86 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            initializeLandscapes();
             document.getElementById('monthSelect').value = currentMonth;
             document.getElementById('dateSelect').value = currentDate;
-            document.getElementById('landscapeSelect').value = currentLandscape;
             
             updateSkillList();
             loadCurrentView();
         });
+
+        // Landscape Management
+        function initializeLandscapes() {
+            const landscapeSelect = document.getElementById('landscapeSelect');
+            const historyFilter = document.getElementById('historyFilter');
+            
+            // Clear existing options
+            landscapeSelect.innerHTML = '';
+            if (historyFilter) {
+                historyFilter.innerHTML = '<option value="">All Landscapes</option>';
+            }
+            
+            // Populate landscapes
+            landscapesList.forEach(landscape => {
+                const option = document.createElement('option');
+                option.value = landscape;
+                option.textContent = landscape;
+                landscapeSelect.appendChild(option);
+                
+                if (historyFilter) {
+                    const filterOption = document.createElement('option');
+                    filterOption.value = landscape;
+                    filterOption.textContent = landscape;
+                    historyFilter.appendChild(filterOption);
+                }
+            });
+            
+            // Set default
+            landscapeSelect.value = currentLandscape;
+        }
+
+        function addNewLandscape() {
+            document.getElementById('addLandscapeModal').style.display = 'block';
+        }
+
+        function closeAddLandscapeModal() {
+            document.getElementById('addLandscapeModal').style.display = 'none';
+            document.getElementById('newLandscapeName').value = '';
+        }
+
+        function saveNewLandscape() {
+            const newLandscape = document.getElementById('newLandscapeName').value.trim();
+            
+            if (!newLandscape) {
+                alert('❌ Please enter a landscape name!');
+                return;
+            }
+            
+            if (landscapesList.includes(newLandscape)) {
+                alert('❌ Landscape already exists!');
+                return;
+            }
+            
+            // Add to list and save
+            landscapesList.push(newLandscape);
+            localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
+            
+            // Update dropdowns
+            initializeLandscapes();
+            
+            // Select new landscape
+            document.getElementById('landscapeSelect').value = newLandscape;
+            currentLandscape = newLandscape;
+            
+            closeAddLandscapeModal();
+            loadCurrentView();
+            alert(`✅ "${newLandscape}" landscape added successfully!`);
+        }
+
+        // Auto-percentage calculation
+        function calculatePercentage(status) {
+            return statusPercentages[status] || 0;
+        }
 
         // View Management
         function switchView(view) {
@@ -1197,7 +1363,7 @@
                     const entryKey = `${currentLandscape}_${skill}_${currentMonth}_W${week.number}`;
                     const entry = operationalData[entryKey];
                     const statusClass = entry ? entry.status : 'none';
-                    const percentage = entry ? entry.percentage || 0 : 0;
+                    const percentage = entry ? calculatePercentage(entry.status) : 0;
                     const displayText = entry ? `${percentage}%` : '';
                     
                     bodyHTML += `
@@ -1213,7 +1379,7 @@
             document.getElementById('monthlyBody').innerHTML = bodyHTML;
         }
 
-        // Daily View with Percentage
+        // Daily View with Auto-Percentage
         function generateDailyView() {
             const date = new Date(currentDate);
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -1223,7 +1389,7 @@
             // Create day headers
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
-                dayDate.setDate(date.getDate() - date.getDay() + i); // Start from Sunday of current week
+                dayDate.setDate(date.getDate() - date.getDay() + i);
                 gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}</small></div>`;
             }
             
@@ -1238,7 +1404,7 @@
                     const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
                     const entry = operationalData[entryKey];
                     const statusClass = entry ? entry.status : 'none';
-                    const percentage = entry ? entry.percentage || 0 : 0;
+                    const percentage = entry ? calculatePercentage(entry.status) : 0;
                     
                     gridHTML += `
                         <div class="daily-cell" onclick="editEntry('${entryKey}', '${skill}', '${dateStr}')">
@@ -1268,7 +1434,7 @@
                 todayTotal++;
                 if (entry) {
                     todayCompleted++;
-                    todaySum += entry.percentage || 0;
+                    todaySum += calculatePercentage(entry.status);
                 }
             });
 
@@ -1284,7 +1450,7 @@
                     weekTotal++;
                     if (entry) {
                         weekCompleted++;
-                        weekSum += entry.percentage || 0;
+                        weekSum += calculatePercentage(entry.status);
                     }
                 });
             }
@@ -1298,7 +1464,7 @@
             document.getElementById('trendIndicator').textContent = trend;
         }
 
-        // Entry Management
+        // Entry Management with Auto-Percentage
         function editEntry(key, skill, period) {
             editingKey = key;
             const entry = operationalData[key] || {};
@@ -1307,12 +1473,12 @@
             document.getElementById('modalPeriod').value = period;
             document.getElementById('modalDate').value = entry.date || new Date().toISOString().split('T')[0];
             document.getElementById('modalNotes').value = entry.notes || '';
-            document.getElementById('modalPercentage').value = entry.percentage || 0;
             document.getElementById('modalDowntime').value = entry.downtime || '';
             document.getElementById('modalIncident').value = entry.incident || '';
             
             selectedStatus = entry.status || null;
             updateStatusButtons();
+            updatePercentageField();
             
             // Show/hide conditional fields based on status
             if (selectedStatus === 'amber' || selectedStatus === 'red') {
@@ -1327,6 +1493,7 @@
         function setModalStatus(status) {
             selectedStatus = status;
             updateStatusButtons();
+            updatePercentageField();
             
             // Show/hide conditional fields
             if (status === 'amber' || status === 'red') {
@@ -1346,19 +1513,25 @@
             }
         }
 
+        function updatePercentageField() {
+            const percentage = selectedStatus ? calculatePercentage(selectedStatus) : 0;
+            document.getElementById('modalPercentage').value = percentage;
+        }
+
         function saveEntry() {
             if (!selectedStatus) {
                 alert('❌ Please select a status!');
                 return;
             }
             
-            const percentage = parseInt(document.getElementById('modalPercentage').value) || 0;
+            // Auto-calculate percentage based on status
+            const autoPercentage = calculatePercentage(selectedStatus);
             
             const entry = {
                 status: selectedStatus,
                 date: document.getElementById('modalDate').value,
                 notes: document.getElementById('modalNotes').value || '',
-                percentage: Math.min(100, Math.max(0, percentage)),
+                percentage: autoPercentage, // Automatically calculated
                 downtime: document.getElementById('modalDowntime').value || 0,
                 incident: document.getElementById('modalIncident').value || '',
                 landscape: currentLandscape,
@@ -1372,7 +1545,7 @@
             
             closeModal();
             loadCurrentView();
-            alert('✅ Entry saved successfully!');
+            alert('✅ Entry saved successfully with auto-calculated percentage!');
         }
 
         function deleteEntry() {
@@ -1474,14 +1647,12 @@
             document.getElementById('redCount').textContent = red;
         }
 
-        // SCREENSHOT-IDENTICAL EXCEL EXPORT
+        // SCREENSHOT-IDENTICAL EXCEL EXPORT with Auto-Percentages
         function exportToExcel() {
-            // Get current month info for weeks
             const weeks = generateWeeksForMonth();
             const [year, month] = currentMonth.split('-').map(Number);
             const monthName = new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
-            // Create HTML table identical to screenshot format
             let htmlTable = `
                 <!DOCTYPE html>
                 <html>
@@ -1509,20 +1680,18 @@
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()}
+                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Auto-Calculated Percentages
                             </td>
                         </tr>
                         <tr>
                             <td class="skill-cell" style="width: 250px;">Operational Description</td>
             `;
             
-            // Add week headers exactly like screenshot
             weeks.forEach((week, index) => {
                 htmlTable += `<td class="header" style="width: 80px;">${week.label}<br><small>${week.start}-${week.end}</small></td>`;
             });
             htmlTable += '</tr>';
             
-            // Add skill rows with colored dots and percentages
             skillsList.forEach(skill => {
                 htmlTable += `<tr><td class="skill-cell">${skill}</td>`;
                 
@@ -1534,7 +1703,8 @@
                     let percentage = '';
                     
                     if (entry) {
-                        percentage = `${entry.percentage || 100}.0%`;
+                        const autoPercentage = calculatePercentage(entry.status);
+                        percentage = `${autoPercentage}.0%`;
                         switch(entry.status) {
                             case 'green':
                                 cellClass = 'green-cell';
@@ -1568,7 +1738,7 @@
             htmlTable += `
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Legend: ● Green (Normal) | ● Amber (Attention) | ● Red (Critical) | ○ No Data
+                                Legend: ● Green (100%) | ● Amber (75%) | ● Red (25%) | ○ No Data (0%) - Auto-Calculated
                             </td>
                         </tr>
                     </table>
@@ -1576,7 +1746,6 @@
                 </html>
             `;
             
-            // Create and download Excel file
             const blob = new Blob([htmlTable], { 
                 type: 'application/vnd.ms-excel;charset=utf-8;'
             });
@@ -1589,11 +1758,10 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            alert('✅ Professional Excel report exported successfully!\n📊 Format matches your screenshot exactly with colored status dots!');
+            alert('✅ Professional Excel report exported with auto-calculated percentages!');
         }
 
         function exportHistoryToExcel() {
-            // Create complete history export
             let htmlTable = `
                 <!DOCTYPE html>
                 <html>
@@ -1611,15 +1779,16 @@
                 <body>
                     <table border="1">
                         <tr>
-                            <td colspan="9" class="header">Complete Operations History Report</td>
+                            <td colspan="9" class="header">Complete Operations History Report - Auto-Calculated Percentages</td>
                         </tr>
                         <tr class="header">
-                            <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Completion%</td><td>Downtime</td><td>Incident</td><td>Notes</td>
+                            <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Auto %</td><td>Downtime</td><td>Incident</td><td>Notes</td>
                         </tr>
             `;
             
             Object.entries(operationalData).forEach(([key, entry]) => {
                 let cellClass = '';
+                const autoPercentage = calculatePercentage(entry.status);
                 switch(entry.status) {
                     case 'green': cellClass = 'green-cell'; break;
                     case 'amber': cellClass = 'amber-cell'; break;
@@ -1633,7 +1802,7 @@
                         <td class="data-cell">${entry.skill}</td>
                         <td class="data-cell">${entry.period}</td>
                         <td class="data-cell ${cellClass}">● ${entry.status.toUpperCase()}</td>
-                        <td class="data-cell">${entry.percentage || 0}%</td>
+                        <td class="data-cell">${autoPercentage}%</td>
                         <td class="data-cell">${entry.downtime || 0}h</td>
                         <td class="data-cell">${entry.incident || ''}</td>
                         <td class="data-cell">${entry.notes || ''}</td>
@@ -1647,13 +1816,13 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Operations_History_Complete_${new Date().toISOString().split('T')[0]}.xls`;
+            link.download = `Operations_History_AutoPercentage_${new Date().toISOString().split('T')[0]}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            alert('✅ Complete history exported to Excel!');
+            alert('✅ Complete history exported with auto-calculated percentages!');
         }
 
         // History Management - Enhanced
@@ -1684,6 +1853,7 @@
                 const statusColor = entry.status === 'green' ? '#28a745' : 
                                    entry.status === 'amber' ? '#ffc107' : 
                                    entry.status === 'red' ? '#dc3545' : '#999';
+                const autoPercentage = calculatePercentage(entry.status);
                 
                 html += `
                     <tr onclick="editHistoryEntry('${entry.key}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
@@ -1692,7 +1862,7 @@
                         <td>${entry.skill}</td>
                         <td>${entry.period}</td>
                         <td><span style="color: ${statusColor}; font-weight: bold; font-size: 18px;">●</span> ${entry.status}</td>
-                        <td>${entry.percentage || 0}%</td>
+                        <td>${autoPercentage}%</td>
                         <td>${entry.downtime || 0}h</td>
                         <td>${entry.incident || '-'}</td>
                         <td>
@@ -1767,13 +1937,18 @@
                         if (importData.skills) {
                             skillsList = [...new Set([...skillsList, ...importData.skills])];
                         }
+                        if (importData.landscapes) {
+                            landscapesList = [...new Set([...landscapesList, ...importData.landscapes])];
+                            localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
+                            initializeLandscapes();
+                        }
                         
                         localStorage.setItem('operationalData', JSON.stringify(operationalData));
                         localStorage.setItem('skillsList', JSON.stringify(skillsList));
                         
                         updateSkillList();
                         loadCurrentView();
-                        alert('✅ Data imported successfully!');
+                        alert('✅ Data imported successfully with auto-calculated percentages!');
                     }
                 } catch (error) {
                     alert('❌ Invalid file format!');
@@ -1782,11 +1957,12 @@
             reader.readAsText(file);
         }
 
-        // Auto-save
+        // Auto-save with enhanced data
         setInterval(() => {
             if (Object.keys(operationalData).length > 0) {
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 localStorage.setItem('skillsList', JSON.stringify(skillsList));
+                localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
             }
         }, 30000);
 
