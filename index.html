@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Enhanced Operations Dashboard</title>
+    <title>Advanced Operations Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -370,7 +370,7 @@
             height: 35px;
             border-radius: 50%;
             border: 4px solid #333;
-            margin: 0 auto;
+            margin: 0 auto 10px;
             transition: all 0.3s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             cursor: pointer;
@@ -378,7 +378,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             color: white;
         }
 
@@ -408,6 +408,45 @@
             border: 4px dashed #999;
             color: #999;
         }
+
+        /* Weekly dropdown in monthly view */
+        .weekly-dropdown {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 5px;
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            max-width: 100px;
+            margin: 5px auto 0;
+        }
+
+        .weekly-dropdown:hover {
+            background: #f8f9fa;
+        }
+
+        .daily-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .daily-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            cursor: pointer;
+            title: '';
+        }
+
+        .daily-indicator.green { background: #28a745; }
+        .daily-indicator.amber { background: #ffc107; }
+        .daily-indicator.red { background: #dc3545; }
+        .daily-indicator.none { background: #f8f9fa; }
 
         /* Daily View Specific */
         .daily-container {
@@ -475,6 +514,12 @@
             font-weight: bold;
             color: #28a745;
             margin-top: 5px;
+        }
+
+        .downtime-display {
+            font-size: 10px;
+            color: #666;
+            margin-top: 3px;
         }
 
         /* Modal Styles */
@@ -622,7 +667,7 @@
         }
 
         .conditional-section {
-            display: none;
+            display: block;
             background: #fff3cd;
             padding: 25px;
             border-radius: 15px;
@@ -863,8 +908,8 @@
 <body>
     <div class="main-container">
         <div class="header">
-            <h1>📊 Enhanced Operations Dashboard</h1>
-            <p>Daily & Monthly Status Tracking with Automatic Performance Analytics</p>
+            <h1>📊 Advanced Operations Dashboard</h1>
+            <p>Integrated Daily & Monthly Tracking with Dynamic Percentage Calculation</p>
         </div>
 
         <div class="content">
@@ -910,13 +955,14 @@
                 </div>
             </div>
 
-            <!-- Auto-Percentage Info -->
+            <!-- Dynamic Percentage Info -->
             <div class="percentage-info">
-                <h4>🤖 Automatic Percentage Calculation</h4>
+                <h4>🤖 Dynamic Percentage Calculation (Downtime-Based)</h4>
                 <ul>
-                    <li>🟢 <strong>Green Status:</strong> Automatically calculates to 100% (Normal Operations)</li>
-                    <li>🟡 <strong>Amber Status:</strong> Automatically calculates to 75% (Attention Required)</li>
-                    <li>🔴 <strong>Red Status:</strong> Automatically calculates to 25% (Critical Issue)</li>
+                    <li>🟢 <strong>Green (95-100%):</strong> Minimal downtime (≤1.2 hours/day)</li>
+                    <li>🟡 <strong>Amber (45-95%):</strong> Moderate downtime (1.2-13.2 hours/day)</li>
+                    <li>🔴 <strong>Red (0-45%):</strong> High downtime (>13.2 hours/day)</li>
+                    <li>📊 <strong>Monthly View:</strong> Shows weekly averages calculated from daily data</li>
                 </ul>
             </div>
 
@@ -926,19 +972,19 @@
                     <strong style="color: #28a745; font-size: 18px;">📌 Status Guide:</strong>
                     <div class="legend-item">
                         <div class="legend-dot dot-green"></div>
-                        <span>Green - Normal Operations (100%)</span>
+                        <span>Green - Optimal Performance (95-100%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-amber"></div>
-                        <span>Amber - Attention Required (75%)</span>
+                        <span>Amber - Needs Attention (45-95%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-red"></div>
-                        <span>Red - Critical Issue (25%)</span>
+                        <span>Red - Critical Issues (0-45%)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-none"></div>
-                        <span>No Status Set (0%)</span>
+                        <span>No Data Available (0%)</span>
                     </div>
                 </div>
             </div>
@@ -951,15 +997,15 @@
                 </div>
                 <div class="summary-card green">
                     <h3 id="greenCount">0</h3>
-                    <p>🟢 Green Status</p>
+                    <p>🟢 Optimal Performance</p>
                 </div>
                 <div class="summary-card amber">
                     <h3 id="amberCount">0</h3>
-                    <p>🟡 Amber Status</p>
+                    <p>🟡 Needs Attention</p>
                 </div>
                 <div class="summary-card red">
                     <h3 id="redCount">0</h3>
-                    <p>🔴 Red Status</p>
+                    <p>🔴 Critical Issues</p>
                 </div>
             </div>
 
@@ -998,7 +1044,7 @@
                             <div style="display: flex; gap: 30px; flex-wrap: wrap;">
                                 <div style="text-align: center;">
                                     <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="dailyCompletion">0%</div>
-                                    <div style="font-weight: 600;">Today's Completion</div>
+                                    <div style="font-weight: 600;">Today's Average</div>
                                 </div>
                                 <div style="text-align: center;">
                                     <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="weeklyAverage">0%</div>
@@ -1042,29 +1088,19 @@
                 <input type="date" id="modalDate">
             </div>
 
-            <div class="form-group">
-                <label>⭐ Status (Percentage Auto-Calculated):</label>
-                <div class="status-selection">
-                    <div class="status-button btn-green-select" onclick="setModalStatus('green')">
-                        🟢 Green (100%)
-                    </div>
-                    <div class="status-button btn-amber-select" onclick="setModalStatus('amber')">
-                        🟡 Amber (75%)
-                    </div>
-                    <div class="status-button btn-red-select" onclick="setModalStatus('red')">
-                        🔴 Red (25%)
-                    </div>
-                </div>
-            </div>
-
             <div id="conditionalFields" class="conditional-section">
-                <h5>⚠️ Additional Information Required</h5>
+                <h5>⏱️ Downtime Configuration (Determines Status & Percentage)</h5>
                 <div class="form-group">
-                    <label>⏱️ Downtime (hours):</label>
-                    <input type="number" id="modalDowntime" step="0.5" min="0" placeholder="0.0">
+                    <label>⏱️ Downtime Hours (0-24):</label>
+                    <input type="number" id="modalDowntime" step="0.5" min="0" max="24" placeholder="0.0" oninput="updateStatusFromDowntime()">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        • 0-1.2 hours: Green (95-100%)<br>
+                        • 1.2-13.2 hours: Amber (45-95%)<br>
+                        • 13.2+ hours: Red (0-45%)
+                    </small>
                 </div>
                 <div class="form-group">
-                    <label>🆔 Incident Number:</label>
+                    <label>🆔 Incident Number (if applicable):</label>
                     <input type="text" id="modalIncident" placeholder="INC123456">
                 </div>
             </div>
@@ -1075,9 +1111,9 @@
             </div>
 
             <div class="form-group">
-                <label>📊 Completion Percentage (Auto-Calculated):</label>
-                <input type="number" id="modalPercentage" readonly style="background: #f8f9fa; cursor: not-allowed;">
-                <small style="color: #666; margin-top: 5px; display: block;">Percentage is automatically set based on status selection above.</small>
+                <label>📊 Calculated Performance (Auto-Calculated from Downtime):</label>
+                <input type="text" id="modalPercentage" readonly style="background: #f8f9fa; cursor: not-allowed; font-weight: bold; font-size: 1.2rem;">
+                <small style="color: #666; margin-top: 5px; display: block;">Percentage and status automatically calculated based on downtime hours.</small>
             </div>
 
             <div class="modal-actions">
@@ -1113,8 +1149,8 @@
                             <th>Skill</th>
                             <th>Period</th>
                             <th>Status</th>
-                            <th>Completion %</th>
-                            <th>Downtime</th>
+                            <th>Performance %</th>
+                            <th>Downtime (h)</th>
                             <th>Incident</th>
                             <th>Actions</th>
                         </tr>
@@ -1169,20 +1205,45 @@
             'Europe', 'NAM', 'IA', 'SEA', 'Global'
         ];
 
-        // Auto-percentage mapping
-        const statusPercentages = {
-            'green': 100,
-            'amber': 75,
-            'red': 25,
-            'none': 0
-        };
-
         let currentView = 'monthly';
         let currentLandscape = 'Europe';
         let currentMonth = new Date().toISOString().substring(0, 7);
         let currentDate = new Date().toISOString().split('T')[0];
-        let selectedStatus = null;
         let editingKey = null;
+
+        // Dynamic percentage calculation based on downtime hours
+        function calculatePercentageFromDowntime(downtimeHours) {
+            const downtime = parseFloat(downtimeHours) || 0;
+            
+            if (downtime <= 1.2) {
+                // Green: 95-100%
+                return Math.max(95, Math.round(100 - (downtime * 4.17))); // Linear scale from 100% to 95%
+            } else if (downtime <= 13.2) {
+                // Amber: 45-95%
+                const range = 13.2 - 1.2; // 12 hours range
+                const percentage = 95 - ((downtime - 1.2) / range) * 50; // Scale from 95% to 45%
+                return Math.round(percentage);
+            } else {
+                // Red: 0-45%
+                const maxDowntime = 24;
+                const remaining = Math.max(0, maxDowntime - downtime);
+                return Math.round((remaining / (maxDowntime - 13.2)) * 45);
+            }
+        }
+
+        function getStatusFromPercentage(percentage) {
+            if (percentage >= 95) return 'green';
+            if (percentage >= 45) return 'amber';
+            return 'red';
+        }
+
+        function updateStatusFromDowntime() {
+            const downtime = parseFloat(document.getElementById('modalDowntime').value) || 0;
+            const percentage = calculatePercentageFromDowntime(downtime);
+            const status = getStatusFromPercentage(percentage);
+            
+            document.getElementById('modalPercentage').value = `${percentage}% (${status.toUpperCase()})`;
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1262,11 +1323,6 @@
             alert(`✅ "${newLandscape}" landscape added successfully!`);
         }
 
-        // Auto-percentage calculation
-        function calculatePercentage(status) {
-            return statusPercentages[status] || 0;
-        }
-
         // View Management
         function switchView(view) {
             currentView = view;
@@ -1307,7 +1363,29 @@
             updateSummaryCards();
         }
 
-        // Monthly View
+        // Weekly aggregation function
+        function calculateWeeklyStatus(skill, weekDates) {
+            let totalPercentage = 0;
+            let validEntries = 0;
+            
+            weekDates.forEach(date => {
+                const entryKey = `${currentLandscape}_${skill}_${date}`;
+                const entry = operationalData[entryKey];
+                if (entry) {
+                    totalPercentage += entry.percentage || 0;
+                    validEntries++;
+                }
+            });
+            
+            if (validEntries === 0) return { percentage: 0, status: 'none' };
+            
+            const avgPercentage = Math.round(totalPercentage / validEntries);
+            const status = getStatusFromPercentage(avgPercentage);
+            
+            return { percentage: avgPercentage, status: status };
+        }
+
+        // Monthly View with weekly aggregation
         function generateMonthlyView() {
             const weeks = generateWeeksForMonth();
             createMonthlyHeaders(weeks);
@@ -1328,11 +1406,18 @@
                 const weekEnd = new Date(currentDate);
                 weekEnd.setDate(currentDate.getDate() + 6);
                 
+                // Get all dates in this week
+                const weekDates = [];
+                for (let d = new Date(weekStart); d <= weekEnd && d <= lastDay; d.setDate(d.getDate() + 1)) {
+                    weekDates.push(d.toISOString().split('T')[0]);
+                }
+                
                 weeks.push({
                     number: weekNum,
                     label: `WK ${weekNum}`,
                     start: weekStart.getDate(),
-                    end: Math.min(weekEnd.getDate(), lastDay.getDate())
+                    end: Math.min(weekEnd.getDate(), lastDay.getDate()),
+                    dates: weekDates
                 });
                 
                 currentDate.setDate(currentDate.getDate() + 7);
@@ -1360,15 +1445,32 @@
                 bodyHTML += `<tr><td class="skill-cell">${skill}</td>`;
                 
                 weeks.forEach(week => {
-                    const entryKey = `${currentLandscape}_${skill}_${currentMonth}_W${week.number}`;
-                    const entry = operationalData[entryKey];
-                    const statusClass = entry ? entry.status : 'none';
-                    const percentage = entry ? calculatePercentage(entry.status) : 0;
-                    const displayText = entry ? `${percentage}%` : '';
+                    const weeklyData = calculateWeeklyStatus(skill, week.dates);
+                    const statusClass = weeklyData.status;
+                    const percentage = weeklyData.percentage;
+                    
+                    // Create daily indicators
+                    let dailyIndicators = '<div class="daily-indicators">';
+                    week.dates.forEach((date, index) => {
+                        const entryKey = `${currentLandscape}_${skill}_${date}`;
+                        const entry = operationalData[entryKey];
+                        const dayStatus = entry ? getStatusFromPercentage(entry.percentage) : 'none';
+                        const dayName = ['S','M','T','W','T','F','S'][new Date(date).getDay()];
+                        
+                        dailyIndicators += `
+                            <div class="daily-indicator ${dayStatus}" 
+                                 title="${dayName}: ${entry ? entry.percentage + '%' : 'No data'}" 
+                                 onclick="goToDailyView('${date}')"></div>
+                        `;
+                    });
+                    dailyIndicators += '</div>';
                     
                     bodyHTML += `
-                        <td class="status-cell" onclick="editEntry('${entryKey}', '${skill}', 'Week ${week.number}')">
-                            <div class="status-dot ${statusClass}" title="Click to edit ${skill} - Week ${week.number}">${displayText}</div>
+                        <td class="status-cell" onclick="editWeeklyEntry('${skill}', ${week.number}, '${JSON.stringify(week.dates).replace(/"/g, '&quot;')}')">
+                            <div class="status-dot ${statusClass}" title="Click to view details - Week ${week.number}">
+                                ${percentage}%
+                            </div>
+                            ${dailyIndicators}
                         </td>
                     `;
                 });
@@ -1379,7 +1481,30 @@
             document.getElementById('monthlyBody').innerHTML = bodyHTML;
         }
 
-        // Daily View with Auto-Percentage
+        function goToDailyView(date) {
+            // Switch to daily view and set the date
+            document.getElementById('dateSelect').value = date;
+            currentDate = date;
+            switchView('daily');
+            
+            // Update toggle button
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.toggle-btn:last-child').classList.add('active');
+        }
+
+        function editWeeklyEntry(skill, weekNumber, weekDatesStr) {
+            const weekDates = JSON.parse(weekDatesStr.replace(/&quot;/g, '"'));
+            
+            // Show options: View details or go to daily view
+            const choice = confirm(`📊 Weekly Summary for ${skill} - Week ${weekNumber}\n\nClick OK to go to Daily View for editing\nClick Cancel to stay in Monthly View`);
+            
+            if (choice) {
+                // Go to daily view with the first date of the week
+                goToDailyView(weekDates[0]);
+            }
+        }
+
+        // Daily View
         function generateDailyView() {
             const date = new Date(currentDate);
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -1403,8 +1528,9 @@
                     const dateStr = dayDate.toISOString().split('T')[0];
                     const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
                     const entry = operationalData[entryKey];
-                    const statusClass = entry ? entry.status : 'none';
-                    const percentage = entry ? calculatePercentage(entry.status) : 0;
+                    const statusClass = entry ? getStatusFromPercentage(entry.percentage) : 'none';
+                    const percentage = entry ? entry.percentage : 0;
+                    const downtime = entry ? entry.downtime || 0 : 0;
                     
                     gridHTML += `
                         <div class="daily-cell" onclick="editEntry('${entryKey}', '${skill}', '${dateStr}')">
@@ -1412,6 +1538,7 @@
                                 ${entry ? '✓' : ''}
                             </div>
                             <div class="percentage-value">${percentage}%</div>
+                            <div class="downtime-display">${downtime}h down</div>
                         </div>
                     `;
                 }
@@ -1423,8 +1550,8 @@
 
         function updateDailyStats() {
             const date = new Date(currentDate);
-            let todayTotal = 0, todayCompleted = 0, todaySum = 0;
-            let weekTotal = 0, weekCompleted = 0, weekSum = 0;
+            let todayTotal = 0, todaySum = 0;
+            let weekTotal = 0, weekSum = 0;
 
             // Today's stats
             const todayKey = currentDate;
@@ -1433,8 +1560,7 @@
                 const entry = operationalData[entryKey];
                 todayTotal++;
                 if (entry) {
-                    todayCompleted++;
-                    todaySum += calculatePercentage(entry.status);
+                    todaySum += entry.percentage || 0;
                 }
             });
 
@@ -1449,14 +1575,13 @@
                     const entry = operationalData[entryKey];
                     weekTotal++;
                     if (entry) {
-                        weekCompleted++;
-                        weekSum += calculatePercentage(entry.status);
+                        weekSum += entry.percentage || 0;
                     }
                 });
             }
 
-            const dailyCompletion = todayCompleted > 0 ? Math.round(todaySum / todayCompleted) : 0;
-            const weeklyAverage = weekCompleted > 0 ? Math.round(weekSum / weekCompleted) : 0;
+            const dailyCompletion = todayTotal > 0 ? Math.round(todaySum / todayTotal) : 0;
+            const weeklyAverage = weekTotal > 0 ? Math.round(weekSum / weekTotal) : 0;
             const trend = dailyCompletion >= weeklyAverage ? '📈' : '📉';
 
             document.getElementById('dailyCompletion').textContent = `${dailyCompletion}%`;
@@ -1464,75 +1589,35 @@
             document.getElementById('trendIndicator').textContent = trend;
         }
 
-        // Entry Management with Auto-Percentage
+        // Entry Management with Downtime-Based Calculation
         function editEntry(key, skill, period) {
             editingKey = key;
             const entry = operationalData[key] || {};
             
             document.getElementById('modalSkill').value = skill;
             document.getElementById('modalPeriod').value = period;
-            document.getElementById('modalDate').value = entry.date || new Date().toISOString().split('T')[0];
+            document.getElementById('modalDate').value = entry.date || period;
             document.getElementById('modalNotes').value = entry.notes || '';
-            document.getElementById('modalDowntime').value = entry.downtime || '';
+            document.getElementById('modalDowntime').value = entry.downtime || 0;
             document.getElementById('modalIncident').value = entry.incident || '';
             
-            selectedStatus = entry.status || null;
-            updateStatusButtons();
-            updatePercentageField();
-            
-            // Show/hide conditional fields based on status
-            if (selectedStatus === 'amber' || selectedStatus === 'red') {
-                document.getElementById('conditionalFields').style.display = 'block';
-            } else {
-                document.getElementById('conditionalFields').style.display = 'none';
-            }
+            // Update percentage display
+            updateStatusFromDowntime();
             
             document.getElementById('editModal').style.display = 'block';
         }
 
-        function setModalStatus(status) {
-            selectedStatus = status;
-            updateStatusButtons();
-            updatePercentageField();
-            
-            // Show/hide conditional fields
-            if (status === 'amber' || status === 'red') {
-                document.getElementById('conditionalFields').style.display = 'block';
-            } else {
-                document.getElementById('conditionalFields').style.display = 'none';
-            }
-        }
-
-        function updateStatusButtons() {
-            document.querySelectorAll('.status-button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            if (selectedStatus) {
-                document.querySelector(`.btn-${selectedStatus}-select`).classList.add('selected');
-            }
-        }
-
-        function updatePercentageField() {
-            const percentage = selectedStatus ? calculatePercentage(selectedStatus) : 0;
-            document.getElementById('modalPercentage').value = percentage;
-        }
-
         function saveEntry() {
-            if (!selectedStatus) {
-                alert('❌ Please select a status!');
-                return;
-            }
-            
-            // Auto-calculate percentage based on status
-            const autoPercentage = calculatePercentage(selectedStatus);
+            const downtime = parseFloat(document.getElementById('modalDowntime').value) || 0;
+            const percentage = calculatePercentageFromDowntime(downtime);
+            const status = getStatusFromPercentage(percentage);
             
             const entry = {
-                status: selectedStatus,
+                status: status,
                 date: document.getElementById('modalDate').value,
                 notes: document.getElementById('modalNotes').value || '',
-                percentage: autoPercentage, // Automatically calculated
-                downtime: document.getElementById('modalDowntime').value || 0,
+                percentage: percentage,
+                downtime: downtime,
                 incident: document.getElementById('modalIncident').value || '',
                 landscape: currentLandscape,
                 skill: document.getElementById('modalSkill').value,
@@ -1544,8 +1629,8 @@
             localStorage.setItem('operationalData', JSON.stringify(operationalData));
             
             closeModal();
-            loadCurrentView();
-            alert('✅ Entry saved successfully with auto-calculated percentage!');
+            loadCurrentView(); // This will refresh both views and sync them
+            alert('✅ Entry saved successfully with calculated percentage and status!');
         }
 
         function deleteEntry() {
@@ -1561,7 +1646,6 @@
 
         function closeModal() {
             document.getElementById('editModal').style.display = 'none';
-            selectedStatus = null;
             editingKey = null;
         }
 
@@ -1647,7 +1731,7 @@
             document.getElementById('redCount').textContent = red;
         }
 
-        // SCREENSHOT-IDENTICAL EXCEL EXPORT with Auto-Percentages
+        // Excel Export
         function exportToExcel() {
             const weeks = generateWeeksForMonth();
             const [year, month] = currentMonth.split('-').map(Number);
@@ -1680,7 +1764,7 @@
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Auto-Calculated Percentages
+                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Dynamic Downtime-Based Calculation
                             </td>
                         </tr>
                         <tr>
@@ -1696,16 +1780,14 @@
                 htmlTable += `<tr><td class="skill-cell">${skill}</td>`;
                 
                 weeks.forEach(week => {
-                    const entryKey = `${currentLandscape}_${skill}_${currentMonth}_W${week.number}`;
-                    const entry = operationalData[entryKey];
+                    const weeklyData = calculateWeeklyStatus(skill, week.dates);
                     let cellClass = 'white-cell';
                     let statusDot = '';
                     let percentage = '';
                     
-                    if (entry) {
-                        const autoPercentage = calculatePercentage(entry.status);
-                        percentage = `${autoPercentage}.0%`;
-                        switch(entry.status) {
+                    if (weeklyData.status !== 'none') {
+                        percentage = `${weeklyData.percentage}.0%`;
+                        switch(weeklyData.status) {
                             case 'green':
                                 cellClass = 'green-cell';
                                 statusDot = '●';
@@ -1738,7 +1820,7 @@
             htmlTable += `
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Legend: ● Green (100%) | ● Amber (75%) | ● Red (25%) | ○ No Data (0%) - Auto-Calculated
+                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - Calculated from Downtime Hours
                             </td>
                         </tr>
                     </table>
@@ -1752,13 +1834,13 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Daily_Operational_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`;
+            link.download = `Dynamic_Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            alert('✅ Professional Excel report exported with auto-calculated percentages!');
+            alert('✅ Advanced Excel report exported with dynamic downtime-based calculations!');
         }
 
         function exportHistoryToExcel() {
@@ -1779,16 +1861,15 @@
                 <body>
                     <table border="1">
                         <tr>
-                            <td colspan="9" class="header">Complete Operations History Report - Auto-Calculated Percentages</td>
+                            <td colspan="9" class="header">Complete Operations History Report - Dynamic Downtime-Based Calculation</td>
                         </tr>
                         <tr class="header">
-                            <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Auto %</td><td>Downtime</td><td>Incident</td><td>Notes</td>
+                            <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Performance %</td><td>Downtime (h)</td><td>Incident</td><td>Notes</td>
                         </tr>
             `;
             
             Object.entries(operationalData).forEach(([key, entry]) => {
                 let cellClass = '';
-                const autoPercentage = calculatePercentage(entry.status);
                 switch(entry.status) {
                     case 'green': cellClass = 'green-cell'; break;
                     case 'amber': cellClass = 'amber-cell'; break;
@@ -1802,7 +1883,7 @@
                         <td class="data-cell">${entry.skill}</td>
                         <td class="data-cell">${entry.period}</td>
                         <td class="data-cell ${cellClass}">● ${entry.status.toUpperCase()}</td>
-                        <td class="data-cell">${autoPercentage}%</td>
+                        <td class="data-cell">${entry.percentage}%</td>
                         <td class="data-cell">${entry.downtime || 0}h</td>
                         <td class="data-cell">${entry.incident || ''}</td>
                         <td class="data-cell">${entry.notes || ''}</td>
@@ -1816,16 +1897,16 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Operations_History_AutoPercentage_${new Date().toISOString().split('T')[0]}.xls`;
+            link.download = `Operations_History_Dynamic_${new Date().toISOString().split('T')[0]}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            alert('✅ Complete history exported with auto-calculated percentages!');
+            alert('✅ Complete history exported with dynamic calculations!');
         }
 
-        // History Management - Enhanced
+        // History Management
         function showHistoryModal() {
             populateHistoryTable();
             document.getElementById('historyModal').style.display = 'block';
@@ -1853,7 +1934,6 @@
                 const statusColor = entry.status === 'green' ? '#28a745' : 
                                    entry.status === 'amber' ? '#ffc107' : 
                                    entry.status === 'red' ? '#dc3545' : '#999';
-                const autoPercentage = calculatePercentage(entry.status);
                 
                 html += `
                     <tr onclick="editHistoryEntry('${entry.key}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
@@ -1862,7 +1942,7 @@
                         <td>${entry.skill}</td>
                         <td>${entry.period}</td>
                         <td><span style="color: ${statusColor}; font-weight: bold; font-size: 18px;">●</span> ${entry.status}</td>
-                        <td>${autoPercentage}%</td>
+                        <td>${entry.percentage}%</td>
                         <td>${entry.downtime || 0}h</td>
                         <td>${entry.incident || '-'}</td>
                         <td>
@@ -1948,7 +2028,7 @@
                         
                         updateSkillList();
                         loadCurrentView();
-                        alert('✅ Data imported successfully with auto-calculated percentages!');
+                        alert('✅ Data imported successfully with dynamic calculations!');
                     }
                 } catch (error) {
                     alert('❌ Invalid file format!');
