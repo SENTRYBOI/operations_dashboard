@@ -3,13 +3,1083 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Advanced Operations Dashboard with KPIs</title>
+    <title>Advanced Operations Dashboard with KPI Analytics</title>
     <meta name="description" content="Professional operations dashboard with KPI tracking and dynamic downtime-based calculations">
-    <meta name="keywords" content="operations, dashboard, KPI, performance tracking, business analytics">
-    <meta name="author" content="Operations Dashboard Team">
     
-    <!-- External CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid #28a745;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 25px;
+            background: #f8f9fa;
+        }
+
+        /* KPI Dashboard Styles */
+        .kpi-dashboard {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.1);
+        }
+
+        .kpi-dashboard h3 {
+            color: #28a745;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .kpi-section {
+            margin-bottom: 25px;
+        }
+
+        .kpi-section h4 {
+            color: #20c997;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #28a745;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Weekly KPIs Above Table */
+        .weekly-kpis {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #20c997;
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.1);
+        }
+
+        .weekly-kpis h4 {
+            color: #20c997;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .weekly-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .weekly-kpi-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #20c997;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .weekly-kpi-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.2);
+        }
+
+        .weekly-kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #20c997;
+            margin-bottom: 5px;
+        }
+
+        .weekly-kpi-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Top Controls Panel */
+        .top-controls {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        }
+
+        .control-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 220px;
+        }
+
+        .control-group label {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 16px;
+        }
+
+        /* Form Elements */
+        select, input[type="month"], input[type="date"], input[type="text"], input[type="number"] {
+            padding: 15px 20px;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            font-size: 18px;
+            background: white;
+            color: #333;
+            min-height: 50px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #20c997;
+            box-shadow: 0 0 12px rgba(40, 167, 69, 0.3);
+        }
+
+        textarea {
+            padding: 15px 20px;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* Landscape Controls */
+        .landscape-controls {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .landscape-controls select {
+            flex: 1;
+        }
+
+        .add-landscape-btn {
+            padding: 15px;
+            background: #20c997;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            min-height: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .add-landscape-btn:hover {
+            background: #17a2b8;
+            transform: translateY(-2px);
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 30px;
+            margin: 0 auto;
+            width: fit-content;
+            border: 2px solid #28a745;
+        }
+
+        .toggle-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: transparent;
+            color: #666;
+        }
+
+        .toggle-btn.active {
+            background: #28a745;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s;
+            min-height: 50px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+            border: 2px solid #28a745;
+        }
+
+        .btn-primary:hover {
+            background: #20c997;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success {
+            background: #20c997;
+            color: white;
+            border: 2px solid #20c997;
+        }
+
+        .btn-success:hover {
+            background: #17a2b8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: 2px solid #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        /* Information Sections */
+        .percentage-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .percentage-info h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .percentage-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .percentage-info li {
+            padding: 5px 0;
+            font-weight: 500;
+        }
+
+        /* Legend Section */
+        .legend-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px solid #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .legend-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .dot-green { background: #28a745; }
+        .dot-amber { background: #ffc107; }
+        .dot-red { background: #dc3545; }
+        .dot-none { background: #f8f9fa; border-style: dashed; }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .summary-card {
+            background: white;
+            border: 3px solid #28a745;
+            color: #28a745;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card.green { 
+            background: linear-gradient(135deg, #28a745, #20c997); 
+            color: white;
+        }
+
+        .summary-card.amber { 
+            background: linear-gradient(135deg, #ffc107, #ffb300); 
+            color: white;
+        }
+
+        .summary-card.red { 
+            background: linear-gradient(135deg, #dc3545, #c82333); 
+            color: white;
+        }
+
+        .summary-card h3 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .summary-card p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Skill Management */
+        .skill-management {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 3px solid #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        }
+
+        .skill-management h4 {
+            color: #28a745;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .add-skill-form {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .add-skill-form input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: #20c997;
+            transform: translateY(-2px);
+        }
+
+        .skill-remove {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .skill-remove:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.1);
+        }
+
+        /* Main Dashboard Container */
+        .view-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #28a745;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.1);
+        }
+
+        /* Grid Table - Monthly View */
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+            background: white;
+        }
+
+        .grid-table th {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            border: 1px solid #20c997;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            font-size: 16px;
+        }
+
+        .grid-table th.skill-header {
+            text-align: left;
+            padding-left: 25px;
+            min-width: 300px;
+        }
+
+        .grid-table td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .grid-table td.skill-cell {
+            background: #f8f9fa;
+            font-weight: 700;
+            text-align: left;
+            padding-left: 25px;
+            border-right: 4px solid #28a745;
+            min-width: 300px;
+            color: #28a745;
+        }
+
+        /* Status Cells and Dots */
+        .status-cell {
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 20px;
+            position: relative;
+        }
+
+        .status-cell:hover {
+            background: #e8f5e9;
+            transform: scale(1.05);
+        }
+
+        .status-dot {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 4px solid #333;
+            margin: 0 auto 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+        }
+
+        .status-dot:hover {
+            transform: scale(1.3);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .status-dot.green {
+            background: #28a745;
+            border-color: #155724;
+        }
+
+        .status-dot.amber {
+            background: #ffc107;
+            border-color: #856404;
+            color: #333;
+        }
+
+        .status-dot.red {
+            background: #dc3545;
+            border-color: #721c24;
+        }
+
+        .status-dot.none {
+            background: #f8f9fa;
+            border: 4px dashed #999;
+            color: #999;
+        }
+
+        /* Daily Indicators in Monthly View */
+        .daily-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .daily-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .daily-indicator:hover {
+            transform: scale(1.3);
+        }
+
+        .daily-indicator.green { background: #28a745; }
+        .daily-indicator.amber { background: #ffc107; }
+        .daily-indicator.red { background: #dc3545; }
+        .daily-indicator.none { background: #f8f9fa; }
+
+        /* Daily View Styles */
+        .daily-container {
+            padding: 25px;
+        }
+
+        .daily-stats {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #28a745;
+        }
+
+        .daily-grid {
+            display: grid;
+            grid-template-columns: 250px repeat(7, 1fr);
+            gap: 3px;
+            background: #e9ecef;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .daily-header {
+            background: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            border-radius: 5px;
+        }
+
+        .daily-skill {
+            background: #20c997;
+            color: white;
+            padding: 20px;
+            font-weight: 700;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .daily-cell {
+            background: white;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+            border: 2px solid transparent;
+        }
+
+        .daily-cell:hover {
+            background: #e8f5e9;
+            transform: scale(1.02);
+            border-color: #28a745;
+        }
+
+        .percentage-value {
+            font-size: 12px;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 5px;
+        }
+
+        .downtime-display {
+            font-size: 10px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 20px auto;
+            padding: 35px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            animation: modalSlideIn 0.3s ease-out;
+            border: 3px solid #28a745;
+            position: relative;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .modal-header h3 {
+            color: #28a745;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #28a745;
+            font-size: 18px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            font-size: 18px;
+            background: white;
+            min-height: 50px;
+        }
+
+        .form-group small {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Conditional Section */
+        .conditional-section {
+            display: block;
+            background: #fff3cd;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 5px solid #ffc107;
+            border: 2px solid #ffc107;
+        }
+
+        .conditional-section h5 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        /* Modal Actions */
+        .modal-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        /* History Table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .history-table th {
+            background: #28a745;
+            color: white;
+            padding: 20px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .history-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 16px;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .edit-btn {
+            background: #20c997;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: #17a2b8;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                margin: 5px;
+            }
+            
+            .grid-table {
+                font-size: 14px;
+            }
+            
+            .status-dot {
+                width: 30px;
+                height: 30px;
+                font-size: 10px;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .landscape-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            select, input[type="month"], input[type="date"], input[type="text"], input[type="number"] {
+                font-size: 20px;
+                padding: 18px 22px;
+                min-height: 55px;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .weekly-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .modal-content {
+                margin: 10px;
+                padding: 25px;
+                width: calc(100% - 20px);
+                max-width: none;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .daily-grid {
+                grid-template-columns: 200px repeat(7, 1fr);
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .daily-header, .daily-skill {
+                padding: 15px 10px;
+            }
+
+            .btn {
+                font-size: 18px;
+                padding: 18px 25px;
+            }
+
+            .add-skill-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .weekly-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .daily-grid {
+                grid-template-columns: 150px repeat(7, 1fr);
+                font-size: 12px;
+            }
+
+            .status-dot {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Main Application Container -->
@@ -23,57 +1093,55 @@
         <!-- Main Content Area -->
         <main class="content">
             <!-- Top Controls Panel -->
-            <section class="top-controls" role="region" aria-label="Dashboard Controls">
+            <section class="top-controls">
                 <div class="control-row">
                     <div class="control-group">
                         <label for="landscapeSelect">🌍 Landscape:</label>
                         <div class="landscape-controls">
-                            <select id="landscapeSelect" aria-label="Select landscape">
+                            <select id="landscapeSelect">
                                 <!-- Dynamically populated by JavaScript -->
                             </select>
-                            <button class="add-landscape-btn" onclick="addNewLandscape()" 
-                                    title="Add New Landscape" aria-label="Add new landscape">➕</button>
+                            <button class="add-landscape-btn" onclick="addNewLandscape()">➕</button>
                         </div>
                     </div>
 
                     <div class="control-group" id="monthControl">
                         <label for="monthSelect">📅 Month:</label>
-                        <input type="month" id="monthSelect" aria-label="Select month">
+                        <input type="month" id="monthSelect">
                     </div>
 
                     <div class="control-group" id="dateControl" style="display: none;">
                         <label for="dateSelect">📅 Date:</label>
-                        <input type="date" id="dateSelect" aria-label="Select date">
+                        <input type="date" id="dateSelect">
                     </div>
 
                     <div class="control-group">
                         <label>📊 View Mode:</label>
-                        <div class="view-toggle" role="tablist">
-                            <button class="toggle-btn active" onclick="switchView('monthly')" 
-                                    role="tab" aria-selected="true">📊 Monthly</button>
-                            <button class="toggle-btn" onclick="switchView('daily')" 
-                                    role="tab" aria-selected="false">📅 Daily</button>
+                        <div class="view-toggle">
+                            <button class="toggle-btn active" onclick="switchView('monthly')">📊 Monthly</button>
+                            <button class="toggle-btn" onclick="switchView('daily')">📅 Daily</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <nav class="action-buttons" role="navigation" aria-label="Dashboard Actions">
-                    <button class="btn btn-primary" onclick="loadCurrentView()" aria-label="Refresh current view">🔄 Refresh</button>
-                    <button class="btn btn-success" onclick="showAddSkillModal()" aria-label="Add new skill">➕ Add Skill</button>
-                    <button class="btn btn-primary" onclick="exportToExcel()" aria-label="Export to Excel">📊 Export Excel Report</button>
-                    <button class="btn btn-primary" onclick="importData()" aria-label="Import data">📤 Import</button>
-                    <button class="btn btn-primary" onclick="showHistoryModal()" aria-label="View history">📋 History</button>
-                    <button class="btn btn-danger" onclick="clearCurrentData()" aria-label="Clear current data">🗑️ Clear</button>
+                <nav class="action-buttons">
+                    <button class="btn btn-primary" onclick="loadCurrentView()">🔄 Refresh</button>
+                    <button class="btn btn-success" onclick="showAddSkillModal()">➕ Add Skill</button>
+                    <button class="btn btn-primary" onclick="exportToExcel()">📊 Export Excel Report</button>
+                    <button class="btn btn-primary" onclick="importData()">📤 Import</button>
+                    <button class="btn btn-primary" onclick="showHistoryModal()">📋 History</button>
+                    <button class="btn btn-danger" onclick="clearCurrentData()">🗑️ Clear</button>
+                    <button class="btn btn-danger" onclick="clearAllHistory()">🗑️ Clear All History</button>
                 </nav>
             </section>
 
             <!-- KPI Dashboard Section -->
-            <section class="kpi-dashboard" role="region" aria-label="Key Performance Indicators">
+            <section class="kpi-dashboard">
                 <h3>📈 Key Performance Indicators</h3>
                 
                 <!-- Monthly KPIs -->
-                <div class="kpi-section monthly-kpis">
+                <div class="kpi-section">
                     <h4>📅 Monthly Performance - <span id="currentMonthDisplay"></span></h4>
                     <div class="kpi-grid">
                         <div class="kpi-card">
@@ -100,7 +1168,7 @@
                 </div>
 
                 <!-- Yearly KPIs -->
-                <div class="kpi-section yearly-kpis">
+                <div class="kpi-section">
                     <h4>📊 Yearly Performance - <span id="currentYearDisplay"></span></h4>
                     <div class="kpi-grid">
                         <div class="kpi-card">
@@ -128,7 +1196,7 @@
             </section>
 
             <!-- Dynamic Percentage Information -->
-            <section class="percentage-info" role="region" aria-label="Calculation Information">
+            <section class="percentage-info">
                 <h4>🤖 Dynamic Percentage Calculation (Downtime-Based)</h4>
                 <ul>
                     <li>🟢 <strong>Green (95-100%):</strong> Minimal downtime (≤1.2 hours/day)</li>
@@ -139,30 +1207,30 @@
             </section>
 
             <!-- Legend Section -->
-            <section class="legend-section" role="region" aria-label="Status Legend">
+            <section class="legend-section">
                 <div class="legend">
                     <strong style="color: #28a745; font-size: 18px;">📌 Status Guide:</strong>
                     <div class="legend-item">
-                        <div class="legend-dot dot-green" aria-hidden="true"></div>
+                        <div class="legend-dot dot-green"></div>
                         <span>Green - Optimal Performance (95-100%)</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-dot dot-amber" aria-hidden="true"></div>
+                        <div class="legend-dot dot-amber"></div>
                         <span>Amber - Needs Attention (45-95%)</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-dot dot-red" aria-hidden="true"></div>
+                        <div class="legend-dot dot-red"></div>
                         <span>Red - Critical Issues (0-45%)</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-dot dot-none" aria-hidden="true"></div>
+                        <div class="legend-dot dot-none"></div>
                         <span>No Data Available (0%)</span>
                     </div>
                 </div>
             </section>
 
             <!-- Summary Cards -->
-            <section class="summary-cards" role="region" aria-label="Performance Summary">
+            <section class="summary-cards">
                 <div class="summary-card">
                     <h3 id="totalCount">0</h3>
                     <p>Total Entries</p>
@@ -182,23 +1250,22 @@
             </section>
 
             <!-- Skill Management -->
-            <section class="skill-management" role="region" aria-label="Skill Management">
+            <section class="skill-management">
                 <h4>🛠️ Skill Management</h4>
                 <p>Manage operational skills being tracked</p>
                 <div class="add-skill-form">
-                    <input type="text" id="newSkillInput" placeholder="Enter new skill name" 
-                           aria-label="New skill name">
+                    <input type="text" id="newSkillInput" placeholder="Enter new skill name">
                     <button class="btn btn-success" onclick="addSkill()">Add Skill</button>
                 </div>
-                <div class="skill-list" id="skillList" role="list">
+                <div class="skill-list" id="skillList">
                     <!-- Skills displayed here by JavaScript -->
                 </div>
             </section>
 
             <!-- Main Dashboard Container -->
-            <section class="view-container" role="region" aria-label="Dashboard Data">
+            <section class="view-container">
                 <!-- Monthly View -->
-                <div id="monthlyView" role="tabpanel" aria-labelledby="monthly-tab">
+                <div id="monthlyView">
                     <!-- Weekly Availability KPIs Above Table -->
                     <div class="weekly-kpis" id="weeklyKPIs">
                         <h4>📊 Weekly Skill Availability Overview</h4>
@@ -207,7 +1274,7 @@
                         </div>
                     </div>
                     
-                    <table class="grid-table" id="monthlyTable" role="grid">
+                    <table class="grid-table" id="monthlyTable">
                         <thead id="monthlyHeaders">
                             <!-- Headers generated dynamically by JavaScript -->
                         </thead>
@@ -218,7 +1285,7 @@
                 </div>
 
                 <!-- Daily View -->
-                <div id="dailyView" style="display: none;" role="tabpanel" aria-labelledby="daily-tab">
+                <div id="dailyView" style="display: none;">
                     <div class="daily-container">
                         <div class="daily-stats">
                             <h3 style="color: #28a745; margin-bottom: 15px;">📊 Daily Performance Statistics</h3>
@@ -237,7 +1304,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="daily-grid" id="dailyGrid" role="grid">
+                        <div class="daily-grid" id="dailyGrid">
                             <!-- Daily grid generated dynamically by JavaScript -->
                         </div>
                     </div>
@@ -246,13 +1313,12 @@
         </main>
     </div>
 
-    <!-- Modal Dialogs (same as before) -->
     <!-- Edit Entry Modal -->
-    <div id="editModal" class="modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="edit-modal-title">✏️ Edit Entry</h3>
-                <button class="close-btn" onclick="closeModal()" aria-label="Close modal">&times;</button>
+                <h3>✏️ Edit Entry</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
             
             <form onsubmit="return false;">
@@ -271,7 +1337,7 @@
                     <input type="date" id="modalDate">
                 </div>
 
-                <div id="conditionalFields" class="conditional-section">
+                <div class="conditional-section">
                     <h5>⏱️ Downtime Configuration (Determines Status & Percentage)</h5>
                     <div class="form-group">
                         <label for="modalDowntime">⏱️ Downtime Hours (0-24):</label>
@@ -295,7 +1361,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="modalPercentage">📊 Calculated Performance (Auto-Calculated from Downtime):</label>
+                    <label for="modalPercentage">📊 Calculated Performance (Auto-Calculated):</label>
                     <input type="text" id="modalPercentage" readonly 
                            style="background: #f8f9fa; cursor: not-allowed; font-weight: bold; font-size: 1.2rem;">
                     <small style="color: #666; margin-top: 5px; display: block;">
@@ -313,33 +1379,33 @@
     </div>
 
     <!-- History Modal -->
-    <div id="historyModal" class="modal" role="dialog" aria-labelledby="history-modal-title" aria-hidden="true">
+    <div id="historyModal" class="modal">
         <div class="modal-content" style="width: 95%; max-width: 1200px;">
             <div class="modal-header">
-                <h3 id="history-modal-title">📋 Entry History - Click any entry to edit</h3>
-                <button class="close-btn" onclick="closeHistoryModal()" aria-label="Close history modal">&times;</button>
+                <h3>📋 Entry History - Click any entry to edit</h3>
+                <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
             </div>
             
             <div style="margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="exportHistoryToExcel()">📊 Export History to Excel</button>
-                <select id="historyFilter" onchange="filterHistory()" style="padding: 10px;" aria-label="Filter by landscape">
+                <select id="historyFilter" onchange="filterHistory()" style="padding: 10px;">
                     <option value="">All Landscapes</option>
                 </select>
             </div>
 
             <div style="max-height: 500px; overflow-y: auto;">
-                <table class="history-table" role="grid">
+                <table class="history-table">
                     <thead>
-                        <tr role="row">
-                            <th scope="col">Date</th>
-                            <th scope="col">Landscape</th>
-                            <th scope="col">Skill</th>
-                            <th scope="col">Period</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Performance %</th>
-                            <th scope="col">Downtime (h)</th>
-                            <th scope="col">Incident</th>
-                            <th scope="col">Actions</th>
+                        <tr>
+                            <th>Date</th>
+                            <th>Landscape</th>
+                            <th>Skill</th>
+                            <th>Period</th>
+                            <th>Status</th>
+                            <th>Performance %</th>
+                            <th>Downtime (h)</th>
+                            <th>Incident</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody">
@@ -350,11 +1416,11 @@
     </div>
 
     <!-- Add Landscape Modal -->
-    <div id="addLandscapeModal" class="modal" role="dialog" aria-labelledby="landscape-modal-title" aria-hidden="true">
+    <div id="addLandscapeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="landscape-modal-title">🌍 Add New Landscape</h3>
-                <button class="close-btn" onclick="closeAddLandscapeModal()" aria-label="Close landscape modal">&times;</button>
+                <h3>🌍 Add New Landscape</h3>
+                <button class="close-btn" onclick="closeAddLandscapeModal()">&times;</button>
             </div>
             
             <form onsubmit="return false;">
@@ -372,10 +1438,1216 @@
     </div>
 
     <!-- Hidden File Input for Import -->
-    <input type="file" id="fileInput" accept=".json" style="display: none;" 
-           onchange="handleFileImport(event)" aria-label="Import data file">
+    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
-    <!-- External JavaScript -->
-    <script src="main.js"></script>
+    <script>
+        // ========================================
+        // GLOBAL VARIABLES & CONFIGURATION
+        // ========================================
+
+        // Core data storage
+        let operationalData = JSON.parse(localStorage.getItem('operationalData')) || {};
+        let skillsList = JSON.parse(localStorage.getItem('skillsList')) || [
+            'Business Clarity',
+            'Revenue',
+            'BPT Processing',
+            'Stock Aging',
+            'Inventory',
+            'AMB for Manufacturing',
+            'PMI for Manufacturing',
+            'BPM Stock Reconciliation'
+        ];
+
+        // Enhanced Landscapes with dynamic addition
+        let landscapesList = JSON.parse(localStorage.getItem('landscapesList')) || [
+            'Europe', 'NAM', 'IA', 'SEA', 'Global'
+        ];
+
+        // Application state
+        let currentView = 'monthly';
+        let currentLandscape = 'Europe';
+        let currentMonth = new Date().toISOString().substring(0, 7);
+        let currentDate = new Date().toISOString().split('T')[0];
+        let editingKey = null;
+
+        // KPI tracking variables
+        let monthlyKPICache = {};
+        let yearlyKPICache = {};
+        let weeklyKPICache = {};
+
+        // ========================================
+        // DYNAMIC PERCENTAGE CALCULATION ENGINE
+        // ========================================
+
+        function calculatePercentageFromDowntime(downtimeHours) {
+            const downtime = parseFloat(downtimeHours) || 0;
+            
+            if (downtime <= 1.2) {
+                return Math.max(95, Math.round(100 - (downtime * 4.17)));
+            } else if (downtime <= 13.2) {
+                const range = 13.2 - 1.2;
+                const percentage = 95 - ((downtime - 1.2) / range) * 50;
+                return Math.round(percentage);
+            } else {
+                const maxDowntime = 24;
+                const remaining = Math.max(0, maxDowntime - downtime);
+                return Math.round((remaining / (maxDowntime - 13.2)) * 45);
+            }
+        }
+
+        function getStatusFromPercentage(percentage) {
+            if (percentage >= 95) return 'green';
+            if (percentage >= 45) return 'amber';
+            return 'red';
+        }
+
+        function updateStatusFromDowntime() {
+            const downtime = parseFloat(document.getElementById('modalDowntime').value) || 0;
+            const percentage = calculatePercentageFromDowntime(downtime);
+            const status = getStatusFromPercentage(percentage);
+            
+            document.getElementById('modalPercentage').value = `${percentage}% (${status.toUpperCase()})`;
+        }
+
+        // ========================================
+        // KPI CALCULATION FUNCTIONS
+        // ========================================
+
+        function calculateMonthlyKPIs() {
+            const [year, month] = currentMonth.split('-').map(Number);
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+            
+            let totalEntries = 0;
+            let totalPercentage = 0;
+            let greenCount = 0;
+            let amberCount = 0;
+            let redCount = 0;
+            
+            // Calculate current month stats
+            for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                    const entry = operationalData[entryKey];
+                    
+                    if (entry && entry.percentage !== undefined) {
+                        totalEntries++;
+                        totalPercentage += entry.percentage;
+                        
+                        if (entry.status === 'green') greenCount++;
+                        else if (entry.status === 'amber') amberCount++;
+                        else if (entry.status === 'red') redCount++;
+                    }
+                });
+            }
+            
+            const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
+            const greenPercentage = totalEntries > 0 ? Math.round((greenCount / totalEntries) * 100) : 0;
+            const amberPercentage = totalEntries > 0 ? Math.round((amberCount / totalEntries) * 100) : 0;
+            const redPercentage = totalEntries > 0 ? Math.round((redCount / totalEntries) * 100) : 0;
+            
+            // Trend calculation (simplified)
+            let trendIndicator = '📊';
+            if (overallAvg >= 90) trendIndicator = '📈';
+            else if (overallAvg <= 60) trendIndicator = '📉';
+            
+            return {
+                overallAvg,
+                greenPercentage,
+                amberPercentage,
+                redPercentage,
+                trendIndicator,
+                totalEntries
+            };
+        }
+
+        function calculateYearlyKPIs() {
+            const currentYear = new Date(currentMonth).getFullYear();
+            const startOfYear = new Date(currentYear, 0, 1);
+            const endOfYear = new Date(currentYear, 11, 31);
+            
+            let totalEntries = 0;
+            let totalPercentage = 0;
+            let greenCount = 0;
+            let amberCount = 0;
+            let redCount = 0;
+            
+            // Calculate current year stats
+            for (let date = new Date(startOfYear); date <= endOfYear; date.setDate(date.getDate() + 1)) {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                    const entry = operationalData[entryKey];
+                    
+                    if (entry && entry.percentage !== undefined) {
+                        totalEntries++;
+                        totalPercentage += entry.percentage;
+                        
+                        if (entry.status === 'green') greenCount++;
+                        else if (entry.status === 'amber') amberCount++;
+                        else if (entry.status === 'red') redCount++;
+                    }
+                });
+            }
+            
+            const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
+            const greenPercentage = totalEntries > 0 ? Math.round((greenCount / totalEntries) * 100) : 0;
+            const amberPercentage = totalEntries > 0 ? Math.round((amberCount / totalEntries) * 100) : 0;
+            const redPercentage = totalEntries > 0 ? Math.round((redCount / totalEntries) * 100) : 0;
+            
+            // Trend calculation (simplified)
+            let trendIndicator = '📊';
+            if (overallAvg >= 90) trendIndicator = '📈';
+            else if (overallAvg <= 60) trendIndicator = '📉';
+            
+            return {
+                overallAvg,
+                greenPercentage,
+                amberPercentage,
+                redPercentage,
+                trendIndicator,
+                totalEntries
+            };
+        }
+
+        function calculateWeeklyKPIs(weeks) {
+            const weeklyKPIs = [];
+            
+            weeks.forEach((week, index) => {
+                let totalEntries = 0;
+                let totalPercentage = 0;
+                
+                week.dates.forEach(dateStr => {
+                    skillsList.forEach(skill => {
+                        const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                        const entry = operationalData[entryKey];
+                        
+                        if (entry && entry.percentage !== undefined) {
+                            totalEntries++;
+                            totalPercentage += entry.percentage;
+                        }
+                    });
+                });
+                
+                const avgPercentage = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
+                const status = getStatusFromPercentage(avgPercentage);
+                
+                weeklyKPIs.push({
+                    week: week.label,
+                    percentage: avgPercentage,
+                    status: status,
+                    totalEntries: totalEntries
+                });
+            });
+            
+            return weeklyKPIs;
+        }
+
+        function updateKPIDisplays() {
+            const monthlyKPIs = calculateMonthlyKPIs();
+            const yearlyKPIs = calculateYearlyKPIs();
+            
+            // Update monthly KPIs
+            document.getElementById('currentMonthDisplay').textContent = new Date(currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            document.getElementById('monthlyOverallAvailability').textContent = `${monthlyKPIs.overallAvg}%`;
+            document.getElementById('monthlyGreenPercentage').textContent = `${monthlyKPIs.greenPercentage}%`;
+            document.getElementById('monthlyAmberPercentage').textContent = `${monthlyKPIs.amberPercentage}%`;
+            document.getElementById('monthlyRedPercentage').textContent = `${monthlyKPIs.redPercentage}%`;
+            document.getElementById('monthlyTrendIndicator').textContent = monthlyKPIs.trendIndicator;
+            
+            // Update yearly KPIs
+            document.getElementById('currentYearDisplay').textContent = new Date(currentMonth).getFullYear();
+            document.getElementById('yearlyOverallAvailability').textContent = `${yearlyKPIs.overallAvg}%`;
+            document.getElementById('yearlyGreenPercentage').textContent = `${yearlyKPIs.greenPercentage}%`;
+            document.getElementById('yearlyAmberPercentage').textContent = `${yearlyKPIs.amberPercentage}%`;
+            document.getElementById('yearlyRedPercentage').textContent = `${yearlyKPIs.redPercentage}%`;
+            document.getElementById('yearlyTrendIndicator').textContent = yearlyKPIs.trendIndicator;
+            
+            // Cache the results
+            monthlyKPICache = monthlyKPIs;
+            yearlyKPICache = yearlyKPIs;
+        }
+
+        function generateWeeklyKPIs(weeks) {
+            const weeklyKPIs = calculateWeeklyKPIs(weeks);
+            let kpiHTML = '';
+            
+            weeklyKPIs.forEach(weekKPI => {
+                const statusClass = weekKPI.status;
+                
+                kpiHTML += `
+                    <div class="weekly-kpi-item">
+                        <div class="weekly-kpi-value" style="color: ${getStatusColor(statusClass)}">
+                            ${weekKPI.percentage}%
+                        </div>
+                        <div class="weekly-kpi-label">
+                            ${weekKPI.week} Availability
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('weeklyKPIGrid').innerHTML = kpiHTML;
+            weeklyKPICache = weeklyKPIs;
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'green': return '#28a745';
+                case 'amber': return '#ffc107';
+                case 'red': return '#dc3545';
+                default: return '#666';
+            }
+        }
+
+        // ========================================
+        // INITIALIZATION & SETUP
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Advanced Operations Dashboard with KPI Analytics - Initializing...');
+            
+            initializeLandscapes();
+            document.getElementById('monthSelect').value = currentMonth;
+            document.getElementById('dateSelect').value = currentDate;
+            
+            // Event listeners for live updates
+            document.getElementById('landscapeSelect').addEventListener('change', loadCurrentView);
+            document.getElementById('monthSelect').addEventListener('change', loadCurrentView);
+            document.getElementById('dateSelect').addEventListener('change', loadCurrentView);
+            
+            updateSkillList();
+            updateKPIDisplays();
+            loadCurrentView();
+            
+            // Set up auto-save interval
+            setInterval(autoSave, 30000);
+            
+            console.log('✅ Dashboard with KPI analytics initialized successfully');
+        });
+
+        // ========================================
+        // LANDSCAPE MANAGEMENT
+        // ========================================
+
+        function initializeLandscapes() {
+            const landscapeSelect = document.getElementById('landscapeSelect');
+            const historyFilter = document.getElementById('historyFilter');
+            
+            // Clear existing options
+            landscapeSelect.innerHTML = '';
+            if (historyFilter) {
+                historyFilter.innerHTML = '<option value="">All Landscapes</option>';
+            }
+            
+            // Populate landscapes
+            landscapesList.forEach(landscape => {
+                const option = document.createElement('option');
+                option.value = landscape;
+                option.textContent = landscape;
+                landscapeSelect.appendChild(option);
+                
+                if (historyFilter) {
+                    const filterOption = document.createElement('option');
+                    filterOption.value = landscape;
+                    filterOption.textContent = landscape;
+                    historyFilter.appendChild(filterOption);
+                }
+            });
+            
+            // Set default
+            landscapeSelect.value = currentLandscape;
+        }
+
+        function addNewLandscape() {
+            document.getElementById('addLandscapeModal').style.display = 'block';
+            document.getElementById('newLandscapeName').focus();
+        }
+
+        function closeAddLandscapeModal() {
+            document.getElementById('addLandscapeModal').style.display = 'none';
+            document.getElementById('newLandscapeName').value = '';
+        }
+
+        function saveNewLandscape() {
+            const newLandscape = document.getElementById('newLandscapeName').value.trim();
+            
+            if (!newLandscape) {
+                alert('❌ Please enter a landscape name!');
+                return;
+            }
+            
+            if (landscapesList.includes(newLandscape)) {
+                alert('❌ Landscape already exists!');
+                return;
+            }
+            
+            // Add to list and save
+            landscapesList.push(newLandscape);
+            localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
+            
+            // Update dropdowns
+            initializeLandscapes();
+            
+            // Select new landscape
+            document.getElementById('landscapeSelect').value = newLandscape;
+            currentLandscape = newLandscape;
+            
+            closeAddLandscapeModal();
+            loadCurrentView();
+            alert(`✅ "${newLandscape}" landscape added successfully!`);
+        }
+
+        // ========================================
+        // VIEW MANAGEMENT & NAVIGATION
+        // ========================================
+
+        function switchView(view) {
+            currentView = view;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide controls and views
+            if (view === 'daily') {
+                document.getElementById('monthControl').style.display = 'none';
+                document.getElementById('dateControl').style.display = 'flex';
+                document.getElementById('monthlyView').style.display = 'none';
+                document.getElementById('dailyView').style.display = 'block';
+            } else {
+                document.getElementById('monthControl').style.display = 'flex';
+                document.getElementById('dateControl').style.display = 'none';
+                document.getElementById('monthlyView').style.display = 'block';
+                document.getElementById('dailyView').style.display = 'none';
+            }
+            
+            loadCurrentView();
+        }
+
+        function loadCurrentView() {
+            currentLandscape = document.getElementById('landscapeSelect').value;
+            
+            if (currentView === 'monthly') {
+                currentMonth = document.getElementById('monthSelect').value;
+                generateMonthlyView();
+            } else {
+                currentDate = document.getElementById('dateSelect').value;
+                generateDailyView();
+            }
+            
+            // Always update KPIs and summary cards for live sync
+            updateKPIDisplays();
+            updateSummaryCards();
+        }
+
+        // ========================================
+        // WEEKLY AGGREGATION & CALCULATIONS
+        // ========================================
+
+        function calculateWeeklyStatus(skill, weekDates) {
+            let totalPercentage = 0;
+            let validEntries = 0;
+            
+            weekDates.forEach(date => {
+                const entryKey = `${currentLandscape}_${skill}_${date}`;
+                const entry = operationalData[entryKey];
+                if (entry) {
+                    totalPercentage += entry.percentage || 0;
+                    validEntries++;
+                }
+            });
+            
+            if (validEntries === 0) return { percentage: 0, status: 'none' };
+            
+            const avgPercentage = Math.round(totalPercentage / validEntries);
+            const status = getStatusFromPercentage(avgPercentage);
+            
+            return { percentage: avgPercentage, status: status };
+        }
+
+        // ========================================
+        // MONTHLY VIEW GENERATION
+        // ========================================
+
+        function generateMonthlyView() {
+            const weeks = generateWeeksForMonth();
+            generateWeeklyKPIs(weeks);
+            createMonthlyHeaders(weeks);
+            createMonthlyBody(weeks);
+        }
+
+        function generateWeeksForMonth() {
+            const [year, month] = currentMonth.split('-').map(Number);
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+            
+            let weeks = [];
+            let currentDate = new Date(firstDay);
+            let weekNum = 1;
+
+            while (currentDate <= lastDay) {
+                const weekStart = new Date(currentDate);
+                const weekEnd = new Date(currentDate);
+                weekEnd.setDate(currentDate.getDate() + 6);
+                
+                // Get all dates in this week
+                const weekDates = [];
+                for (let d = new Date(weekStart); d <= weekEnd && d <= lastDay; d.setDate(d.getDate() + 1)) {
+                    weekDates.push(d.toISOString().split('T')[0]);
+                }
+                
+                weeks.push({
+                    number: weekNum,
+                    label: `WK ${weekNum}`,
+                    start: weekStart.getDate(),
+                    end: Math.min(weekEnd.getDate(), lastDay.getDate()),
+                    dates: weekDates
+                });
+                
+                currentDate.setDate(currentDate.getDate() + 7);
+                weekNum++;
+            }
+            
+            return weeks;
+        }
+
+        function createMonthlyHeaders(weeks) {
+            let headerHTML = '<tr><th class="skill-header">Skills / Operational Areas</th>';
+            
+            weeks.forEach(week => {
+                headerHTML += `<th>${week.label}<br><small>${week.start}-${week.end}</small></th>`;
+            });
+            
+            headerHTML += '</tr>';
+            document.getElementById('monthlyHeaders').innerHTML = headerHTML;
+        }
+
+        function createMonthlyBody(weeks) {
+            let bodyHTML = '';
+            
+            skillsList.forEach(skill => {
+                bodyHTML += `<tr><td class="skill-cell">${skill}</td>`;
+                
+                weeks.forEach(week => {
+                    const weeklyData = calculateWeeklyStatus(skill, week.dates);
+                    const statusClass = weeklyData.status;
+                    const percentage = weeklyData.percentage;
+                    
+                    // Create daily indicators
+                    let dailyIndicators = '<div class="daily-indicators">';
+                    week.dates.forEach((date, index) => {
+                        const entryKey = `${currentLandscape}_${skill}_${date}`;
+                        const entry = operationalData[entryKey];
+                        const dayStatus = entry ? getStatusFromPercentage(entry.percentage) : 'none';
+                        const dayName = ['S','M','T','W','T','F','S'][new Date(date).getDay()];
+                        
+                        dailyIndicators += `
+                            <div class="daily-indicator ${dayStatus}" 
+                                 title="${dayName}: ${entry ? entry.percentage + '%' : 'No data'}" 
+                                 onclick="goToDailyView('${date}')"></div>
+                        `;
+                    });
+                    dailyIndicators += '</div>';
+                    
+                    bodyHTML += `
+                        <td class="status-cell" onclick="editWeeklyEntry('${skill}', ${week.number}, '${JSON.stringify(week.dates).replace(/"/g, '&quot;')}')">
+                            <div class="status-dot ${statusClass}" title="Click to view details - Week ${week.number}">
+                                ${percentage}%
+                            </div>
+                            ${dailyIndicators}
+                        </td>
+                    `;
+                });
+                
+                bodyHTML += '</tr>';
+            });
+            
+            document.getElementById('monthlyBody').innerHTML = bodyHTML;
+        }
+
+        function goToDailyView(date) {
+            // Switch to daily view and set the date
+            document.getElementById('dateSelect').value = date;
+            currentDate = date;
+            
+            // Update view
+            currentView = 'daily';
+            document.getElementById('monthControl').style.display = 'none';
+            document.getElementById('dateControl').style.display = 'flex';
+            document.getElementById('monthlyView').style.display = 'none';
+            document.getElementById('dailyView').style.display = 'block';
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.toggle-btn:last-child').classList.add('active');
+            
+            generateDailyView();
+        }
+
+        function editWeeklyEntry(skill, weekNumber, weekDatesStr) {
+            const weekDates = JSON.parse(weekDatesStr.replace(/&quot;/g, '"'));
+            
+            // Show options: View details or go to daily view
+            const choice = confirm(`📊 Weekly Summary for ${skill} - Week ${weekNumber}\n\nClick OK to go to Daily View for editing\nClick Cancel to stay in Monthly View`);
+            
+            if (choice) {
+                // Go to daily view with the first date of the week
+                goToDailyView(weekDates[0]);
+            }
+        }
+
+        // ========================================
+        // DAILY VIEW GENERATION
+        // ========================================
+
+        function generateDailyView() {
+            const date = new Date(currentDate);
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            let gridHTML = '<div class="daily-header">Skills</div>';
+            
+            // Create day headers
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(date);
+                dayDate.setDate(date.getDate() - date.getDay() + i);
+                gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}</small></div>`;
+            }
+            
+            // Create skill rows
+            skillsList.forEach(skill => {
+                gridHTML += `<div class="daily-skill">${skill}</div>`;
+                
+                for (let i = 0; i < 7; i++) {
+                    const dayDate = new Date(date);
+                    dayDate.setDate(date.getDate() - date.getDay() + i);
+                    const dateStr = dayDate.toISOString().split('T')[0];
+                    const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                    const entry = operationalData[entryKey];
+                    const statusClass = entry ? getStatusFromPercentage(entry.percentage) : 'none';
+                    const percentage = entry ? entry.percentage : 0;
+                    const downtime = entry ? entry.downtime || 0 : 0;
+                    
+                    gridHTML += `
+                        <div class="daily-cell" onclick="editEntry('${entryKey}', '${skill}', '${dateStr}')">
+                            <div class="status-dot ${statusClass}" title="Click to edit ${skill} - ${dateStr}">
+                                ${entry ? '✓' : ''}
+                            </div>
+                            <div class="percentage-value">${percentage}%</div>
+                            <div class="downtime-display">${downtime}h down</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('dailyGrid').innerHTML = gridHTML;
+            updateDailyStats();
+        }
+
+        function updateDailyStats() {
+            const date = new Date(currentDate);
+            let todayTotal = 0, todaySum = 0;
+            let weekTotal = 0, weekSum = 0;
+
+            // Today's stats
+            const todayKey = currentDate;
+            skillsList.forEach(skill => {
+                const entryKey = `${currentLandscape}_${skill}_${todayKey}`;
+                const entry = operationalData[entryKey];
+                todayTotal++;
+                if (entry) {
+                    todaySum += entry.percentage || 0;
+                }
+            });
+
+            // Week's stats
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(date);
+                dayDate.setDate(date.getDate() - date.getDay() + i);
+                const dateStr = dayDate.toISOString().split('T')[0];
+                
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                    const entry = operationalData[entryKey];
+                    weekTotal++;
+                    if (entry) {
+                        weekSum += entry.percentage || 0;
+                    }
+                });
+            }
+
+            const dailyCompletion = todayTotal > 0 ? Math.round(todaySum / todayTotal) : 0;
+            const weeklyAverage = weekTotal > 0 ? Math.round(weekSum / weekTotal) : 0;
+            const trend = dailyCompletion >= weeklyAverage ? '📈' : '📉';
+
+            document.getElementById('dailyCompletion').textContent = `${dailyCompletion}%`;
+            document.getElementById('weeklyAverage').textContent = `${weeklyAverage}%`;
+            document.getElementById('trendIndicator').textContent = trend;
+        }
+
+        // ========================================
+        // ENTRY MANAGEMENT
+        // ========================================
+
+        function editEntry(key, skill, period) {
+            editingKey = key;
+            const entry = operationalData[key] || {};
+            
+            document.getElementById('modalSkill').value = skill;
+            document.getElementById('modalPeriod').value = period;
+            document.getElementById('modalDate').value = entry.date || period;
+            document.getElementById('modalNotes').value = entry.notes || '';
+            document.getElementById('modalDowntime').value = entry.downtime || 0;
+            document.getElementById('modalIncident').value = entry.incident || '';
+            
+            // Update percentage display
+            updateStatusFromDowntime();
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function saveEntry() {
+            const downtime = parseFloat(document.getElementById('modalDowntime').value) || 0;
+            const percentage = calculatePercentageFromDowntime(downtime);
+            const status = getStatusFromPercentage(percentage);
+            
+            const entry = {
+                status: status,
+                date: document.getElementById('modalDate').value,
+                notes: document.getElementById('modalNotes').value || '',
+                percentage: percentage,
+                downtime: downtime,
+                incident: document.getElementById('modalIncident').value || '',
+                landscape: currentLandscape,
+                skill: document.getElementById('modalSkill').value,
+                period: document.getElementById('modalPeriod').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            operationalData[editingKey] = entry;
+            localStorage.setItem('operationalData', JSON.stringify(operationalData));
+            
+            closeModal();
+            loadCurrentView(); // This will update both views and KPIs live
+            alert('✅ Entry saved successfully with calculated percentage and status!');
+        }
+
+        function deleteEntry() {
+            if (confirm('🗑️ Delete this entry?')) {
+                delete operationalData[editingKey];
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                
+                closeModal();
+                loadCurrentView(); // Live sync update
+                alert('✅ Entry deleted!');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingKey = null;
+        }
+
+        // ========================================
+        // SKILL MANAGEMENT
+        // ========================================
+
+        function updateSkillList() {
+            let listHTML = '';
+            skillsList.forEach((skill, index) => {
+                listHTML += `
+                    <div class="skill-tag">
+                        ${skill}
+                        <button class="skill-remove" onclick="removeSkill(${index})" title="Remove skill">×</button>
+                    </div>
+                `;
+            });
+            document.getElementById('skillList').innerHTML = listHTML;
+        }
+
+        function showAddSkillModal() {
+            const skillName = prompt('📝 Enter new skill name:');
+            if (skillName && skillName.trim()) {
+                addSkill(skillName.trim());
+            }
+        }
+
+        function addSkill(skillName = null) {
+            if (!skillName) {
+                skillName = document.getElementById('newSkillInput').value.trim();
+            }
+            
+            if (skillName && !skillsList.includes(skillName)) {
+                skillsList.push(skillName);
+                localStorage.setItem('skillsList', JSON.stringify(skillsList));
+                document.getElementById('newSkillInput').value = '';
+                updateSkillList();
+                loadCurrentView(); // Live sync update
+                alert(`✅ "${skillName}" added successfully!`);
+            } else if (skillsList.includes(skillName)) {
+                alert('❌ Skill already exists!');
+            } else {
+                alert('❌ Please enter a skill name!');
+            }
+        }
+
+        function removeSkill(index) {
+            if (confirm(`🗑️ Remove "${skillsList[index]}"?`)) {
+                const skillName = skillsList[index];
+                skillsList.splice(index, 1);
+                
+                // Remove related entries
+                Object.keys(operationalData).forEach(key => {
+                    if (key.includes(skillName)) {
+                        delete operationalData[key];
+                    }
+                });
+                
+                localStorage.setItem('skillsList', JSON.stringify(skillsList));
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                
+                updateSkillList();
+                loadCurrentView(); // Live sync update
+                alert('✅ Skill removed!');
+            }
+        }
+
+        // ========================================
+        // SUMMARY CARDS & STATISTICS
+        // ========================================
+
+        function updateSummaryCards() {
+            let total = 0, green = 0, amber = 0, red = 0;
+            
+            Object.values(operationalData).forEach(entry => {
+                if (entry.landscape === currentLandscape) {
+                    total++;
+                    switch(entry.status) {
+                        case 'green': green++; break;
+                        case 'amber': amber++; break;
+                        case 'red': red++; break;
+                    }
+                }
+            });
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('greenCount').textContent = green;
+            document.getElementById('amberCount').textContent = amber;
+            document.getElementById('redCount').textContent = red;
+        }
+
+        // ========================================
+        // EXCEL EXPORT FUNCTIONALITY
+        // ========================================
+
+        function exportToExcel() {
+            const weeks = generateWeeksForMonth();
+            const [year, month] = currentMonth.split('-').map(Number);
+            const monthName = new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            let htmlTable = generateExcelTable(weeks, monthName);
+            downloadExcelFile(htmlTable, `Advanced_KPI_Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
+            
+            alert('✅ Advanced Excel report with KPI analytics exported successfully!');
+        }
+
+        function generateExcelTable(weeks, monthName) {
+            const monthlyKPIs = calculateMonthlyKPIs();
+            const yearlyKPIs = calculateYearlyKPIs();
+            const weeklyKPIs = calculateWeeklyKPIs(weeks);
+            
+            let htmlTable = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+                        .header { background-color: #4472C4; color: white; font-weight: bold; text-align: center; padding: 8px; font-size: 11px; }
+                        .subheader { background-color: #D9E1F2; font-weight: bold; text-align: center; padding: 6px; font-size: 10px; border: 1px solid #B4C6E7; }
+                        .kpi-header { background-color: #70AD47; color: white; font-weight: bold; text-align: center; padding: 8px; font-size: 11px; }
+                        .kpi-cell { background-color: #E2EFDA; text-align: center; padding: 6px; font-size: 10px; border: 1px solid #A9D08E; }
+                        .skill-cell { background-color: #E2EFDA; font-weight: bold; padding: 8px; font-size: 10px; border: 1px solid #A9D08E; text-align: left; }
+                        .data-cell { text-align: center; padding: 8px; font-size: 12px; border: 1px solid #D0D7DE; font-weight: bold; }
+                        .green-cell { background-color: #C6EFCE; color: #006100; }
+                        .amber-cell { background-color: #FFEB9C; color: #9C5700; }
+                        .red-cell { background-color: #FFC7CE; color: #9C0006; }
+                        .white-cell { background-color: #FFFFFF; color: #767676; }
+                    </style>
+                </head>
+                <body>
+                    <table border="1">
+                        <tr>
+                            <td colspan="${weeks.length + 1}" class="header">
+                                Advanced Operations Dashboard with KPI Analytics - ${monthName}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="${weeks.length + 1}" class="subheader">
+                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Dynamic Downtime-Based Calculation with KPI Tracking
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="${weeks.length + 1}" class="kpi-header">
+                                MONTHLY KPI SUMMARY
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="kpi-cell">Overall: ${monthlyKPIs.overallAvg}%</td>
+                            <td class="kpi-cell">Green: ${monthlyKPIs.greenPercentage}%</td>
+                            <td class="kpi-cell">Amber: ${monthlyKPIs.amberPercentage}%</td>
+                            <td class="kpi-cell">Red: ${monthlyKPIs.redPercentage}%</td>
+                            <td class="kpi-cell">Trend: ${monthlyKPIs.trendIndicator}</td>
+            `;
+            
+            // Add remaining columns if weeks.length > 4
+            for (let i = 4; i < weeks.length; i++) {
+                htmlTable += '<td class="kpi-cell">-</td>';
+            }
+            htmlTable += '</tr>';
+            
+            // Weekly KPIs row
+            htmlTable += '<tr><td class="kpi-header">Weekly Availability</td>';
+            weeklyKPIs.forEach(weekKPI => {
+                htmlTable += `<td class="kpi-cell">${weekKPI.week}: ${weekKPI.percentage}%</td>`;
+            });
+            // Fill remaining cells
+            for (let i = weeklyKPIs.length; i < weeks.length; i++) {
+                htmlTable += '<td class="kpi-cell">-</td>';
+            }
+            htmlTable += '</tr>';
+            
+            // Main data table
+            htmlTable += `
+                        <tr>
+                            <td class="skill-cell" style="width: 250px;">Operational Description</td>
+            `;
+            
+            weeks.forEach(week => {
+                htmlTable += `<td class="header" style="width: 80px;">${week.label}<br><small>${week.start}-${week.end}</small></td>`;
+            });
+            htmlTable += '</tr>';
+            
+            skillsList.forEach(skill => {
+                htmlTable += `<tr><td class="skill-cell">${skill}</td>`;
+                
+                weeks.forEach(week => {
+                    const weeklyData = calculateWeeklyStatus(skill, week.dates);
+                    let cellClass = 'white-cell';
+                    let statusDot = '';
+                    let percentage = '';
+                    
+                    if (weeklyData.status !== 'none') {
+                        percentage = `${weeklyData.percentage}.0%`;
+                        switch(weeklyData.status) {
+                            case 'green':
+                                cellClass = 'green-cell';
+                                statusDot = '●';
+                                break;
+                            case 'amber':
+                                cellClass = 'amber-cell';
+                                statusDot = '●';
+                                break;
+                            case 'red':
+                                cellClass = 'red-cell';
+                                statusDot = '●';
+                                break;
+                        }
+                    } else {
+                        statusDot = '○';
+                        percentage = '';
+                    }
+                    
+                    htmlTable += `
+                        <td class="data-cell ${cellClass}">
+                            <span style="font-size: 16px;">${statusDot}</span><br>
+                            <small>${percentage}</small>
+                        </td>
+                    `;
+                });
+                
+                htmlTable += '</tr>';
+            });
+            
+            htmlTable += `
+                        <tr>
+                            <td colspan="${weeks.length + 1}" class="subheader">
+                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - Advanced KPI Analytics
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+            `;
+            
+            return htmlTable;
+        }
+
+        function downloadExcelFile(content, filename) {
+            const blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportHistoryToExcel() {
+            let htmlTable = generateHistoryExcelTable();
+            downloadExcelFile(htmlTable, `Operations_History_KPI_Analytics_${new Date().toISOString().split('T')[0]}.xls`);
+            alert('✅ Complete history with KPI analytics exported successfully!');
+        }
+
+        function generateHistoryExcelTable() {
+            let htmlTable = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+                        .header { background-color: #4472C4; color: white; font-weight: bold; text-align: center; padding: 8px; font-size: 12px; }
+                        .kpi-header { background-color: #70AD47; color: white; font-weight: bold; text-align: center; padding: 8px; font-size: 12px; }
+                        .data-cell { text-align: center; padding: 6px; font-size: 11px; border: 1px solid #D0D7DE; }
+                        .green-cell { background-color: #C6EFCE; color: #006100; }
+                        .amber-cell { background-color: #FFEB9C; color: #9C5700; }
+                        .red-cell { background-color: #FFC7CE; color: #9C0006; }
+                    </style>
+                </head>
+                <body>
+                    <table border="1">
+                        <tr>
+                            <td colspan="9" class="header">Complete Operations History Report with KPI Analytics</td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" class="kpi-header">Monthly Average: ${monthlyKPICache ? monthlyKPICache.overallAvg : 0}% | Yearly Average: ${yearlyKPICache ? yearlyKPICache.overallAvg : 0}%</td>
+                        </tr>
+                        <tr class="header">
+                            <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Performance %</td><td>Downtime (h)</td><td>Incident</td><td>Notes</td>
+                        </tr>
+            `;
+            
+            Object.entries(operationalData).forEach(([key, entry]) => {
+                let cellClass = '';
+                switch(entry.status) {
+                    case 'green': cellClass = 'green-cell'; break;
+                    case 'amber': cellClass = 'amber-cell'; break;
+                    case 'red': cellClass = 'red-cell'; break;
+                }
+                
+                htmlTable += `
+                    <tr>
+                        <td class="data-cell">${entry.date}</td>
+                        <td class="data-cell">${entry.landscape}</td>
+                        <td class="data-cell">${entry.skill}</td>
+                        <td class="data-cell">${entry.period}</td>
+                        <td class="data-cell ${cellClass}">● ${entry.status.toUpperCase()}</td>
+                        <td class="data-cell">${entry.percentage}%</td>
+                        <td class="data-cell">${entry.downtime || 0}h</td>
+                        <td class="data-cell">${entry.incident || ''}</td>
+                        <td class="data-cell">${entry.notes || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            htmlTable += '</table></body></html>';
+            return htmlTable;
+        }
+
+        // ========================================
+        // HISTORY MANAGEMENT
+        // ========================================
+
+        function showHistoryModal() {
+            populateHistoryTable();
+            document.getElementById('historyModal').style.display = 'block';
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function populateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            const filter = document.getElementById('historyFilter') ? document.getElementById('historyFilter').value : '';
+            let entries = [];
+            
+            Object.entries(operationalData).forEach(([key, entry]) => {
+                if (!filter || entry.landscape === filter) {
+                    entries.push({key, ...entry});
+                }
+            });
+            
+            entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            let html = '';
+            entries.forEach(entry => {
+                const statusColor = entry.status === 'green' ? '#28a745' : 
+                                   entry.status === 'amber' ? '#ffc107' : 
+                                   entry.status === 'red' ? '#dc3545' : '#999';
+                
+                html += `
+                    <tr onclick="editHistoryEntry('${entry.key}')" style="cursor: pointer;" 
+                        onmouseover="this.style.backgroundColor='#f8f9fa'" 
+                        onmouseout="this.style.backgroundColor='white'">
+                        <td>${new Date(entry.timestamp).toLocaleDateString()}</td>
+                        <td>${entry.landscape}</td>
+                        <td>${entry.skill}</td>
+                        <td>${entry.period}</td>
+                        <td><span style="color: ${statusColor}; font-weight: bold; font-size: 18px;">●</span> ${entry.status}</td>
+                        <td>${entry.percentage}%</td>
+                        <td>${entry.downtime || 0}h</td>
+                        <td>${entry.incident || '-'}</td>
+                        <td>
+                            <button class="edit-btn" onclick="event.stopPropagation(); editHistoryEntry('${entry.key}')">Edit</button>
+                            <button class="delete-btn" onclick="event.stopPropagation(); deleteHistoryEntry('${entry.key}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function filterHistory() {
+            populateHistoryTable();
+        }
+
+        function editHistoryEntry(key) {
+            closeHistoryModal();
+            const entry = operationalData[key];
+            editEntry(key, entry.skill, entry.period);
+        }
+
+        function deleteHistoryEntry(key) {
+            if (confirm('🗑️ Delete this history entry?')) {
+                delete operationalData[key];
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                populateHistoryTable();
+                loadCurrentView(); // Live sync update
+                alert('✅ Entry deleted!');
+            }
+        }
+
+        // ========================================
+        // DATA MANAGEMENT
+        // ========================================
+
+        function clearCurrentData() {
+            const confirmText = currentView === 'monthly' ? 
+                `Clear all data for ${currentMonth} in ${currentLandscape}?` :
+                `Clear all data for ${currentDate} in ${currentLandscape}?`;
+            
+            if (confirm(`🗑️ ${confirmText}`)) {
+                Object.keys(operationalData).forEach(key => {
+                    if (key.includes(currentLandscape)) {
+                        if (currentView === 'monthly' && key.includes(currentMonth)) {
+                            delete operationalData[key];
+                        } else if (currentView === 'daily' && key.includes(currentDate)) {
+                            delete operationalData[key];
+                        }
+                    }
+                });
+                
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                loadCurrentView(); // Live sync update
+                alert('✅ Data cleared!');
+            }
+        }
+
+        function clearAllHistory() {
+            if (confirm('🗑️ ⚠️ WARNING: This will permanently delete ALL historical data across all landscapes and dates. This action cannot be undone!\n\nAre you absolutely sure?')) {
+                if (confirm('🚨 FINAL CONFIRMATION: Delete ALL operational data permanently?')) {
+                    operationalData = {};
+                    localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                    loadCurrentView(); // Live sync update
+                    alert('✅ All historical data cleared successfully!');
+                }
+            }
+        }
+
+        function importData() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importData = JSON.parse(e.target.result);
+                    
+                    if (confirm('📤 Import data? This will merge with existing data.')) {
+                        operationalData = {...operationalData, ...importData.data || importData};
+                        if (importData.skills) {
+                            skillsList = [...new Set([...skillsList, ...importData.skills])];
+                        }
+                        if (importData.landscapes) {
+                            landscapesList = [...new Set([...landscapesList, ...importData.landscapes])];
+                            localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
+                            initializeLandscapes();
+                        }
+                        
+                        localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                        localStorage.setItem('skillsList', JSON.stringify(skillsList));
+                        
+                        updateSkillList();
+                        loadCurrentView(); // Live sync update
+                        alert('✅ Data imported successfully with KPI analytics updated!');
+                    }
+                } catch (error) {
+                    alert('❌ Invalid file format!');
+                    console.error('Import error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ========================================
+        // AUTO-SAVE & UTILITY FUNCTIONS
+        // ========================================
+
+        function autoSave() {
+            if (Object.keys(operationalData).length > 0) {
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                localStorage.setItem('skillsList', JSON.stringify(skillsList));
+                localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
+                console.log('🔄 Auto-save completed with KPI data');
+            }
+        }
+
+        // ========================================
+        // EVENT LISTENERS & MODAL MANAGEMENT
+        // ========================================
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const visibleModals = document.querySelectorAll('.modal[style*="block"]');
+                visibleModals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+
+        console.log('✅ Advanced Operations Dashboard with KPI Analytics loaded successfully');
+    </script>
 </body>
 </html>
