@@ -199,6 +199,26 @@
             font-weight: 600;
         }
 
+        /* Admin Badge */
+        .admin-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         /* Main Container */
         .main-container {
             max-width: 1600px;
@@ -275,6 +295,12 @@
         .connection-status.offline {
             background: #dc3545;
             color: white;
+        }
+
+        .connection-status.admin {
+            background: #ff6b6b;
+            color: white;
+            animation: pulse 2s infinite;
         }
 
         /* KPI Dashboard Styles */
@@ -1347,11 +1373,12 @@
     <!-- Authentication Section -->
     <div id="auth-section">
         <div class="auth-container">
+            <div class="admin-badge" style="display: none;" id="adminBadge">👑 ADMIN</div>
             <h2>🔐 Team Login</h2>
             <p class="subtitle">Secure access to your operations dashboard</p>
             
             <form class="auth-form" onsubmit="return false;">
-                <input type="email" id="email" placeholder="📧 Enter your email" required>
+                <input type="text" id="email" placeholder="📧 Enter your email or username" required>
                 <input type="password" id="password" placeholder="🔒 Enter your password" required>
                 
                 <div class="auth-buttons">
@@ -1742,6 +1769,9 @@
             measurementId: "G-EQ8S9T513X"
         };
 
+        // Global variables for admin access
+        window.isAdminMode = false;
+
         // Initialize Firebase
         let app, db, auth;
         
@@ -1775,17 +1805,72 @@
         }
 
         // ========================================
-        // FIREBASE AUTHENTICATION FUNCTIONS
+        // ADMIN ACCESS SYSTEM
         // ========================================
 
-        // Sign up with email and password
+        function checkAdminAccess(username, password) {
+            return username.toLowerCase().trim() === 'hey there' && password === '0000';
+        }
+
+        function activateAdminMode() {
+            window.isAdminMode = true;
+            document.getElementById('adminBadge').style.display = 'block';
+            updateConnectionStatus('admin');
+            
+            // Show admin user info
+            const userInfo = document.getElementById('userInfo');
+            const userEmail = document.getElementById('userEmail');
+            userInfo.style.display = 'block';
+            userEmail.textContent = '👑 ADMIN ACCESS';
+            
+            console.log('👑 Admin mode activated');
+        }
+
+        // ========================================
+        // FIREBASE AUTHENTICATION FUNCTIONS (FIXED)
+        // ========================================
+
+        // Sign up with email and password OR admin access
         window.signUp = async function() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            const emailInput = document.getElementById("email").value.trim();
+            const passwordInput = document.getElementById("password").value;
             const statusDiv = document.getElementById("auth-status");
             
-            if (!email || !password) {
+            // Check for admin access first
+            if (checkAdminAccess(emailInput, passwordInput)) {
+                statusDiv.innerHTML = '<div>👑 Admin access granted! Welcome, Administrator!</div>';
+                statusDiv.className = 'auth-status success';
+                
+                activateAdminMode();
+                
+                // Show dashboard immediately
+                const dashboard = document.querySelector('.main-container');
+                const authSection = document.getElementById('auth-section');
+                const signOutBtn = document.getElementById('signOutBtn');
+                
+                dashboard.style.display = "block";
+                authSection.style.display = "none";
+                signOutBtn.style.display = "block";
+                
+                // Initialize dashboard
+                setTimeout(() => {
+                    initializeDashboard();
+                }, 500);
+                
+                return;
+            }
+            
+            // Regular Firebase signup
+            if (!emailInput || !passwordInput) {
                 statusDiv.innerHTML = '<div class="error">❌ Please enter both email and password</div>';
+                statusDiv.className = 'auth-status error';
+                return;
+            }
+            
+            // Validate email format for Firebase
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                statusDiv.innerHTML = '<div class="error">❌ Please enter a valid email address for account creation</div>';
                 statusDiv.className = 'auth-status error';
                 return;
             }
@@ -1794,7 +1879,7 @@
             statusDiv.className = 'auth-status';
             
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
+                await createUserWithEmailAndPassword(auth, emailInput, passwordInput);
                 statusDiv.innerHTML = '<div>✅ Account created successfully! Welcome to the team!</div>';
                 statusDiv.className = 'auth-status success';
             } catch (error) {
@@ -1813,14 +1898,47 @@
             }
         }
 
-        // Sign in with email and password
+        // Sign in with email and password OR admin access
         window.signIn = async function() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            const emailInput = document.getElementById("email").value.trim();
+            const passwordInput = document.getElementById("password").value;
             const statusDiv = document.getElementById("auth-status");
             
-            if (!email || !password) {
+            // Check for admin access first
+            if (checkAdminAccess(emailInput, passwordInput)) {
+                statusDiv.innerHTML = '<div>👑 Admin access granted! Welcome back, Administrator!</div>';
+                statusDiv.className = 'auth-status success';
+                
+                activateAdminMode();
+                
+                // Show dashboard immediately
+                const dashboard = document.querySelector('.main-container');
+                const authSection = document.getElementById('auth-section');
+                const signOutBtn = document.getElementById('signOutBtn');
+                
+                dashboard.style.display = "block";
+                authSection.style.display = "none";
+                signOutBtn.style.display = "block";
+                
+                // Initialize dashboard
+                setTimeout(() => {
+                    initializeDashboard();
+                }, 500);
+                
+                return;
+            }
+            
+            // Regular Firebase signin
+            if (!emailInput || !passwordInput) {
                 statusDiv.innerHTML = '<div class="error">❌ Please enter both email and password</div>';
+                statusDiv.className = 'auth-status error';
+                return;
+            }
+            
+            // Validate email format for Firebase
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                statusDiv.innerHTML = '<div class="error">❌ Please enter a valid email address to sign in</div>';
                 statusDiv.className = 'auth-status error';
                 return;
             }
@@ -1829,7 +1947,7 @@
             statusDiv.className = 'auth-status';
             
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, emailInput, passwordInput);
                 statusDiv.innerHTML = '<div>✅ Welcome back! Loading dashboard...</div>';
                 statusDiv.className = 'auth-status success';
             } catch (error) {
@@ -1840,6 +1958,8 @@
                     errorMessage += 'Incorrect password. Please try again.';
                 } else if (error.code === 'auth/invalid-email') {
                     errorMessage += 'Please enter a valid email address.';
+                } else if (error.code === 'auth/invalid-credential') {
+                    errorMessage += 'Invalid email or password. Please check and try again.';
                 } else {
                     errorMessage += error.message;
                 }
@@ -1848,18 +1968,47 @@
             }
         }
 
-        // Sign out
+        // Sign out (works for both admin and regular users)
         window.signOut = async function() {
             try {
-                await signOut(auth);
-                console.log('👋 User signed out successfully');
+                if (window.isAdminMode) {
+                    // Admin logout
+                    window.isAdminMode = false;
+                    document.getElementById('adminBadge').style.display = 'none';
+                    updateConnectionStatus('connecting');
+                    console.log('👑 Admin signed out');
+                } else {
+                    // Firebase logout
+                    await signOut(auth);
+                    console.log('👋 User signed out successfully');
+                }
+                
+                // Reset UI
+                const dashboard = document.querySelector('.main-container');
+                const authSection = document.getElementById('auth-section');
+                const signOutBtn = document.getElementById('signOutBtn');
+                const userInfo = document.getElementById('userInfo');
+                
+                dashboard.style.display = "none";
+                authSection.style.display = "flex";
+                signOutBtn.style.display = "none";
+                userInfo.style.display = "none";
+                
+                // Clear form
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('auth-status').innerHTML = '';
+                
             } catch (error) {
                 console.error('❌ Sign out error:', error);
             }
         }
 
-        // Monitor authentication state
+        // Monitor authentication state (only for Firebase users)
         onAuthStateChanged(auth, (user) => {
+            // Skip if in admin mode
+            if (window.isAdminMode) return;
+            
             const dashboard = document.querySelector('.main-container');
             const authSection = document.getElementById('auth-section');
             const signOutBtn = document.getElementById('signOutBtn');
@@ -1867,7 +2016,7 @@
             const userEmail = document.getElementById('userEmail');
             
             if (user) {
-                // User is signed in
+                // User is signed in via Firebase
                 dashboard.style.display = "block";
                 authSection.style.display = "none";
                 signOutBtn.style.display = "block";
@@ -1885,13 +2034,15 @@
                 console.log('✅ User authenticated:', user.email);
                 
             } else {
-                // User is signed out
-                dashboard.style.display = "none";
-                authSection.style.display = "flex";
-                signOutBtn.style.display = "none";
-                userInfo.style.display = "none";
-                
-                console.log('👤 No user signed in');
+                // User is signed out (and not admin)
+                if (!window.isAdminMode) {
+                    dashboard.style.display = "none";
+                    authSection.style.display = "flex";
+                    signOutBtn.style.display = "none";
+                    userInfo.style.display = "none";
+                    
+                    console.log('👤 No user signed in');
+                }
             }
         });
         
@@ -1911,11 +2062,15 @@
                 case 'offline':
                     statusEl.textContent = '⚠️ Offline Mode';
                     break;
+                case 'admin':
+                    statusEl.textContent = '👑 Admin Mode - Full Access';
+                    break;
             }
         }
         
         function setupRealtimeSync() {
-            if (!window.firebase || !auth.currentUser) return;
+            // Skip if admin mode or no Firebase
+            if (window.isAdminMode || !window.firebase || !auth.currentUser) return;
             
             try {
                 const teamId = localStorage.getItem('teamId') || 'default-team';
@@ -1944,6 +2099,8 @@
         // Make functions globally available
         window.updateConnectionStatus = updateConnectionStatus;
         window.setupRealtimeSync = setupRealtimeSync;
+        window.checkAdminAccess = checkAdminAccess;
+        window.activateAdminMode = activateAdminMode;
     </script>
 
     <script>
@@ -2008,10 +2165,12 @@
             updateKPIDisplays();
             loadCurrentView();
             
-            // Load team data after initial UI setup
-            setTimeout(() => {
-                loadTeamData();
-            }, 1000);
+            // Load team data after initial UI setup (only if not admin mode)
+            if (!window.isAdminMode) {
+                setTimeout(() => {
+                    loadTeamData();
+                }, 1000);
+            }
             
             // Set up auto-save interval
             setInterval(autoSave, 30000);
@@ -2020,10 +2179,16 @@
         }
 
         // ========================================
-        // FIREBASE INTEGRATION FUNCTIONS
+        // FIREBASE INTEGRATION FUNCTIONS (ADMIN-AWARE)
         // ========================================
 
         async function saveEntryToFirebase(entryKey, entryData) {
+            // Skip Firebase if in admin mode
+            if (window.isAdminMode) {
+                console.log('👑 Admin mode: Skipping Firebase sync, saving locally only');
+                return true;
+            }
+            
             if (!window.firebase || !window.firebase.auth.currentUser) {
                 console.log('⚠️ Firebase not available or user not authenticated, saving locally only');
                 return false;
@@ -2057,6 +2222,12 @@
         }
 
         async function loadTeamData() {
+            // Skip Firebase if in admin mode
+            if (window.isAdminMode) {
+                console.log('👑 Admin mode: Using local data only');
+                return;
+            }
+            
             if (!window.firebase || !window.firebase.auth.currentUser) {
                 console.log('⚠️ Firebase not available or user not authenticated, using local data only');
                 return;
@@ -2099,6 +2270,9 @@
 
         // Silent version for real-time updates (doesn't show loading)
         async function loadTeamDataSilent() {
+            // Skip Firebase if in admin mode
+            if (window.isAdminMode) return;
+            
             if (!window.firebase || !window.firebase.auth.currentUser || document.querySelector('.modal[style*="block"]')) {
                 return; // Skip if not authenticated or modal is open (user is editing)
             }
@@ -2133,6 +2307,10 @@
         }
 
         function syncNow() {
+            if (window.isAdminMode) {
+                alert('👑 Admin Mode: All data is already available locally!');
+                return;
+            }
             loadTeamData();
         }
 
@@ -2401,7 +2579,9 @@
             
             closeAddLandscapeModal();
             loadCurrentView();
-            alert(`✅ "${newLandscape}" landscape added and synced to team!`);
+            
+            const syncMessage = window.isAdminMode ? 'Admin mode - available locally!' : 'synced to team!';
+            alert(`✅ "${newLandscape}" landscape added and ${syncMessage}`);
         }
 
         // ========================================
@@ -2696,7 +2876,7 @@
         }
 
         // ========================================
-        // ENTRY MANAGEMENT (WITH FIREBASE SYNC)
+        // ENTRY MANAGEMENT (WITH ADMIN SUPPORT)
         // ========================================
 
         function editEntry(key, skill, period) {
@@ -2738,7 +2918,7 @@
             // Update local data first
             operationalData[editingKey] = entry;
             
-            // Try to save to Firebase
+            // Try to save to Firebase (will be skipped in admin mode)
             const syncSuccess = await saveEntryToFirebase(editingKey, entry);
             
             // Always save to localStorage as backup
@@ -2747,7 +2927,9 @@
             closeModal();
             loadCurrentView();
             
-            if (syncSuccess) {
+            if (window.isAdminMode) {
+                alert('👑 Admin: Entry saved locally with full access!');
+            } else if (syncSuccess) {
                 alert('✅ Entry saved and synced to team!');
             } else {
                 alert('✅ Entry saved locally! Will sync when connection is restored.');
@@ -2755,11 +2937,15 @@
         }
 
         function deleteEntry() {
-            if (confirm('🗑️ Delete this entry? This will also remove it from team sync.')) {
+            const confirmMessage = window.isAdminMode ? 
+                '🗑️ Admin: Delete this entry? (Local deletion only)' :
+                '🗑️ Delete this entry? This will also remove it from team sync.';
+                
+            if (confirm(confirmMessage)) {
                 delete operationalData[editingKey];
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 
-                // TODO: Add Firebase delete functionality here if needed
+                // TODO: Add Firebase delete functionality here if needed and not admin mode
                 
                 closeModal();
                 loadCurrentView();
@@ -2807,7 +2993,9 @@
                 document.getElementById('newSkillInput').value = '';
                 updateSkillList();
                 loadCurrentView();
-                alert(`✅ "${skillName}" added and synced to team!`);
+                
+                const syncMessage = window.isAdminMode ? 'Admin mode - available locally!' : 'synced to team!';
+                alert(`✅ "${skillName}" added and ${syncMessage}`);
             } else if (skillsList.includes(skillName)) {
                 alert('❌ Skill already exists!');
             } else {
@@ -2816,8 +3004,12 @@
         }
 
         function removeSkill(index) {
-            if (confirm(`🗑️ Remove "${skillsList[index]}" from team?`)) {
-                const skillName = skillsList[index];
+            const skillName = skillsList[index];
+            const confirmMessage = window.isAdminMode ?
+                `🗑️ Admin: Remove "${skillName}" from dashboard?` :
+                `🗑️ Remove "${skillName}" from team?`;
+                
+            if (confirm(confirmMessage)) {
                 skillsList.splice(index, 1);
                 
                 // Remove related entries
@@ -2832,7 +3024,9 @@
                 
                 updateSkillList();
                 loadCurrentView();
-                alert('✅ Skill removed from team!');
+                
+                const syncMessage = window.isAdminMode ? 'Admin mode - changes local!' : 'team!';
+                alert(`✅ Skill removed from ${syncMessage}`);
             }
         }
 
@@ -2870,15 +3064,22 @@
             const monthName = new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
             let htmlTable = generateExcelTable(weeks, monthName);
-            downloadExcelFile(htmlTable, `Team_Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
+            downloadExcelFile(htmlTable, `Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
             
-            alert('✅ Team operations report exported successfully!');
+            const exportMessage = window.isAdminMode ? 
+                '👑 Admin: Operations report exported with full data!' :
+                '✅ Team operations report exported successfully!';
+            alert(exportMessage);
         }
 
         function generateExcelTable(weeks, monthName) {
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
             const weeklyKPIs = calculateWeeklyKPIs(weeks);
+            
+            const reportTitle = window.isAdminMode ? 
+                `👑 Admin Operations Dashboard - ${monthName}` :
+                `Team Operations Dashboard - ${monthName} (Team: ${teamId})`;
             
             let htmlTable = `
                 <!DOCTYPE html>
@@ -2897,23 +3098,24 @@
                         .amber-cell { background-color: #FFEB9C; color: #9C5700; }
                         .red-cell { background-color: #FFC7CE; color: #9C0006; }
                         .white-cell { background-color: #FFFFFF; color: #767676; }
+                        .admin-cell { background-color: #FFE4E1; color: #8B0000; }
                     </style>
                 </head>
                 <body>
                     <table border="1">
                         <tr>
                             <td colspan="${weeks.length + 1}" class="header">
-                                Team Operations Dashboard - ${monthName} (Team: ${teamId})
+                                ${reportTitle}
                             </td>
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Real-time Team Collaboration
+                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | ${window.isAdminMode ? '👑 Admin Full Access' : 'Real-time Team Collaboration'}
                             </td>
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="kpi-header">
-                                KPI SUMMARY - Team Synchronized Data
+                                KPI SUMMARY - ${window.isAdminMode ? 'Admin Dashboard Data' : 'Team Synchronized Data'}
                             </td>
                         </tr>
                         <tr>
@@ -2987,7 +3189,7 @@
             htmlTable += `
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - Real-time Team Dashboard
+                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - ${window.isAdminMode ? '👑 Admin Dashboard' : 'Real-time Team Dashboard'}
                             </td>
                         </tr>
                     </table>
@@ -3012,11 +3214,20 @@
 
         function exportHistoryToExcel() {
             let htmlTable = generateHistoryExcelTable();
-            downloadExcelFile(htmlTable, `Team_Operations_History_${new Date().toISOString().split('T')[0]}.xls`);
-            alert('✅ Complete team history exported successfully!');
+            const reportType = window.isAdminMode ? 'Admin_History' : 'Team_Operations_History';
+            downloadExcelFile(htmlTable, `${reportType}_${new Date().toISOString().split('T')[0]}.xls`);
+            
+            const exportMessage = window.isAdminMode ?
+                '👑 Admin: Complete history exported with full access!' :
+                '✅ Complete team history exported successfully!';
+            alert(exportMessage);
         }
 
         function generateHistoryExcelTable() {
+            const reportTitle = window.isAdminMode ?
+                '👑 Admin Operations History Report' :
+                `Team Operations History Report (Team: ${teamId})`;
+                
             let htmlTable = `
                 <!DOCTYPE html>
                 <html>
@@ -3030,15 +3241,16 @@
                         .green-cell { background-color: #C6EFCE; color: #006100; }
                         .amber-cell { background-color: #FFEB9C; color: #9C5700; }
                         .red-cell { background-color: #FFC7CE; color: #9C0006; }
+                        .admin-cell { background-color: #FFE4E1; color: #8B0000; }
                     </style>
                 </head>
                 <body>
                     <table border="1">
                         <tr>
-                            <td colspan="9" class="header">Team Operations History Report (Team: ${teamId})</td>
+                            <td colspan="9" class="header">${reportTitle}</td>
                         </tr>
                         <tr>
-                            <td colspan="9" class="kpi-header">Real-time Synchronized Data</td>
+                            <td colspan="9" class="kpi-header">${window.isAdminMode ? '👑 Admin Full Access Data' : 'Real-time Synchronized Data'}</td>
                         </tr>
                         <tr class="header">
                             <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Performance %</td><td>Downtime (h)</td><td>Incident</td><td>Notes</td>
@@ -3138,25 +3350,34 @@
         }
 
         function deleteHistoryEntry(key) {
-            if (confirm('🗑️ Delete this team entry?')) {
+            const confirmMessage = window.isAdminMode ?
+                '🗑️ Admin: Delete this entry?' :
+                '🗑️ Delete this team entry?';
+                
+            if (confirm(confirmMessage)) {
                 delete operationalData[key];
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 populateHistoryTable();
                 loadCurrentView();
-                alert('✅ Entry deleted from team!');
+                
+                const deleteMessage = window.isAdminMode ?
+                    '✅ Entry deleted!' :
+                    '✅ Entry deleted from team!';
+                alert(deleteMessage);
             }
         }
 
         // ========================================
-        // DATA MANAGEMENT
+        // DATA MANAGEMENT (ADMIN-AWARE)
         // ========================================
 
         function clearCurrentData() {
-            const confirmText = currentView === 'monthly' ? 
-                `Clear all team data for ${currentMonth} in ${currentLandscape}?` :
-                `Clear all team data for ${currentDate} in ${currentLandscape}?`;
+            const periodText = currentView === 'monthly' ? currentMonth : currentDate;
+            const confirmText = window.isAdminMode ?
+                `👑 Admin: Clear all data for ${periodText} in ${currentLandscape}?` :
+                `Clear all team data for ${periodText} in ${currentLandscape}? This affects all team members!`;
             
-            if (confirm(`🗑️ ${confirmText} This affects all team members!`)) {
+            if (confirm(`🗑️ ${confirmText}`)) {
                 Object.keys(operationalData).forEach(key => {
                     if (key.includes(currentLandscape)) {
                         if (currentView === 'monthly' && key.includes(currentMonth)) {
@@ -3169,17 +3390,33 @@
                 
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 loadCurrentView();
-                alert('✅ Team data cleared!');
+                
+                const clearMessage = window.isAdminMode ?
+                    '✅ Admin: Data cleared!' :
+                    '✅ Team data cleared!';
+                alert(clearMessage);
             }
         }
 
         function clearAllHistory() {
-            if (confirm('🗑️ ⚠️ WARNING: This will permanently delete ALL team data across all landscapes and dates. This affects your entire team!\n\nAre you absolutely sure?')) {
-                if (confirm('🚨 FINAL CONFIRMATION: Delete ALL team operational data permanently?')) {
+            const warningText = window.isAdminMode ?
+                '👑 Admin: This will permanently delete ALL dashboard data across all landscapes and dates.' :
+                '🗑️ ⚠️ WARNING: This will permanently delete ALL team data across all landscapes and dates. This affects your entire team!';
+                
+            const finalText = window.isAdminMode ?
+                '👑 ADMIN CONFIRMATION: Delete ALL dashboard data permanently?' :
+                '🚨 FINAL CONFIRMATION: Delete ALL team operational data permanently?';
+                
+            if (confirm(`${warningText}\n\nAre you absolutely sure?`)) {
+                if (confirm(finalText)) {
                     operationalData = {};
                     localStorage.setItem('operationalData', JSON.stringify(operationalData));
                     loadCurrentView();
-                    alert('✅ All team data cleared successfully!');
+                    
+                    const successMessage = window.isAdminMode ?
+                        '✅ Admin: All dashboard data cleared successfully!' :
+                        '✅ All team data cleared successfully!';
+                    alert(successMessage);
                 }
             }
         }
@@ -3197,7 +3434,11 @@
                 try {
                     const importData = JSON.parse(e.target.result);
                     
-                    if (confirm('📤 Import data? This will merge with existing team data.')) {
+                    const importText = window.isAdminMode ?
+                        '👑 Admin: Import data? This will merge with existing dashboard data.' :
+                        '📤 Import data? This will merge with existing team data.';
+                        
+                    if (confirm(importText)) {
                         operationalData = {...operationalData, ...importData.data || importData};
                         if (importData.skills) {
                             skillsList = [...new Set([...skillsList, ...importData.skills])];
@@ -3213,7 +3454,11 @@
                         
                         updateSkillList();
                         loadCurrentView();
-                        alert('✅ Data imported and synced to team!');
+                        
+                        const successMessage = window.isAdminMode ?
+                            '👑 Admin: Data imported successfully!' :
+                            '✅ Data imported and synced to team!';
+                        alert(successMessage);
                     }
                 } catch (error) {
                     alert('❌ Invalid file format!');
@@ -3232,7 +3477,11 @@
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 localStorage.setItem('skillsList', JSON.stringify(skillsList));
                 localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
-                console.log('🔄 Auto-save completed');
+                
+                const saveMessage = window.isAdminMode ? 
+                    '👑 Admin auto-save completed' : 
+                    '🔄 Auto-save completed';
+                console.log(saveMessage);
             }
         }
 
@@ -3255,7 +3504,20 @@
             }
         });
 
-        console.log('✅ Advanced Operations Dashboard with Firebase Auth loaded successfully');
+        // Add special keypress for admin quick access (Ctrl+Alt+A)
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.altKey && event.key === 'a') {
+                if (!window.isAdminMode) {
+                    document.getElementById('email').value = 'hey there';
+                    document.getElementById('password').value = '0000';
+                    document.getElementById('auth-status').innerHTML = '<div>👑 Quick Admin Access - Click Sign In</div>';
+                    document.getElementById('auth-status').className = 'auth-status success';
+                }
+            }
+        });
+
+        console.log('✅ Advanced Operations Dashboard with Firebase Auth & Admin Access loaded successfully');
+        console.log('👑 Admin access: Username "hey there" + Password "0000" OR press Ctrl+Alt+A');
     </script>
 </body>
 </html>
