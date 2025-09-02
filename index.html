@@ -23,6 +23,182 @@
             line-height: 1.6;
         }
 
+        /* Authentication Section Styles */
+        #auth-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            text-align: center;
+            min-width: 400px;
+            border: 3px solid #28a745;
+        }
+
+        .auth-container h2 {
+            color: #28a745;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .auth-container .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .auth-form input {
+            padding: 18px 25px;
+            border: 3px solid #28a745;
+            border-radius: 12px;
+            font-size: 18px;
+            background: white;
+            color: #333;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: #20c997;
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .auth-form input::placeholder {
+            color: #999;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .auth-btn {
+            flex: 1;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .auth-btn.signup {
+            background: #28a745;
+            color: white;
+            border: 3px solid #28a745;
+        }
+
+        .auth-btn.signup:hover {
+            background: #20c997;
+            border-color: #20c997;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .auth-btn.signin {
+            background: transparent;
+            color: #28a745;
+            border: 3px solid #28a745;
+        }
+
+        .auth-btn.signin:hover {
+            background: #28a745;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .auth-btn.signout {
+            background: #dc3545;
+            color: white;
+            border: 3px solid #dc3545;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            flex: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            z-index: 10000;
+        }
+
+        .auth-btn.signout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .auth-status {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .auth-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .auth-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .auth-loading {
+            color: #28a745;
+            font-style: italic;
+        }
+
+        .auth-divider {
+            margin: 30px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+        }
+
+        .auth-divider span {
+            background: white;
+            padding: 0 20px;
+            color: #666;
+            font-weight: 600;
+        }
+
         /* Main Container */
         .main-container {
             max-width: 1600px;
@@ -32,6 +208,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
             border: 2px solid #28a745;
+            display: none; /* Hidden by default until authenticated */
         }
 
         /* Header Styles */
@@ -40,6 +217,7 @@
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
         }
 
         .header h1 {
@@ -54,6 +232,17 @@
             font-weight: 500;
         }
 
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
         /* Content Area */
         .content {
             padding: 25px;
@@ -64,7 +253,7 @@
         .connection-status {
             position: fixed;
             top: 10px;
-            right: 10px;
+            right: 150px; /* Adjusted to make room for sign out button */
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;
@@ -999,6 +1188,15 @@
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
                 gap: 12px;
             }
+
+            .auth-container {
+                min-width: 300px;
+                padding: 35px;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1077,6 +1275,29 @@
             .add-skill-form {
                 flex-direction: column;
             }
+
+            .auth-container {
+                min-width: 250px;
+                padding: 25px;
+                margin: 20px;
+            }
+
+            .auth-form input {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+
+            .auth-btn {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+
+            .connection-status {
+                top: 70px;
+                right: 10px;
+                font-size: 10px;
+                padding: 5px 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1109,10 +1330,53 @@
                 width: 25px;
                 height: 25px;
             }
+
+            .auth-container {
+                min-width: 200px;
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .auth-container h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Authentication Section -->
+    <div id="auth-section">
+        <div class="auth-container">
+            <h2>🔐 Team Login</h2>
+            <p class="subtitle">Secure access to your operations dashboard</p>
+            
+            <form class="auth-form" onsubmit="return false;">
+                <input type="email" id="email" placeholder="📧 Enter your email" required>
+                <input type="password" id="password" placeholder="🔒 Enter your password" required>
+                
+                <div class="auth-buttons">
+                    <button type="button" class="auth-btn signup" onclick="signUp()">
+                        🚀 Create Account
+                    </button>
+                    <button type="button" class="auth-btn signin" onclick="signIn()">
+                        🔑 Sign In
+                    </button>
+                </div>
+            </form>
+            
+            <div id="auth-status" class="auth-status"></div>
+            
+            <div class="auth-divider">
+                <span>Secure team collaboration with Firebase</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Out Button (shown when authenticated) -->
+    <button id="signOutBtn" class="auth-btn signout" onclick="signOut()" style="display:none">
+        🚪 Sign Out
+    </button>
+
     <!-- Connection Status Indicator -->
     <div id="connectionStatus" class="connection-status connecting">🔄 Connecting to Firebase...</div>
 
@@ -1120,6 +1384,9 @@
     <div class="main-container">
         <!-- Header Section -->
         <header class="header">
+            <div id="userInfo" class="user-info" style="display:none">
+                👤 <span id="userEmail"></span>
+            </div>
             <h1>📊 Advanced Operations Dashboard with KPI Analytics</h1>
             <p>Integrated Daily & Monthly Tracking with Dynamic Percentage Calculation & Real-time Team Collaboration</p>
         </header>
@@ -1461,24 +1728,27 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, deleteDoc } 
                from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+               from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 
         // ✅ YOUR FIREBASE CONFIG - UPDATED WITH YOUR VALUES
         const firebaseConfig = {
-            apiKey: "AIzaSyBUER5i1yjaLqQq8ycf9ZZaH3MMB2AmiXY",
+            apiKey: "AIzaSyBLMrRgSvRVh5R5j1yjalqQ8ycf9Z7aH3MMB2Am1XY",
             authDomain: "hboard-af489.firebaseapp.com", 
             projectId: "hboard-af489",
             storageBucket: "hboard-af489.firebasestorage.app",
             messagingSenderId: "286896691982",
-            appId: "1:286896691982:web:4df21083f8f2350874555f",
+            appId: "1:286896691982:web:4df21083f8f23508745559",
             measurementId: "G-EQ8S9T513X"
         };
 
         // Initialize Firebase
-        let app, db;
+        let app, db, auth;
         
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
+            auth = getAuth(app);
             
             // Make available globally
             window.firebase = { 
@@ -1491,20 +1761,139 @@
                 onSnapshot,
                 doc,
                 updateDoc,
-                deleteDoc
+                deleteDoc,
+                auth
             };
             
             console.log('🔥 Firebase connected successfully!');
             updateConnectionStatus('connected');
-            
-            // Set up real-time listener
-            setupRealtimeSync();
             
         } catch (error) {
             console.error('❌ Firebase initialization error:', error);
             updateConnectionStatus('offline');
             window.firebase = null;
         }
+
+        // ========================================
+        // FIREBASE AUTHENTICATION FUNCTIONS
+        // ========================================
+
+        // Sign up with email and password
+        window.signUp = async function() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const statusDiv = document.getElementById("auth-status");
+            
+            if (!email || !password) {
+                statusDiv.innerHTML = '<div class="error">❌ Please enter both email and password</div>';
+                statusDiv.className = 'auth-status error';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<div class="auth-loading">🔄 Creating account...</div>';
+            statusDiv.className = 'auth-status';
+            
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                statusDiv.innerHTML = '<div>✅ Account created successfully! Welcome to the team!</div>';
+                statusDiv.className = 'auth-status success';
+            } catch (error) {
+                let errorMessage = '❌ ';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage += 'Email already in use. Try signing in instead.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage += 'Password should be at least 6 characters.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage += 'Please enter a valid email address.';
+                } else {
+                    errorMessage += error.message;
+                }
+                statusDiv.innerHTML = `<div>${errorMessage}</div>`;
+                statusDiv.className = 'auth-status error';
+            }
+        }
+
+        // Sign in with email and password
+        window.signIn = async function() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const statusDiv = document.getElementById("auth-status");
+            
+            if (!email || !password) {
+                statusDiv.innerHTML = '<div class="error">❌ Please enter both email and password</div>';
+                statusDiv.className = 'auth-status error';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<div class="auth-loading">🔄 Signing in...</div>';
+            statusDiv.className = 'auth-status';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                statusDiv.innerHTML = '<div>✅ Welcome back! Loading dashboard...</div>';
+                statusDiv.className = 'auth-status success';
+            } catch (error) {
+                let errorMessage = '❌ ';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage += 'No account found with this email. Try signing up first.';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage += 'Incorrect password. Please try again.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage += 'Please enter a valid email address.';
+                } else {
+                    errorMessage += error.message;
+                }
+                statusDiv.innerHTML = `<div>${errorMessage}</div>`;
+                statusDiv.className = 'auth-status error';
+            }
+        }
+
+        // Sign out
+        window.signOut = async function() {
+            try {
+                await signOut(auth);
+                console.log('👋 User signed out successfully');
+            } catch (error) {
+                console.error('❌ Sign out error:', error);
+            }
+        }
+
+        // Monitor authentication state
+        onAuthStateChanged(auth, (user) => {
+            const dashboard = document.querySelector('.main-container');
+            const authSection = document.getElementById('auth-section');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const userInfo = document.getElementById('userInfo');
+            const userEmail = document.getElementById('userEmail');
+            
+            if (user) {
+                // User is signed in
+                dashboard.style.display = "block";
+                authSection.style.display = "none";
+                signOutBtn.style.display = "block";
+                userInfo.style.display = "block";
+                userEmail.textContent = user.email;
+                
+                // Set up real-time listener for authenticated users only
+                setupRealtimeSync();
+                
+                // Initialize dashboard
+                setTimeout(() => {
+                    initializeDashboard();
+                }, 500);
+                
+                console.log('✅ User authenticated:', user.email);
+                
+            } else {
+                // User is signed out
+                dashboard.style.display = "none";
+                authSection.style.display = "flex";
+                signOutBtn.style.display = "none";
+                userInfo.style.display = "none";
+                
+                console.log('👤 No user signed in');
+            }
+        });
         
         function updateConnectionStatus(status) {
             const statusEl = document.getElementById('connectionStatus');
@@ -1526,7 +1915,7 @@
         }
         
         function setupRealtimeSync() {
-            if (!window.firebase) return;
+            if (!window.firebase || !auth.currentUser) return;
             
             try {
                 const teamId = localStorage.getItem('teamId') || 'default-team';
@@ -1600,12 +1989,43 @@
         let weeklyKPICache = {};
 
         // ========================================
+        // INITIALIZATION & SETUP
+        // ========================================
+
+        function initializeDashboard() {
+            console.log('🚀 Advanced Operations Dashboard with Team Sync - Initializing...');
+            
+            initializeLandscapes();
+            document.getElementById('monthSelect').value = currentMonth;
+            document.getElementById('dateSelect').value = currentDate;
+            
+            // Event listeners for live updates
+            document.getElementById('landscapeSelect').addEventListener('change', loadCurrentView);
+            document.getElementById('monthSelect').addEventListener('change', loadCurrentView);
+            document.getElementById('dateSelect').addEventListener('change', loadCurrentView);
+            
+            updateSkillList();
+            updateKPIDisplays();
+            loadCurrentView();
+            
+            // Load team data after initial UI setup
+            setTimeout(() => {
+                loadTeamData();
+            }, 1000);
+            
+            // Set up auto-save interval
+            setInterval(autoSave, 30000);
+            
+            console.log('✅ Dashboard with team synchronization initialized');
+        }
+
+        // ========================================
         // FIREBASE INTEGRATION FUNCTIONS
         // ========================================
 
         async function saveEntryToFirebase(entryKey, entryData) {
-            if (!window.firebase) {
-                console.log('⚠️ Firebase not available, saving locally only');
+            if (!window.firebase || !window.firebase.auth.currentUser) {
+                console.log('⚠️ Firebase not available or user not authenticated, saving locally only');
                 return false;
             }
             
@@ -1618,6 +2038,8 @@
                         id: entryKey,
                         ...entryData,
                         teamId: teamId,
+                        userId: window.firebase.auth.currentUser.uid,
+                        userEmail: window.firebase.auth.currentUser.email,
                         lastModified: new Date().toISOString(),
                         syncVersion: Date.now()
                     }
@@ -1635,8 +2057,8 @@
         }
 
         async function loadTeamData() {
-            if (!window.firebase) {
-                console.log('⚠️ Firebase not available, using local data only');
+            if (!window.firebase || !window.firebase.auth.currentUser) {
+                console.log('⚠️ Firebase not available or user not authenticated, using local data only');
                 return;
             }
             
@@ -1677,8 +2099,8 @@
 
         // Silent version for real-time updates (doesn't show loading)
         async function loadTeamDataSilent() {
-            if (!window.firebase || document.querySelector('.modal[style*="block"]')) {
-                return; // Skip if modal is open (user is editing)
+            if (!window.firebase || !window.firebase.auth.currentUser || document.querySelector('.modal[style*="block"]')) {
+                return; // Skip if not authenticated or modal is open (user is editing)
             }
             
             try {
@@ -1909,37 +2331,6 @@
                 default: return '#666';
             }
         }
-
-        // ========================================
-        // INITIALIZATION & SETUP
-        // ========================================
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Advanced Operations Dashboard with Team Sync - Initializing...');
-            
-            initializeLandscapes();
-            document.getElementById('monthSelect').value = currentMonth;
-            document.getElementById('dateSelect').value = currentDate;
-            
-            // Event listeners for live updates
-            document.getElementById('landscapeSelect').addEventListener('change', loadCurrentView);
-            document.getElementById('monthSelect').addEventListener('change', loadCurrentView);
-            document.getElementById('dateSelect').addEventListener('change', loadCurrentView);
-            
-            updateSkillList();
-            updateKPIDisplays();
-            loadCurrentView();
-            
-            // Load team data after initial UI setup
-            setTimeout(() => {
-                loadTeamData();
-            }, 1000);
-            
-            // Set up auto-save interval
-            setInterval(autoSave, 30000);
-            
-            console.log('✅ Dashboard with team synchronization initialized');
-        });
 
         // ========================================
         // LANDSCAPE MANAGEMENT
@@ -2864,8 +3255,7 @@
             }
         });
 
-        console.log('✅ Advanced Operations Dashboard with Firebase Team Sync loaded successfully');
+        console.log('✅ Advanced Operations Dashboard with Firebase Auth loaded successfully');
     </script>
 </body>
 </html>
-
