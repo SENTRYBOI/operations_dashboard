@@ -90,9 +90,12 @@
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             margin-bottom: 15px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .kpi-card {
@@ -1149,18 +1152,6 @@
                             <div class="kpi-label">Overall Availability</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="monthlyGreenPercentage">0%</div>
-                            <div class="kpi-label">🟢 Green Performance</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value" id="monthlyAmberPercentage">0%</div>
-                            <div class="kpi-label">🟡 Amber Performance</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value" id="monthlyRedPercentage">0%</div>
-                            <div class="kpi-label">🔴 Red Performance</div>
-                        </div>
-                        <div class="kpi-card">
                             <div class="kpi-value" id="monthlyTrendIndicator">📊</div>
                             <div class="kpi-label">Monthly Trend</div>
                         </div>
@@ -1174,18 +1165,6 @@
                         <div class="kpi-card">
                             <div class="kpi-value" id="yearlyOverallAvailability">0%</div>
                             <div class="kpi-label">Overall Availability</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value" id="yearlyGreenPercentage">0%</div>
-                            <div class="kpi-label">🟢 Green Performance</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value" id="yearlyAmberPercentage">0%</div>
-                            <div class="kpi-label">🟡 Amber Performance</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value" id="yearlyRedPercentage">0%</div>
-                            <div class="kpi-label">🔴 Red Performance</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-value" id="yearlyTrendIndicator">📊</div>
@@ -1544,9 +1523,6 @@
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
-            const greenPercentage = totalEntries > 0 ? Math.round((greenCount / totalEntries) * 100) : 0;
-            const amberPercentage = totalEntries > 0 ? Math.round((amberCount / totalEntries) * 100) : 0;
-            const redPercentage = totalEntries > 0 ? Math.round((redCount / totalEntries) * 100) : 0;
             
             // Trend calculation (simplified)
             let trendIndicator = '📊';
@@ -1555,9 +1531,6 @@
             
             return {
                 overallAvg,
-                greenPercentage,
-                amberPercentage,
-                redPercentage,
                 trendIndicator,
                 totalEntries
             };
@@ -1594,9 +1567,6 @@
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
-            const greenPercentage = totalEntries > 0 ? Math.round((greenCount / totalEntries) * 100) : 0;
-            const amberPercentage = totalEntries > 0 ? Math.round((amberCount / totalEntries) * 100) : 0;
-            const redPercentage = totalEntries > 0 ? Math.round((redCount / totalEntries) * 100) : 0;
             
             // Trend calculation (simplified)
             let trendIndicator = '📊';
@@ -1605,9 +1575,6 @@
             
             return {
                 overallAvg,
-                greenPercentage,
-                amberPercentage,
-                redPercentage,
                 trendIndicator,
                 totalEntries
             };
@@ -1650,20 +1617,14 @@
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
             
-            // Update monthly KPIs
+            // Update monthly KPIs - only availability and trend
             document.getElementById('currentMonthDisplay').textContent = new Date(currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             document.getElementById('monthlyOverallAvailability').textContent = `${monthlyKPIs.overallAvg}%`;
-            document.getElementById('monthlyGreenPercentage').textContent = `${monthlyKPIs.greenPercentage}%`;
-            document.getElementById('monthlyAmberPercentage').textContent = `${monthlyKPIs.amberPercentage}%`;
-            document.getElementById('monthlyRedPercentage').textContent = `${monthlyKPIs.redPercentage}%`;
             document.getElementById('monthlyTrendIndicator').textContent = monthlyKPIs.trendIndicator;
             
-            // Update yearly KPIs
+            // Update yearly KPIs - only availability and trend
             document.getElementById('currentYearDisplay').textContent = new Date(currentMonth).getFullYear();
             document.getElementById('yearlyOverallAvailability').textContent = `${yearlyKPIs.overallAvg}%`;
-            document.getElementById('yearlyGreenPercentage').textContent = `${yearlyKPIs.greenPercentage}%`;
-            document.getElementById('yearlyAmberPercentage').textContent = `${yearlyKPIs.amberPercentage}%`;
-            document.getElementById('yearlyRedPercentage').textContent = `${yearlyKPIs.redPercentage}%`;
             document.getElementById('yearlyTrendIndicator').textContent = yearlyKPIs.trendIndicator;
             
             // Cache the results
@@ -2300,15 +2261,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="kpi-cell">Overall: ${monthlyKPIs.overallAvg}%</td>
-                            <td class="kpi-cell">Green: ${monthlyKPIs.greenPercentage}%</td>
-                            <td class="kpi-cell">Amber: ${monthlyKPIs.amberPercentage}%</td>
-                            <td class="kpi-cell">Red: ${monthlyKPIs.redPercentage}%</td>
-                            <td class="kpi-cell">Trend: ${monthlyKPIs.trendIndicator}</td>
+                            <td class="kpi-cell">Monthly Availability: ${monthlyKPIs.overallAvg}%</td>
+                            <td class="kpi-cell">Monthly Trend: ${monthlyKPIs.trendIndicator}</td>
+                            <td class="kpi-cell">Yearly Availability: ${yearlyKPIs.overallAvg}%</td>
+                            <td class="kpi-cell">Yearly Trend: ${yearlyKPIs.trendIndicator}</td>
             `;
             
-            // Add remaining columns if weeks.length > 4
-            for (let i = 4; i < weeks.length; i++) {
+            // Add remaining columns if weeks.length > 3
+            for (let i = 3; i < weeks.length; i++) {
                 htmlTable += '<td class="kpi-cell">-</td>';
             }
             htmlTable += '</tr>';
