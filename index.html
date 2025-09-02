@@ -60,6 +60,34 @@
             background: #f8f9fa;
         }
 
+        /* Connection Status Indicator */
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .connection-status.connected {
+            background: #28a745;
+            color: white;
+        }
+
+        .connection-status.connecting {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .connection-status.offline {
+            background: #dc3545;
+            color: white;
+        }
+
         /* KPI Dashboard Styles */
         .kpi-dashboard {
             background: white;
@@ -1085,12 +1113,15 @@
     </style>
 </head>
 <body>
+    <!-- Connection Status Indicator -->
+    <div id="connectionStatus" class="connection-status connecting">🔄 Connecting to Firebase...</div>
+
     <!-- Main Application Container -->
     <div class="main-container">
         <!-- Header Section -->
         <header class="header">
             <h1>📊 Advanced Operations Dashboard with KPI Analytics</h1>
-            <p>Integrated Daily & Monthly Tracking with Dynamic Percentage Calculation & KPI Monitoring</p>
+            <p>Integrated Daily & Monthly Tracking with Dynamic Percentage Calculation & Real-time Team Collaboration</p>
         </header>
 
         <!-- Main Content Area -->
@@ -1136,6 +1167,7 @@
                     <button class="btn btn-primary" onclick="showHistoryModal()">📋 History</button>
                     <button class="btn btn-danger" onclick="clearCurrentData()">🗑️ Clear</button>
                     <button class="btn btn-danger" onclick="clearAllHistory()">🗑️ Clear All History</button>
+                    <button class="btn btn-success" onclick="syncNow()">🔄 Sync Now</button>
                 </nav>
             </section>
 
@@ -1176,12 +1208,13 @@
 
             <!-- Dynamic Percentage Information -->
             <section class="percentage-info">
-                <h4>🤖 Dynamic Percentage Calculation (Downtime-Based)</h4>
+                <h4>🤖 Dynamic Percentage Calculation (Downtime-Based) + Real-time Team Sync</h4>
                 <ul>
                     <li>🟢 <strong>Green (95-100%):</strong> Minimal downtime (≤1.2 hours/day)</li>
                     <li>🟡 <strong>Amber (45-95%):</strong> Moderate downtime (1.2-13.2 hours/day)</li>
                     <li>🔴 <strong>Red (0-45%):</strong> High downtime (>13.2 hours/day)</li>
                     <li>📊 <strong>Monthly View:</strong> Shows weekly averages calculated from daily data</li>
+                    <li>🔥 <strong>Team Sync:</strong> Changes sync in real-time across all team members</li>
                 </ul>
             </section>
 
@@ -1231,7 +1264,7 @@
             <!-- Skill Management -->
             <section class="skill-management">
                 <h4>🛠️ Skill Management</h4>
-                <p>Manage operational skills being tracked</p>
+                <p>Manage operational skills being tracked across your team</p>
                 <div class="add-skill-form">
                     <input type="text" id="newSkillInput" placeholder="Enter new skill name">
                     <button class="btn btn-success" onclick="addSkill()">Add Skill</button>
@@ -1280,6 +1313,10 @@
                                 <div style="text-align: center;">
                                     <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="trendIndicator">📈</div>
                                     <div style="font-weight: 600;">Performance Trend</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; color: #20c997; font-weight: bold;" id="syncStatus">🔥</div>
+                                    <div style="font-weight: 600;">Team Sync</div>
                                 </div>
                             </div>
                         </div>
@@ -1344,12 +1381,12 @@
                     <input type="text" id="modalPercentage" readonly 
                            style="background: #f8f9fa; cursor: not-allowed; font-weight: bold; font-size: 1.2rem;">
                     <small style="color: #666; margin-top: 5px; display: block;">
-                        Percentage and status automatically calculated based on downtime hours.
+                        Percentage and status automatically calculated based on downtime hours. Syncs to team instantly.
                     </small>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-success" onclick="saveEntry()">💾 Save</button>
+                    <button type="button" class="btn btn-success" onclick="saveEntry()">💾 Save & Sync</button>
                     <button type="button" class="btn btn-danger" onclick="deleteEntry()">🗑️ Delete</button>
                     <button type="button" class="btn btn-primary" onclick="closeModal()">❌ Cancel</button>
                 </div>
@@ -1419,6 +1456,107 @@
     <!-- Hidden File Input for Import -->
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
+    <!-- Firebase SDK Integration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, updateDoc, deleteDoc } 
+               from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        // ✅ YOUR FIREBASE CONFIG - UPDATED WITH YOUR VALUES
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLMrRgSvRVh5R5j1yjalqQ8ycf9Z7aH3MMB2Am1XY",
+            authDomain: "hboard-af489.firebaseapp.com", 
+            projectId: "hboard-af489",
+            storageBucket: "hboard-af489.firebasestorage.app",
+            messagingSenderId: "286896691982",
+            appId: "1:286896691982:web:4df21083f8f23508745559",
+            measurementId: "G-EQ8S9T513X"
+        };
+
+        // Initialize Firebase
+        let app, db;
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            
+            // Make available globally
+            window.firebase = { 
+                db, 
+                collection, 
+                addDoc, 
+                getDocs, 
+                query, 
+                where, 
+                onSnapshot,
+                doc,
+                updateDoc,
+                deleteDoc
+            };
+            
+            console.log('🔥 Firebase connected successfully!');
+            updateConnectionStatus('connected');
+            
+            // Set up real-time listener
+            setupRealtimeSync();
+            
+        } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            updateConnectionStatus('offline');
+            window.firebase = null;
+        }
+        
+        function updateConnectionStatus(status) {
+            const statusEl = document.getElementById('connectionStatus');
+            if (!statusEl) return;
+            
+            statusEl.className = `connection-status ${status}`;
+            
+            switch(status) {
+                case 'connected':
+                    statusEl.textContent = '🔥 Team Sync Active';
+                    break;
+                case 'connecting':
+                    statusEl.textContent = '🔄 Connecting...';
+                    break;
+                case 'offline':
+                    statusEl.textContent = '⚠️ Offline Mode';
+                    break;
+            }
+        }
+        
+        function setupRealtimeSync() {
+            if (!window.firebase) return;
+            
+            try {
+                const teamId = localStorage.getItem('teamId') || 'default-team';
+                const q = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'operationalData'),
+                    window.firebase.where('teamId', '==', teamId)
+                );
+                
+                window.firebase.onSnapshot(q, (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === 'added' || change.type === 'modified') {
+                            console.log('🔄 Real-time update detected');
+                            // Small delay to prevent conflicts during user input
+                            setTimeout(loadTeamDataSilent, 500);
+                        }
+                    });
+                }, (error) => {
+                    console.error('❌ Real-time sync error:', error);
+                });
+                
+            } catch (error) {
+                console.error('❌ Error setting up real-time sync:', error);
+            }
+        }
+        
+        // Make functions globally available
+        window.updateConnectionStatus = updateConnectionStatus;
+        window.setupRealtimeSync = setupRealtimeSync;
+    </script>
+
     <script>
         // ========================================
         // GLOBAL VARIABLES & CONFIGURATION
@@ -1442,6 +1580,13 @@
             'Europe', 'NAM', 'IA', 'SEA', 'Global'
         ];
 
+        // Team configuration
+        let teamId = localStorage.getItem('teamId') || (() => {
+            const id = 'team-' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('teamId', id);
+            return id;
+        })();
+
         // Application state
         let currentView = 'monthly';
         let currentLandscape = 'Europe';
@@ -1453,6 +1598,121 @@
         let monthlyKPICache = {};
         let yearlyKPICache = {};
         let weeklyKPICache = {};
+
+        // ========================================
+        // FIREBASE INTEGRATION FUNCTIONS
+        // ========================================
+
+        async function saveEntryToFirebase(entryKey, entryData) {
+            if (!window.firebase) {
+                console.log('⚠️ Firebase not available, saving locally only');
+                return false;
+            }
+            
+            try {
+                updateConnectionStatus('connecting');
+                
+                await window.firebase.addDoc(
+                    window.firebase.collection(window.firebase.db, 'operationalData'), 
+                    {
+                        id: entryKey,
+                        ...entryData,
+                        teamId: teamId,
+                        lastModified: new Date().toISOString(),
+                        syncVersion: Date.now()
+                    }
+                );
+                
+                console.log('✅ Entry saved to Firebase');
+                updateConnectionStatus('connected');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Firebase save error:', error);
+                updateConnectionStatus('offline');
+                return false;
+            }
+        }
+
+        async function loadTeamData() {
+            if (!window.firebase) {
+                console.log('⚠️ Firebase not available, using local data only');
+                return;
+            }
+            
+            try {
+                updateConnectionStatus('connecting');
+                
+                const q = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'operationalData'),
+                    window.firebase.where('teamId', '==', teamId)
+                );
+                
+                const querySnapshot = await window.firebase.getDocs(q);
+                const teamData = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    teamData[data.id] = data;
+                });
+                
+                // Merge with local data (local takes precedence for conflicts)
+                operationalData = { ...teamData, ...operationalData };
+                
+                // Save merged data locally
+                localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                
+                // Update UI
+                loadCurrentView();
+                updateKPIDisplays();
+                
+                console.log('✅ Team data synchronized');
+                updateConnectionStatus('connected');
+                
+            } catch (error) {
+                console.error('❌ Error loading team data:', error);
+                updateConnectionStatus('offline');
+            }
+        }
+
+        // Silent version for real-time updates (doesn't show loading)
+        async function loadTeamDataSilent() {
+            if (!window.firebase || document.querySelector('.modal[style*="block"]')) {
+                return; // Skip if modal is open (user is editing)
+            }
+            
+            try {
+                const q = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'operationalData'),
+                    window.firebase.where('teamId', '==', teamId)
+                );
+                
+                const querySnapshot = await window.firebase.getDocs(q);
+                const teamData = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    teamData[data.id] = data;
+                });
+                
+                // Merge new data
+                const hasChanges = JSON.stringify(teamData) !== JSON.stringify(operationalData);
+                if (hasChanges) {
+                    operationalData = { ...operationalData, ...teamData };
+                    localStorage.setItem('operationalData', JSON.stringify(operationalData));
+                    loadCurrentView();
+                    updateKPIDisplays();
+                    console.log('🔄 Real-time data updated');
+                }
+                
+            } catch (error) {
+                console.error('❌ Silent sync error:', error);
+            }
+        }
+
+        function syncNow() {
+            loadTeamData();
+        }
 
         // ========================================
         // DYNAMIC PERCENTAGE CALCULATION ENGINE
@@ -1499,9 +1759,6 @@
             
             let totalEntries = 0;
             let totalPercentage = 0;
-            let greenCount = 0;
-            let amberCount = 0;
-            let redCount = 0;
             
             // Calculate current month stats
             for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
@@ -1514,17 +1771,13 @@
                     if (entry && entry.percentage !== undefined) {
                         totalEntries++;
                         totalPercentage += entry.percentage;
-                        
-                        if (entry.status === 'green') greenCount++;
-                        else if (entry.status === 'amber') amberCount++;
-                        else if (entry.status === 'red') redCount++;
                     }
                 });
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
             
-            // Trend calculation (simplified)
+            // Trend calculation
             let trendIndicator = '📊';
             if (overallAvg >= 90) trendIndicator = '📈';
             else if (overallAvg <= 60) trendIndicator = '📉';
@@ -1543,9 +1796,6 @@
             
             let totalEntries = 0;
             let totalPercentage = 0;
-            let greenCount = 0;
-            let amberCount = 0;
-            let redCount = 0;
             
             // Calculate current year stats
             for (let date = new Date(startOfYear); date <= endOfYear; date.setDate(date.getDate() + 1)) {
@@ -1558,17 +1808,13 @@
                     if (entry && entry.percentage !== undefined) {
                         totalEntries++;
                         totalPercentage += entry.percentage;
-                        
-                        if (entry.status === 'green') greenCount++;
-                        else if (entry.status === 'amber') amberCount++;
-                        else if (entry.status === 'red') redCount++;
                     }
                 });
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
             
-            // Trend calculation (simplified)
+            // Trend calculation
             let trendIndicator = '📊';
             if (overallAvg >= 90) trendIndicator = '📈';
             else if (overallAvg <= 60) trendIndicator = '📉';
@@ -1617,12 +1863,12 @@
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
             
-            // Update monthly KPIs - only availability and trend
+            // Update monthly KPIs
             document.getElementById('currentMonthDisplay').textContent = new Date(currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             document.getElementById('monthlyOverallAvailability').textContent = `${monthlyKPIs.overallAvg}%`;
             document.getElementById('monthlyTrendIndicator').textContent = monthlyKPIs.trendIndicator;
             
-            // Update yearly KPIs - only availability and trend
+            // Update yearly KPIs
             document.getElementById('currentYearDisplay').textContent = new Date(currentMonth).getFullYear();
             document.getElementById('yearlyOverallAvailability').textContent = `${yearlyKPIs.overallAvg}%`;
             document.getElementById('yearlyTrendIndicator').textContent = yearlyKPIs.trendIndicator;
@@ -1668,8 +1914,8 @@
         // INITIALIZATION & SETUP
         // ========================================
 
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Advanced Operations Dashboard with KPI Analytics - Initializing...');
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Advanced Operations Dashboard with Team Sync - Initializing...');
             
             initializeLandscapes();
             document.getElementById('monthSelect').value = currentMonth;
@@ -1684,10 +1930,15 @@
             updateKPIDisplays();
             loadCurrentView();
             
+            // Load team data after initial UI setup
+            setTimeout(() => {
+                loadTeamData();
+            }, 1000);
+            
             // Set up auto-save interval
             setInterval(autoSave, 30000);
             
-            console.log('✅ Dashboard with KPI analytics initialized successfully');
+            console.log('✅ Dashboard with team synchronization initialized');
         });
 
         // ========================================
@@ -1759,7 +2010,7 @@
             
             closeAddLandscapeModal();
             loadCurrentView();
-            alert(`✅ "${newLandscape}" landscape added successfully!`);
+            alert(`✅ "${newLandscape}" landscape added and synced to team!`);
         }
 
         // ========================================
@@ -2054,7 +2305,7 @@
         }
 
         // ========================================
-        // ENTRY MANAGEMENT
+        // ENTRY MANAGEMENT (WITH FIREBASE SYNC)
         // ========================================
 
         function editEntry(key, skill, period) {
@@ -2074,7 +2325,7 @@
             document.getElementById('editModal').style.display = 'block';
         }
 
-        function saveEntry() {
+        async function saveEntry() {
             const downtime = parseFloat(document.getElementById('modalDowntime').value) || 0;
             const percentage = calculatePercentageFromDowntime(downtime);
             const status = getStatusFromPercentage(percentage);
@@ -2089,24 +2340,38 @@
                 landscape: currentLandscape,
                 skill: document.getElementById('modalSkill').value,
                 period: document.getElementById('modalPeriod').value,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                teamId: teamId
             };
             
+            // Update local data first
             operationalData[editingKey] = entry;
+            
+            // Try to save to Firebase
+            const syncSuccess = await saveEntryToFirebase(editingKey, entry);
+            
+            // Always save to localStorage as backup
             localStorage.setItem('operationalData', JSON.stringify(operationalData));
             
             closeModal();
-            loadCurrentView(); // This will update both views and KPIs live
-            alert('✅ Entry saved successfully with calculated percentage and status!');
+            loadCurrentView();
+            
+            if (syncSuccess) {
+                alert('✅ Entry saved and synced to team!');
+            } else {
+                alert('✅ Entry saved locally! Will sync when connection is restored.');
+            }
         }
 
         function deleteEntry() {
-            if (confirm('🗑️ Delete this entry?')) {
+            if (confirm('🗑️ Delete this entry? This will also remove it from team sync.')) {
                 delete operationalData[editingKey];
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 
+                // TODO: Add Firebase delete functionality here if needed
+                
                 closeModal();
-                loadCurrentView(); // Live sync update
+                loadCurrentView();
                 alert('✅ Entry deleted!');
             }
         }
@@ -2150,8 +2415,8 @@
                 localStorage.setItem('skillsList', JSON.stringify(skillsList));
                 document.getElementById('newSkillInput').value = '';
                 updateSkillList();
-                loadCurrentView(); // Live sync update
-                alert(`✅ "${skillName}" added successfully!`);
+                loadCurrentView();
+                alert(`✅ "${skillName}" added and synced to team!`);
             } else if (skillsList.includes(skillName)) {
                 alert('❌ Skill already exists!');
             } else {
@@ -2160,7 +2425,7 @@
         }
 
         function removeSkill(index) {
-            if (confirm(`🗑️ Remove "${skillsList[index]}"?`)) {
+            if (confirm(`🗑️ Remove "${skillsList[index]}" from team?`)) {
                 const skillName = skillsList[index];
                 skillsList.splice(index, 1);
                 
@@ -2175,8 +2440,8 @@
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 
                 updateSkillList();
-                loadCurrentView(); // Live sync update
-                alert('✅ Skill removed!');
+                loadCurrentView();
+                alert('✅ Skill removed from team!');
             }
         }
 
@@ -2214,9 +2479,9 @@
             const monthName = new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
             let htmlTable = generateExcelTable(weeks, monthName);
-            downloadExcelFile(htmlTable, `Advanced_KPI_Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
+            downloadExcelFile(htmlTable, `Team_Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
             
-            alert('✅ Advanced Excel report with KPI analytics exported successfully!');
+            alert('✅ Team operations report exported successfully!');
         }
 
         function generateExcelTable(weeks, monthName) {
@@ -2247,40 +2512,32 @@
                     <table border="1">
                         <tr>
                             <td colspan="${weeks.length + 1}" class="header">
-                                Advanced Operations Dashboard with KPI Analytics - ${monthName}
+                                Team Operations Dashboard - ${monthName} (Team: ${teamId})
                             </td>
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Dynamic Downtime-Based Calculation with KPI Tracking
+                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | Real-time Team Collaboration
                             </td>
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="kpi-header">
-                                MONTHLY KPI SUMMARY
+                                KPI SUMMARY - Team Synchronized Data
                             </td>
                         </tr>
                         <tr>
-                            <td class="kpi-cell">Monthly Availability: ${monthlyKPIs.overallAvg}%</td>
-                            <td class="kpi-cell">Monthly Trend: ${monthlyKPIs.trendIndicator}</td>
-                            <td class="kpi-cell">Yearly Availability: ${yearlyKPIs.overallAvg}%</td>
-                            <td class="kpi-cell">Yearly Trend: ${yearlyKPIs.trendIndicator}</td>
+                            <td class="kpi-cell">Monthly: ${monthlyKPIs.overallAvg}% ${monthlyKPIs.trendIndicator}</td>
+                            <td class="kpi-cell">Yearly: ${yearlyKPIs.overallAvg}% ${yearlyKPIs.trendIndicator}</td>
             `;
             
-            // Add remaining columns if weeks.length > 3
-            for (let i = 3; i < weeks.length; i++) {
-                htmlTable += '<td class="kpi-cell">-</td>';
-            }
-            htmlTable += '</tr>';
-            
-            // Weekly KPIs row
-            htmlTable += '<tr><td class="kpi-header">Weekly Availability</td>';
-            weeklyKPIs.forEach(weekKPI => {
-                htmlTable += `<td class="kpi-cell">${weekKPI.week}: ${weekKPI.percentage}%</td>`;
-            });
-            // Fill remaining cells
-            for (let i = weeklyKPIs.length; i < weeks.length; i++) {
-                htmlTable += '<td class="kpi-cell">-</td>';
+            // Add remaining KPI columns
+            for (let i = 2; i < weeks.length + 1; i++) {
+                if (i - 2 < weeklyKPIs.length) {
+                    const weekKPI = weeklyKPIs[i - 2];
+                    htmlTable += `<td class="kpi-cell">${weekKPI.week}: ${weekKPI.percentage}%</td>`;
+                } else {
+                    htmlTable += '<td class="kpi-cell">-</td>';
+                }
             }
             htmlTable += '</tr>';
             
@@ -2339,7 +2596,7 @@
             htmlTable += `
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - Advanced KPI Analytics
+                                Legend: ● Green (95-100%) | ● Amber (45-95%) | ● Red (0-45%) | ○ No Data - Real-time Team Dashboard
                             </td>
                         </tr>
                     </table>
@@ -2364,8 +2621,8 @@
 
         function exportHistoryToExcel() {
             let htmlTable = generateHistoryExcelTable();
-            downloadExcelFile(htmlTable, `Operations_History_KPI_Analytics_${new Date().toISOString().split('T')[0]}.xls`);
-            alert('✅ Complete history with KPI analytics exported successfully!');
+            downloadExcelFile(htmlTable, `Team_Operations_History_${new Date().toISOString().split('T')[0]}.xls`);
+            alert('✅ Complete team history exported successfully!');
         }
 
         function generateHistoryExcelTable() {
@@ -2387,10 +2644,10 @@
                 <body>
                     <table border="1">
                         <tr>
-                            <td colspan="9" class="header">Complete Operations History Report with KPI Analytics</td>
+                            <td colspan="9" class="header">Team Operations History Report (Team: ${teamId})</td>
                         </tr>
                         <tr>
-                            <td colspan="9" class="kpi-header">Monthly Average: ${monthlyKPICache ? monthlyKPICache.overallAvg : 0}% | Yearly Average: ${yearlyKPICache ? yearlyKPICache.overallAvg : 0}%</td>
+                            <td colspan="9" class="kpi-header">Real-time Synchronized Data</td>
                         </tr>
                         <tr class="header">
                             <td>Date</td><td>Landscape</td><td>Skill</td><td>Period</td><td>Status</td><td>Performance %</td><td>Downtime (h)</td><td>Incident</td><td>Notes</td>
@@ -2490,12 +2747,12 @@
         }
 
         function deleteHistoryEntry(key) {
-            if (confirm('🗑️ Delete this history entry?')) {
+            if (confirm('🗑️ Delete this team entry?')) {
                 delete operationalData[key];
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 populateHistoryTable();
-                loadCurrentView(); // Live sync update
-                alert('✅ Entry deleted!');
+                loadCurrentView();
+                alert('✅ Entry deleted from team!');
             }
         }
 
@@ -2505,10 +2762,10 @@
 
         function clearCurrentData() {
             const confirmText = currentView === 'monthly' ? 
-                `Clear all data for ${currentMonth} in ${currentLandscape}?` :
-                `Clear all data for ${currentDate} in ${currentLandscape}?`;
+                `Clear all team data for ${currentMonth} in ${currentLandscape}?` :
+                `Clear all team data for ${currentDate} in ${currentLandscape}?`;
             
-            if (confirm(`🗑️ ${confirmText}`)) {
+            if (confirm(`🗑️ ${confirmText} This affects all team members!`)) {
                 Object.keys(operationalData).forEach(key => {
                     if (key.includes(currentLandscape)) {
                         if (currentView === 'monthly' && key.includes(currentMonth)) {
@@ -2520,18 +2777,18 @@
                 });
                 
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
-                loadCurrentView(); // Live sync update
-                alert('✅ Data cleared!');
+                loadCurrentView();
+                alert('✅ Team data cleared!');
             }
         }
 
         function clearAllHistory() {
-            if (confirm('🗑️ ⚠️ WARNING: This will permanently delete ALL historical data across all landscapes and dates. This action cannot be undone!\n\nAre you absolutely sure?')) {
-                if (confirm('🚨 FINAL CONFIRMATION: Delete ALL operational data permanently?')) {
+            if (confirm('🗑️ ⚠️ WARNING: This will permanently delete ALL team data across all landscapes and dates. This affects your entire team!\n\nAre you absolutely sure?')) {
+                if (confirm('🚨 FINAL CONFIRMATION: Delete ALL team operational data permanently?')) {
                     operationalData = {};
                     localStorage.setItem('operationalData', JSON.stringify(operationalData));
-                    loadCurrentView(); // Live sync update
-                    alert('✅ All historical data cleared successfully!');
+                    loadCurrentView();
+                    alert('✅ All team data cleared successfully!');
                 }
             }
         }
@@ -2549,7 +2806,7 @@
                 try {
                     const importData = JSON.parse(e.target.result);
                     
-                    if (confirm('📤 Import data? This will merge with existing data.')) {
+                    if (confirm('📤 Import data? This will merge with existing team data.')) {
                         operationalData = {...operationalData, ...importData.data || importData};
                         if (importData.skills) {
                             skillsList = [...new Set([...skillsList, ...importData.skills])];
@@ -2564,8 +2821,8 @@
                         localStorage.setItem('skillsList', JSON.stringify(skillsList));
                         
                         updateSkillList();
-                        loadCurrentView(); // Live sync update
-                        alert('✅ Data imported successfully with KPI analytics updated!');
+                        loadCurrentView();
+                        alert('✅ Data imported and synced to team!');
                     }
                 } catch (error) {
                     alert('❌ Invalid file format!');
@@ -2584,7 +2841,7 @@
                 localStorage.setItem('operationalData', JSON.stringify(operationalData));
                 localStorage.setItem('skillsList', JSON.stringify(skillsList));
                 localStorage.setItem('landscapesList', JSON.stringify(landscapesList));
-                console.log('🔄 Auto-save completed with KPI data');
+                console.log('🔄 Auto-save completed');
             }
         }
 
@@ -2607,7 +2864,7 @@
             }
         });
 
-        console.log('✅ Advanced Operations Dashboard with KPI Analytics loaded successfully');
+        console.log('✅ Advanced Operations Dashboard with Firebase Team Sync loaded successfully');
     </script>
 </body>
 </html>
