@@ -4,42 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>🔹 HBoard - Advanced Operations Excellence Dashboard v2024 🔹</title>
-    <meta name="description" content="Production-ready operations dashboard with Firebase authentication, SMTP integration, dynamic KPI analytics, real-time team collaboration, and email screenshot functionality">
+    <meta name="description" content="Production-ready operations dashboard with Gmail API authentication, dynamic KPI analytics, real-time team collaboration, and email screenshot functionality">
     
     <!-- External CDN Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
-    <script src="https://smtpjs.com/v3/smtp.js"></script>
-    
-    <!-- Firebase SDK v9 -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-        
-        // Firebase configuration (replace with your config)
-        const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "your-sender-id",
-            appId: "your-app-id"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        // Make Firebase available globally
-        window.firebaseAuth = auth;
-        window.firebaseDB = db;
-        window.firebaseSignIn = signInWithEmailAndPassword;
-        window.firebaseSignUp = createUserWithEmailAndPassword;
-        window.firebaseSignOut = signOut;
-        window.firebaseAuthStateChanged = onAuthStateChanged;
-    </script>
+    <!-- Google APIs Client Library -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
     
     <style>
         /* Global Styles and CSS Variables */
@@ -132,98 +103,40 @@
             font-weight: 500;
         }
 
-        .auth-form {
+        .gmail-signin-container {
             display: flex;
             flex-direction: column;
             gap: 25px;
+            align-items: center;
         }
 
-        .auth-form input {
-            padding: 18px 25px;
-            border: 3px solid var(--primary-green);
-            border-radius: 12px;
-            font-size: 18px;
-            background: white;
-            color: var(--dark-gray);
-            transition: var(--transition);
-            font-family: inherit;
-        }
-
-        .auth-form input:focus {
-            outline: none;
-            border-color: var(--secondary-teal);
-            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .auth-form input::placeholder {
-            color: var(--medium-gray);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .auth-btn {
-            flex: 1;
-            padding: 18px 25px;
+        .gmail-signin-btn {
+            background: #db4437;
+            color: white;
+            padding: 15px 30px;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+            justify-content: center;
         }
 
-        .auth-btn.signup {
-            background: var(--primary-green);
-            color: white;
-            border: 3px solid var(--primary-green);
-        }
-
-        .auth-btn.signup:hover {
-            background: var(--secondary-teal);
-            border-color: var(--secondary-teal);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .auth-btn.signin {
-            background: transparent;
-            color: var(--primary-green);
-            border: 3px solid var(--primary-green);
-        }
-
-        .auth-btn.signin:hover {
-            background: var(--primary-green);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .auth-btn.signout {
-            background: var(--danger-red);
-            color: white;
-            border: 3px solid var(--danger-red);
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            flex: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            z-index: 10000;
-            border-radius: 25px;
-        }
-
-        .auth-btn.signout:hover {
-            background: #c82333;
+        .gmail-signin-btn:hover {
+            background: #c23321;
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
+        }
+
+        .gmail-signin-btn:disabled {
+            background: var(--medium-gray);
+            cursor: not-allowed;
+            transform: none;
         }
 
         .auth-status {
@@ -246,9 +159,10 @@
             border: 2px solid #f5c6cb;
         }
 
-        .auth-loading {
-            color: var(--primary-green);
-            font-style: italic;
+        .auth-status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
         }
 
         .auth-divider {
@@ -274,8 +188,8 @@
             font-weight: 600;
         }
 
-        .admin-badge {
-            background: #ff6b6b;
+        .gmail-badge {
+            background: #db4437;
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
@@ -320,10 +234,33 @@
             color: white;
         }
 
-        .connection-status.admin {
-            background: #ff6b6b;
+        .connection-status.gmail {
+            background: #db4437;
             color: white;
             animation: pulse 2s infinite;
+        }
+
+        /* Sign Out Button */
+        .auth-btn.signout {
+            background: var(--danger-red);
+            color: white;
+            border: 3px solid var(--danger-red);
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            flex: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            z-index: 10000;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-btn.signout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
         }
 
         /* Main Container */
@@ -553,14 +490,14 @@
         }
         
         .btn-email {
-            background: var(--accent-blue);
+            background: #db4437;
             color: white;
-            border-color: var(--accent-blue);
+            border-color: #db4437;
         }
         
         .btn-email:hover {
-            background: #138496;
-            border-color: #138496;
+            background: #c23321;
+            border-color: #c23321;
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
         }
@@ -871,9 +808,9 @@
         
         .monthly-table th.skill-header {
             text-align: left;
-            padding-left: 15px;
-            min-width: 100px;
-            max-width: 120px;
+            padding-left: 20px;
+            min-width: 140px;
+            max-width: 160px;
             position: sticky;
             left: 0;
             z-index: 11;
@@ -891,12 +828,12 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             font-weight: 600;
             text-align: left;
-            padding-left: 15px;
+            padding-left: 20px;
             border-right: 3px solid var(--primary-green);
             color: var(--primary-green);
-            min-width: 100px;
-            max-width: 120px;
-            font-size: 11px;
+            min-width: 140px;
+            max-width: 160px;
+            font-size: 12px;
             position: sticky;
             left: 0;
             z-index: 5;
@@ -1091,21 +1028,20 @@
             transform: scale(1.02);
         }
 
-        /* Skill Management Section - REDUCED WIDTH */
+        /* Skill Management Section */
         .skill-management {
             background: white;
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 25px;
             border: 2px solid var(--accent-blue);
             box-shadow: var(--shadow-light);
-            max-width: 800px; /* Reduced from default */
         }
 
         .skill-management h3 {
             color: var(--accent-blue);
-            font-size: 1.2rem; /* Reduced from 1.4rem */
-            margin-bottom: 15px; /* Reduced from 20px */
+            font-size: 1.4rem;
+            margin-bottom: 20px;
             font-weight: 700;
             text-align: center;
         }
@@ -1113,24 +1049,23 @@
         .skill-management-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px; /* Reduced from 25px */
+            gap: 25px;
         }
 
         .skill-list-section, .add-skill-section {
-            padding: 15px; /* Reduced from 20px */
+            padding: 20px;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
         }
 
         .skill-list-section h4, .add-skill-section h4 {
             color: var(--primary-green);
-            margin-bottom: 12px; /* Reduced from 15px */
+            margin-bottom: 15px;
             font-weight: 600;
-            font-size: 14px; /* Reduced */
         }
 
         .skills-list {
-            max-height: 250px; /* Reduced from 300px */
+            max-height: 300px;
             overflow-y: auto;
         }
 
@@ -1138,10 +1073,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px; /* Reduced from 12px */
+            padding: 12px;
             border: 1px solid var(--border-color);
-            border-radius: 6px; /* Reduced from 8px */
-            margin-bottom: 6px; /* Reduced from 8px */
+            border-radius: 8px;
+            margin-bottom: 8px;
             transition: var(--transition);
         }
 
@@ -1153,19 +1088,18 @@
         .skill-item-name {
             font-weight: 600;
             color: var(--dark-gray);
-            font-size: 13px; /* Reduced */
         }
 
         .skill-item-actions {
             display: flex;
-            gap: 4px; /* Reduced from 5px */
+            gap: 5px;
         }
 
         .skill-action-btn {
-            padding: 4px 8px; /* Reduced from 5px 10px */
+            padding: 5px 10px;
             border: none;
-            border-radius: 4px; /* Reduced from 5px */
-            font-size: 11px; /* Reduced from 12px */
+            border-radius: 5px;
+            font-size: 12px;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -1187,14 +1121,14 @@
         .add-skill-form {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Reduced from 15px */
+            gap: 15px;
         }
 
         .add-skill-form input {
-            padding: 10px; /* Reduced from 12px */
+            padding: 12px;
             border: 2px solid var(--border-color);
-            border-radius: 6px; /* Reduced from 8px */
-            font-size: 13px; /* Reduced from 14px */
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         .add-skill-form input:focus {
@@ -1221,12 +1155,12 @@
             background: white;
             border-radius: var(--border-radius);
             padding: 40px;
-            max-width: 700px;
-            width: 95%;
+            max-width: 600px;
+            width: 90%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-heavy);
-            border: 3px solid var(--accent-blue);
+            border: 3px solid #db4437;
             position: relative;
             animation: modalSlideIn 0.3s ease-out;
         }
@@ -1243,13 +1177,13 @@
         }
         
         .email-modal h3 {
-            color: var(--accent-blue);
+            color: #db4437;
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 25px;
             text-align: center;
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--accent-blue);
+            border-bottom: 2px solid #db4437;
         }
         
         .email-form {
@@ -1260,13 +1194,9 @@
         
         .email-form label {
             font-weight: 700;
-            color: var(--accent-blue);
+            color: #db4437;
             margin-bottom: 5px;
             display: block;
-        }
-        
-        .email-form select[multiple] {
-            min-height: 120px;
         }
         
         .email-form small {
@@ -1274,30 +1204,6 @@
             font-size: 11px;
             margin-top: 5px;
             display: block;
-        }
-        
-        /* Screenshot Preview */
-        .screenshot-preview {
-            margin: 15px 0;
-            padding: 15px;
-            border: 2px dashed var(--primary-green);
-            border-radius: 8px;
-            background: var(--light-gray);
-            text-align: center;
-            display: none;
-        }
-        
-        .screenshot-preview img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-medium);
-        }
-        
-        .preview-info {
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--medium-gray);
         }
         
         .email-close {
@@ -1429,10 +1335,6 @@
             .skill-management-content {
                 grid-template-columns: 1fr;
             }
-            
-            .skill-management {
-                max-width: 100%;
-            }
         }
         
         @media (max-width: 768px) {
@@ -1480,9 +1382,9 @@
             
             .monthly-table th.skill-header,
             .monthly-table td.skill-name {
-                min-width: 80px;
-                max-width: 100px;
-                font-size: 10px;
+                min-width: 110px;
+                max-width: 130px;
+                font-size: 11px;
             }
             
             .monthly-table {
@@ -1498,10 +1400,6 @@
                 min-width: 300px;
                 padding: 30px;
                 margin: 20px;
-            }
-
-            .auth-buttons {
-                flex-direction: column;
             }
 
             .stats-grid {
@@ -1555,28 +1453,23 @@
     <!-- Authentication Section -->
     <div id="auth-section">
         <div class="auth-container">
-            <div class="admin-badge" style="display: none;" id="adminBadge">👑 ADMIN</div>
+            <div class="gmail-badge" style="display: none;" id="gmailBadge">📧 GMAIL</div>
             <h2>🔐 HBoard Login</h2>
-            <p class="subtitle">Secure access to your operations excellence dashboard</p>
+            <p class="subtitle">Secure access with Gmail API authentication</p>
             
-            <form class="auth-form" onsubmit="return false;">
-                <input type="text" id="email" placeholder="📧 Enter your email or username" required>
-                <input type="password" id="password" placeholder="🔒 Enter your password" required>
-                
-                <div class="auth-buttons">
-                    <button type="button" class="auth-btn signup" onclick="signUp()">
-                        🚀 Create Account
-                    </button>
-                    <button type="button" class="auth-btn signin" onclick="signIn()">
-                        🔑 Sign In
-                    </button>
+            <div class="gmail-signin-container">
+                <button id="gmailSigninBtn" class="gmail-signin-btn" onclick="signInWithGmail()">
+                    📧 Sign in with Gmail
+                </button>
+                <div style="font-size: 12px; color: var(--medium-gray); text-align: center; max-width: 300px;">
+                    Sign in with your Gmail account to access the dashboard and send email screenshots
                 </div>
-            </form>
+            </div>
             
             <div id="auth-status" class="auth-status"></div>
             
             <div class="auth-divider">
-                <span>Enterprise-grade security with Firebase + SMTP Integration</span>
+                <span>Powered by Gmail API - Send emails directly from your account</span>
             </div>
         </div>
     </div>
@@ -1594,11 +1487,11 @@
         <!-- Header Section -->
         <header class="header">
             <div id="userInfo" class="user-info" style="display:none">
-                👤 <span id="userEmail"></span>
+                📧 <span id="userEmail"></span>
             </div>
-            <div class="version-badge">v2024.09.07</div>
+            <div class="version-badge">v2024.09.08 - Gmail API</div>
             <h1>📊 HBoard - Operations Excellence Dashboard</h1>
-            <p class="subtitle">Advanced KPI Analytics with Dynamic Downtime Calculations, Real-time Team Collaboration & SMTP Email Screenshot Functionality</p>
+            <p class="subtitle">Advanced KPI Analytics with Gmail API Integration, Dynamic Downtime Calculations & Real-time Team Collaboration</p>
         </header>
 
         <!-- Main Content -->
@@ -1643,7 +1536,7 @@
                         🔄 Refresh Data
                     </button>
                     <button class="btn btn-email" onclick="openEmailModal()">
-                        📤 Email Screenshot
+                        📧 Gmail Screenshot
                     </button>
                     <button class="btn btn-success" onclick="addNewSkill()">
                         ➕ Add Skill
@@ -1672,7 +1565,7 @@
                 
                 <!-- Monthly/Yearly Performance -->
                 <div class="kpi-performance-section">
-                    <h3>📅 Monthly Performance - <span id="currentMonthDisplay">September 2024</span></h3>
+                    <h3>📅 Monthly Performance - <span id="currentMonthDisplay">September 2025</span></h3>
                     <div class="performance-grid">
                         <div class="performance-card">
                             <h4>📅 Monthly Performance</h4>
@@ -1743,10 +1636,10 @@
                 </div>
             </section>
 
-            <!-- Skill Management Section - REDUCED WIDTH -->
+            <!-- Skill Management Section -->
             <section class="skill-management">
                 <h3>🛠️ Skill Management</h3>
-                <p style="text-align: center; color: var(--medium-gray); margin-bottom: 15px; font-size: 13px;">
+                <p style="text-align: center; color: var(--medium-gray); margin-bottom: 25px;">
                     Manage operational skills being tracked across your team
                 </p>
                 <div class="skill-management-content">
@@ -1764,7 +1657,7 @@
                                 ✅ Add Skill
                             </button>
                         </div>
-                        <div style="margin-top: 10px; font-size: 11px; color: var(--medium-gray);">
+                        <div style="margin-top: 15px; font-size: 12px; color: var(--medium-gray);">
                             <strong>Tip:</strong> Skills represent operational areas that require tracking and monitoring.
                         </div>
                     </div>
@@ -1816,8 +1709,8 @@
                                     <div class="daily-stat-label">Performance Trend</div>
                                 </div>
                                 <div class="daily-stat-card">
-                                    <div class="daily-stat-value text-teal">🔥</div>
-                                    <div class="daily-stat-label">Team Sync Active</div>
+                                    <div class="daily-stat-value text-teal">📧</div>
+                                    <div class="daily-stat-label">Gmail API Active</div>
                                 </div>
                             </div>
                         </div>
@@ -1832,34 +1725,22 @@
         </main>
     </div>
 
-    <!-- Email Screenshot Modal with Preview -->
+    <!-- Email Screenshot Modal -->
     <div class="email-modal" id="emailModal">
         <div class="email-modal-content">
             <button class="email-close" onclick="closeEmailModal()">&times;</button>
-            <h3>📤 Send Dashboard Screenshot</h3>
+            <h3>📧 Send Dashboard Screenshot via Gmail</h3>
             
             <form class="email-form" onsubmit="return false;">
                 <div>
-                    <label for="emailRecipients">📧 Select Recipients:</label>
-                    <select id="emailRecipients" multiple>
-                        <option value="manager@company.com">👔 Manager (manager@company.com)</option>
-                        <option value="team.lead@company.com">👥 Team Lead (team.lead@company.com)</option>
-                        <option value="operations@company.com">⚙️ Operations Team (operations@company.com)</option>
-                        <option value="executives@company.com">🏢 Executive Team (executives@company.com)</option>
-                        <option value="qa.team@company.com">🔍 QA Team (qa.team@company.com)</option>
-                        <option value="support@company.com">🛟 Support Team (support@company.com)</option>
-                    </select>
-                    <small>Hold Ctrl (or Cmd on Mac) to select multiple recipients</small>
-                </div>
-
-                <div>
-                    <label for="customEmail">📝 Or enter custom email:</label>
-                    <input type="email" id="customEmail" placeholder="user@company.com">
+                    <label for="emailRecipients">📧 Enter Recipients:</label>
+                    <input type="email" id="emailRecipients" placeholder="Enter email addresses separated by commas">
+                    <small>Enter multiple email addresses separated by commas (e.g., user1@company.com, user2@company.com)</small>
                 </div>
 
                 <div>
                     <label for="screenshotType">📊 Screenshot Content:</label>
-                    <select id="screenshotType" onchange="generateScreenshotPreview()">
+                    <select id="screenshotType">
                         <option value="complete">📊 Complete Dashboard (KPIs + Table)</option>
                         <option value="kpi-dashboard">📈 KPI Dashboard Section</option>
                         <option value="weekly-kpis">📊 Weekly KPIs Overview Only</option>
@@ -1867,14 +1748,6 @@
                         <option value="daily-view">📅 Daily View (if active)</option>
                         <option value="skill-management">🛠️ Skill Management Section</option>
                     </select>
-                </div>
-
-                <!-- Screenshot Preview -->
-                <div class="screenshot-preview" id="screenshotPreview">
-                    <img id="previewImage" src="" alt="Screenshot Preview">
-                    <div class="preview-info">
-                        📸 Preview of selected section - This will be sent via email
-                    </div>
                 </div>
 
                 <div>
@@ -1887,14 +1760,9 @@
                     <textarea id="emailMessage" rows="4" placeholder="Add a custom message to accompany the screenshot..."></textarea>
                 </div>
 
-                <div style="display: flex; gap: 15px;">
-                    <button type="button" class="btn btn-primary" onclick="generateScreenshotPreview()" style="flex: 1;">
-                        🔍 Preview Screenshot
-                    </button>
-                    <button type="button" class="btn btn-email" onclick="sendScreenshotEmail()" style="flex: 2;">
-                        📤 Capture & Send Screenshot
-                    </button>
-                </div>
+                <button type="button" class="btn btn-email" onclick="sendScreenshotEmail()">
+                    📧 Capture & Send via Gmail
+                </button>
             </form>
 
             <div id="emailStatus" class="email-status"></div>
@@ -1956,21 +1824,15 @@
 
     <script>
         // ========================================
-        // SMTP.JS AND EMAILJS INITIALIZATION
+        // GMAIL API CONFIGURATION - REPLACE WITH YOUR DETAILS
         // ========================================
 
-        (function() {
-            try {
-                // Initialize EmailJS with your public key (fallback)
-                if (typeof emailjs !== 'undefined') {
-                    emailjs.init("uMjP4LeVCl37KXNHo");
-                    console.log('📧 EmailJS initialized successfully!');
-                }
-                console.log('📧 SMTP.js loaded successfully!');
-            } catch (error) {
-                console.error('❌ Email service initialization error:', error);
-            }
-        })();
+        const GMAIL_CONFIG = {
+            CLIENT_ID: '879257674381-1qajkdfqtlfuguamntpqute3vfrqmrd5.apps.googleusercontent.com',
+            API_KEY: 'AIzaSyAWhW6-mJf1Df4AodIkuPQcV2ryU4_pDKA',
+            DISCOVERY_DOC: 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest',
+            SCOPES: 'https://www.googleapis.com/auth/gmail.send'
+        };
 
         // ========================================
         // GLOBAL VARIABLES AND DATA STORAGE
@@ -1981,9 +1843,11 @@
         let currentMonth = new Date().toISOString().substring(0, 7);
         let currentDate = new Date().toISOString().split('T')[0];
 
-        // Global variables for admin access and Firebase
-        window.isAdminMode = false;
-        window.firebaseUser = null;
+        // Global variables for Gmail authentication
+        let gapi;
+        let google;
+        let isGmailAuthenticated = false;
+        let currentUser = null;
 
         // Sample Skills Data
         let skillsData = [
@@ -2011,148 +1875,111 @@
             yearlyPerformance: 0
         };
 
-        // SMTP Configuration (use your own SMTP settings)
-        const SMTP_CONFIG = {
-            Host: "smtp.elasticemail.com", // Change to your SMTP server
-            Username: "kastrobistro@gmail.com", // Your SMTP username
-            Password: "9A72C1254E0F0B3106218B9A74FF64248798", // Your SMTP password
-            Port: 2525,
-            // Optional: use secure token instead of username/password
-        };
-
         // ========================================
-        // FIREBASE AUTHENTICATION INTEGRATION
+        // GMAIL API INITIALIZATION AND AUTHENTICATION
         // ========================================
 
-        function checkAdminAccess(username, password) {
-            return username.toLowerCase().trim() === 'admin' && password === 'admin123';
+        async function initializeGmailAPI() {
+            try {
+                showAuthStatus('🔄 Loading Gmail API...', 'loading');
+                
+                // Initialize Google API
+                await new Promise((resolve, reject) => {
+                    gapi.load('auth2:client', {
+                        callback: resolve,
+                        onerror: reject
+                    });
+                });
+
+                await gapi.client.init({
+                    apiKey: GMAIL_CONFIG.API_KEY,
+                    clientId: GMAIL_CONFIG.CLIENT_ID,
+                    discoveryDocs: [GMAIL_CONFIG.DISCOVERY_DOC],
+                    scope: GMAIL_CONFIG.SCOPES
+                });
+
+                console.log('✅ Gmail API initialized successfully');
+                showAuthStatus('✅ Gmail API ready', 'success');
+                
+                // Check if user is already signed in
+                const authInstance = gapi.auth2.getAuthInstance();
+                if (authInstance.isSignedIn.get()) {
+                    handleSignInSuccess(authInstance.currentUser.get());
+                } else {
+                    showAuthStatus('📧 Ready to sign in with Gmail', 'success');
+                }
+
+            } catch (error) {
+                console.error('❌ Gmail API initialization error:', error);
+                showAuthStatus('❌ Failed to load Gmail API. Please check your configuration.', 'error');
+            }
         }
 
-        function activateAdminMode() {
-            window.isAdminMode = true;
-            document.getElementById('adminBadge').style.display = 'block';
-            updateConnectionStatus('admin');
+        async function signInWithGmail() {
+            try {
+                const signinBtn = document.getElementById('gmailSigninBtn');
+                signinBtn.disabled = true;
+                signinBtn.innerHTML = '🔄 Signing in...';
+                
+                showAuthStatus('🔄 Signing in with Gmail...', 'loading');
+
+                const authInstance = gapi.auth2.getAuthInstance();
+                const user = await authInstance.signIn();
+                
+                handleSignInSuccess(user);
+
+            } catch (error) {
+                console.error('❌ Gmail sign-in error:', error);
+                showAuthStatus('❌ Failed to sign in with Gmail: ' + error.error, 'error');
+                
+                const signinBtn = document.getElementById('gmailSigninBtn');
+                signinBtn.disabled = false;
+                signinBtn.innerHTML = '📧 Sign in with Gmail';
+            }
+        }
+
+        function handleSignInSuccess(user) {
+            isGmailAuthenticated = true;
+            currentUser = user;
             
-            // Show admin user info
+            const profile = user.getBasicProfile();
+            const userEmail = profile.getEmail();
+            const userName = profile.getName();
+
+            showAuthStatus(`✅ Signed in as ${userName}`, 'success');
+            document.getElementById('gmailBadge').style.display = 'block';
+            updateConnectionStatus('gmail');
+            
+            // Show user info
             const userInfo = document.getElementById('userInfo');
-            const userEmail = document.getElementById('userEmail');
+            const userEmailSpan = document.getElementById('userEmail');
             userInfo.style.display = 'block';
-            userEmail.textContent = '👑 ADMIN ACCESS';
+            userEmailSpan.textContent = userEmail;
             
-            console.log('👑 Admin mode activated');
-        }
-
-        // Sign up function with Firebase integration
-        window.signUp = async function() {
-            const emailInput = document.getElementById("email").value.trim();
-            const passwordInput = document.getElementById("password").value;
-            const statusDiv = document.getElementById("auth-status");
+            console.log(`👤 Signed in as: ${userName} (${userEmail})`);
             
-            // Check for admin access first
-            if (checkAdminAccess(emailInput, passwordInput)) {
-                statusDiv.innerHTML = '<div>👑 Admin access granted! Welcome, Administrator!</div>';
-                statusDiv.className = 'auth-status success';
-                
-                activateAdminMode();
+            setTimeout(() => {
                 showDashboard();
-                return;
-            }
-
-            statusDiv.innerHTML = '<div class="auth-loading">🔄 Creating account...</div>';
-            statusDiv.className = 'auth-status';
-
-            try {
-                // Try Firebase sign up if available
-                if (window.firebaseAuth && window.firebaseSignUp) {
-                    const userCredential = await window.firebaseSignUp(window.firebaseAuth, emailInput, passwordInput);
-                    window.firebaseUser = userCredential.user;
-                    
-                    statusDiv.innerHTML = '<div>✅ Account created successfully! Welcome to HBoard!</div>';
-                    statusDiv.className = 'auth-status success';
-                    
-                    updateConnectionStatus('connected');
-                    showDashboard();
-                    
-                    // Show user info
-                    const userInfo = document.getElementById('userInfo');
-                    const userEmail = document.getElementById('userEmail');
-                    userInfo.style.display = 'block';
-                    userEmail.textContent = emailInput;
-                } else {
-                    throw new Error('Firebase not configured');
-                }
-            } catch (error) {
-                console.error('Sign up error:', error);
-                statusDiv.innerHTML = `<div class="error">❌ ${error.message || 'Sign up failed. Please try again.'}</div>`;
-                statusDiv.className = 'auth-status error';
-            }
+            }, 1000);
         }
 
-        // Sign in function with Firebase integration
-        window.signIn = async function() {
-            const emailInput = document.getElementById("email").value.trim();
-            const passwordInput = document.getElementById("password").value;
-            const statusDiv = document.getElementById("auth-status");
-            
-            // Check for admin access first
-            if (checkAdminAccess(emailInput, passwordInput)) {
-                statusDiv.innerHTML = '<div>👑 Admin access granted! Welcome back, Administrator!</div>';
-                statusDiv.className = 'auth-status success';
-                
-                activateAdminMode();
-                showDashboard();
-                return;
-            }
-
-            statusDiv.innerHTML = '<div class="auth-loading">🔄 Signing in...</div>';
-            statusDiv.className = 'auth-status';
-
+        async function signOut() {
             try {
-                // Try Firebase sign in if available
-                if (window.firebaseAuth && window.firebaseSignIn) {
-                    const userCredential = await window.firebaseSignIn(window.firebaseAuth, emailInput, passwordInput);
-                    window.firebaseUser = userCredential.user;
-                    
-                    statusDiv.innerHTML = '<div>✅ Welcome back! You are now signed in.</div>';
-                    statusDiv.className = 'auth-status success';
-                    
-                    updateConnectionStatus('connected');
-                    showDashboard();
-                    
-                    // Show user info
-                    const userInfo = document.getElementById('userInfo');
-                    const userEmail = document.getElementById('userEmail');
-                    userInfo.style.display = 'block';
-                    userEmail.textContent = emailInput;
-                } else {
-                    throw new Error('Firebase not configured');
-                }
-            } catch (error) {
-                console.error('Sign in error:', error);
-                statusDiv.innerHTML = `<div class="error">❌ ${error.message || 'Sign in failed. Please check your credentials.'}</div>`;
-                statusDiv.className = 'auth-status error';
-            }
-        }
-
-        // Sign out function
-        window.signOut = async function() {
-            try {
-                if (window.firebaseAuth && window.firebaseSignOut && window.firebaseUser) {
-                    await window.firebaseSignOut(window.firebaseAuth);
+                if (gapi && gapi.auth2) {
+                    const authInstance = gapi.auth2.getAuthInstance();
+                    await authInstance.signOut();
                 }
                 
-                window.firebaseUser = null;
-                window.isAdminMode = false;
-                document.getElementById('adminBadge').style.display = 'none';
+                isGmailAuthenticated = false;
+                currentUser = null;
+                document.getElementById('gmailBadge').style.display = 'none';
                 updateConnectionStatus('connecting');
-                console.log('👋 User signed out');
+                console.log('👤 Signed out from Gmail');
                 
                 hideDashboard();
                 
             } catch (error) {
                 console.error('❌ Sign out error:', error);
-                // Force sign out even if Firebase fails
-                hideDashboard();
             }
         }
 
@@ -2182,10 +2009,19 @@
             signOutBtn.style.display = "none";
             userInfo.style.display = "none";
             
-            // Clear form
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
+            // Reset signin button
+            const signinBtn = document.getElementById('gmailSigninBtn');
+            signinBtn.disabled = false;
+            signinBtn.innerHTML = '📧 Sign in with Gmail';
+            
             document.getElementById('auth-status').innerHTML = '';
+        }
+
+        function showAuthStatus(message, type) {
+            const statusDiv = document.getElementById('auth-status');
+            statusDiv.textContent = message;
+            statusDiv.className = `auth-status ${type}`;
+            statusDiv.style.display = 'block';
         }
         
         function updateConnectionStatus(status) {
@@ -2204,20 +2040,24 @@
                 case 'offline':
                     statusEl.textContent = '⚠️ Offline Mode';
                     break;
-                case 'admin':
-                    statusEl.textContent = '👑 Admin Mode - Full Access';
+                case 'gmail':
+                    statusEl.textContent = '📧 Gmail API Active';
                     break;
             }
         }
 
         // ========================================
-        // ENHANCED EMAIL SCREENSHOT FUNCTIONALITY WITH SMTP
+        // GMAIL API EMAIL SENDING FUNCTIONALITY
         // ========================================
 
         function openEmailModal() {
+            if (!isGmailAuthenticated) {
+                alert('Please sign in with Gmail first to send emails.');
+                return;
+            }
+            
             document.getElementById('emailModal').style.display = 'flex';
             document.getElementById('emailStatus').style.display = 'none';
-            document.getElementById('screenshotPreview').style.display = 'none';
             
             // Set default subject
             const landscape = document.getElementById('landscapeSelect').value;
@@ -2228,107 +2068,32 @@
         function closeEmailModal() {
             document.getElementById('emailModal').style.display = 'none';
             document.getElementById('emailStatus').style.display = 'none';
-            document.getElementById('screenshotPreview').style.display = 'none';
             
             // Reset form
-            const recipientSelect = document.getElementById('emailRecipients');
-            for (let i = 0; i < recipientSelect.options.length; i++) {
-                recipientSelect.options[i].selected = false;
-            }
-            document.getElementById('customEmail').value = '';
+            document.getElementById('emailRecipients').value = '';
             document.getElementById('emailMessage').value = '';
         }
 
-        async function generateScreenshotPreview() {
-            const screenshotType = document.getElementById('screenshotType').value;
-            const previewDiv = document.getElementById('screenshotPreview');
-            const previewImg = document.getElementById('previewImage');
-            
-            try {
-                showEmailStatus('📸 Generating preview...', 'loading');
-                
-                // Determine what to capture
-                let targetElement = getScreenshotTarget(screenshotType);
-                
-                if (!targetElement || targetElement.offsetWidth === 0) {
-                    showEmailStatus('❌ Selected view is not visible or available', 'error');
-                    return;
-                }
-
-                // Capture screenshot
-                const canvas = await html2canvas(targetElement, {
-                    useCORS: true,
-                    allowTaint: false,
-                    scale: 0.5, // Lower scale for preview
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    width: targetElement.scrollWidth,
-                    height: targetElement.scrollHeight
-                });
-
-                const imageData = canvas.toDataURL('image/png', 0.8);
-                
-                // Show preview
-                previewImg.src = imageData;
-                previewDiv.style.display = 'block';
-                
-                showEmailStatus('✅ Preview generated successfully', 'success');
-                setTimeout(() => {
-                    document.getElementById('emailStatus').style.display = 'none';
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Preview generation error:', error);
-                showEmailStatus('❌ Failed to generate preview: ' + error.message, 'error');
-            }
-        }
-
-        function getScreenshotTarget(screenshotType) {
-            switch (screenshotType) {
-                case 'complete':
-                    return document.getElementById('monthlyView').style.display !== 'none' 
-                        ? document.querySelector('.dashboard-container') 
-                        : document.getElementById('dailyView');
-                case 'kpi-dashboard':
-                    return document.querySelector('.kpi-dashboard');
-                case 'weekly-kpis':
-                    return document.getElementById('weeklyKPIs');
-                case 'skills-table':
-                    return document.getElementById('monthlyTable');
-                case 'daily-view':
-                    return document.getElementById('dailyView');
-                case 'skill-management':
-                    return document.querySelector('.skill-management');
-                default:
-                    return document.querySelector('.dashboard-container');
-            }
-        }
-
         async function sendScreenshotEmail() {
-            const recipientSelect = document.getElementById('emailRecipients');
-            const customEmail = document.getElementById('customEmail').value.trim();
+            if (!isGmailAuthenticated) {
+                showEmailStatus('❌ Please sign in with Gmail first', 'error');
+                return;
+            }
+
+            const recipientsInput = document.getElementById('emailRecipients').value.trim();
             const screenshotType = document.getElementById('screenshotType').value;
             const subject = document.getElementById('emailSubject').value.trim();
             const message = document.getElementById('emailMessage').value.trim();
 
-            // Get selected recipients
+            // Parse recipients
             let recipients = [];
-            for (let option of recipientSelect.selectedOptions) {
-                recipients.push(option.value);
-            }
-            
-            if (customEmail) {
-                if (isValidEmail(customEmail)) {
-                    recipients.push(customEmail);
-                } else {
-                    showEmailStatus('❌ Please enter a valid email address', 'error');
-                    return;
-                }
+            if (recipientsInput) {
+                recipients = recipientsInput.split(',').map(email => email.trim()).filter(email => email);
             }
 
             // Validation
             if (recipients.length === 0) {
-                showEmailStatus('❌ Please select at least one recipient or enter a custom email', 'error');
+                showEmailStatus('❌ Please enter at least one recipient email address', 'error');
                 return;
             }
 
@@ -2337,19 +2102,58 @@
                 return;
             }
 
+            // Validate email addresses
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            for (let email of recipients) {
+                if (!emailRegex.test(email)) {
+                    showEmailStatus(`❌ Invalid email address: ${email}`, 'error');
+                    return;
+                }
+            }
+
             try {
-                showEmailStatus('📸 Capturing high-quality screenshot...', 'loading');
+                showEmailStatus('📸 Capturing screenshot...', 'loading');
 
                 // Determine what to capture
-                let targetElement = getScreenshotTarget(screenshotType);
-                let viewName = getViewName(screenshotType);
-                
+                let targetElement, viewName;
+                switch (screenshotType) {
+                    case 'complete':
+                        targetElement = document.getElementById('monthlyView').style.display !== 'none' 
+                            ? document.querySelector('.dashboard-container') 
+                            : document.getElementById('dailyView');
+                        viewName = 'Complete Dashboard View';
+                        break;
+                    case 'kpi-dashboard':
+                        targetElement = document.querySelector('.kpi-dashboard');
+                        viewName = 'KPI Dashboard Section';
+                        break;
+                    case 'weekly-kpis':
+                        targetElement = document.getElementById('weeklyKPIs');
+                        viewName = 'Weekly KPIs Overview';
+                        break;
+                    case 'skills-table':
+                        targetElement = document.getElementById('monthlyTable');
+                        viewName = 'Skills Performance Table';
+                        break;
+                    case 'daily-view':
+                        targetElement = document.getElementById('dailyView');
+                        viewName = 'Daily Operations View';
+                        break;
+                    case 'skill-management':
+                        targetElement = document.querySelector('.skill-management');
+                        viewName = 'Skill Management Section';
+                        break;
+                    default:
+                        targetElement = document.querySelector('.dashboard-container');
+                        viewName = 'Dashboard View';
+                }
+
                 if (!targetElement || targetElement.offsetWidth === 0) {
                     showEmailStatus('❌ Selected view is not visible or available', 'error');
                     return;
                 }
 
-                // Capture high-quality screenshot
+                // Capture screenshot with better options
                 const canvas = await html2canvas(targetElement, {
                     useCORS: true,
                     allowTaint: false,
@@ -2362,14 +2166,23 @@
 
                 const imageData = canvas.toDataURL('image/png', 0.9);
                 
-                showEmailStatus('📤 Sending emails via SMTP...', 'loading');
+                showEmailStatus('📧 Sending emails via Gmail...', 'loading');
 
                 // Prepare email data
                 const landscape = document.getElementById('landscapeSelect').value;
                 const period = document.getElementById('monthSelect').value;
                 const timestamp = new Date().toLocaleString();
+
+                let successCount = 0;
+                let errors = [];
                 
-                const emailBody = message || `Please find attached the ${viewName} screenshot from our HBoard Operations Dashboard.
+                // Send emails to all recipients
+                for (let email of recipients) {
+                    try {
+                        await sendGmailWithAttachment({
+                            to: email,
+                            subject: subject,
+                            body: message || `Please find attached the ${viewName} screenshot from our HBoard Operations Dashboard.
 
 Landscape: ${landscape}
 Period: ${period}
@@ -2378,72 +2191,33 @@ Generated: ${timestamp}
 This automated report provides key insights into our operational performance and system availability.
 
 Best regards,
-HBoard Operations Team`;
+HBoard Operations Team`,
+                            attachmentData: imageData,
+                            attachmentName: `HBoard-${viewName.replace(/\s+/g, '-')}-${landscape}-${period}.png`
+                        });
 
-                let successCount = 0;
-                let errors = [];
-                
-                // Send emails to all recipients using SMTP.js
-                for (let email of recipients) {
-                    try {
-                        // Try SMTP.js first
-                        if (typeof Email !== 'undefined') {
-                            await Email.send({
-                                SecureToken: SMTP_CONFIG.SecureToken,
-                                Host: SMTP_CONFIG.Host,
-                                Username: SMTP_CONFIG.Username,
-                                Password: SMTP_CONFIG.Password,
-                                Port: SMTP_CONFIG.Port,
-                                To: email,
-                                From: SMTP_CONFIG.Username,
-                                Subject: subject,
-                                Body: emailBody,
-                                Attachments: [{
-                                    name: `hboard-screenshot-${Date.now()}.png`,
-                                    data: imageData
-                                }]
-                            });
-                            console.log(`📧 SMTP email sent successfully to: ${email}`);
-                            successCount++;
-                        }
-                        // Fallback to EmailJS if SMTP fails
-                        else if (typeof emailjs !== 'undefined') {
-                            const emailParams = {
-                                to_email: email,
-                                to_name: email.split('@')[0],
-                                subject: subject,
-                                message: emailBody,
-                                landscape: landscape,
-                                period: period,
-                                timestamp: timestamp,
-                                view_name: viewName,
-                                screenshot_data: imageData
-                            };
-                            
-                            await emailjs.send('service_gf6rddd', 'template_894t362', emailParams);
-                            console.log(`📧 EmailJS fallback sent successfully to: ${email}`);
-                            successCount++;
-                        }
+                        console.log(`📧 Email sent successfully to: ${email}`);
+                        successCount++;
                         
                         // Add delay between emails to avoid rate limiting
                         await new Promise(resolve => setTimeout(resolve, 1000));
                         
                     } catch (error) {
                         console.error(`Failed to send to ${email}:`, error);
-                        errors.push(`${email}: ${error.text || error.message || 'Unknown error'}`);
+                        errors.push(`${email}: ${error.message || 'Unknown error'}`);
                     }
                 }
 
                 if (successCount > 0) {
-                    showEmailStatus(`✅ Screenshot sent successfully to ${successCount} recipient(s) via SMTP!${errors.length > 0 ? ` (${errors.length} failed)` : ''}`, 'success');
+                    showEmailStatus(`✅ Screenshot sent successfully to ${successCount} recipient(s)!${errors.length > 0 ? ` (${errors.length} failed)` : ''}`, 'success');
                     
                     // Log the action
-                    logAction('Email Screenshot', `Sent ${viewName} to ${successCount} recipients via SMTP`);
+                    logAction('Gmail Screenshot', `Sent ${viewName} to ${successCount} recipients`);
                     
                     // Auto-close after 3 seconds
                     setTimeout(closeEmailModal, 3000);
                 } else {
-                    showEmailStatus(`❌ Failed to send emails. ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : 'Please check your SMTP configuration.'}`, 'error');
+                    showEmailStatus(`❌ Failed to send emails. ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : 'Please check your Gmail API configuration.'}`, 'error');
                 }
 
             } catch (error) {
@@ -2452,16 +2226,44 @@ HBoard Operations Team`;
             }
         }
 
-        function getViewName(screenshotType) {
-            switch (screenshotType) {
-                case 'complete': return 'Complete Dashboard View';
-                case 'kpi-dashboard': return 'KPI Dashboard Section';
-                case 'weekly-kpis': return 'Weekly KPIs Overview';
-                case 'skills-table': return 'Skills Performance Table';
-                case 'daily-view': return 'Daily Operations View';
-                case 'skill-management': return 'Skill Management Section';
-                default: return 'Dashboard View';
-            }
+        async function sendGmailWithAttachment({ to, subject, body, attachmentData, attachmentName }) {
+            // Convert base64 image to binary
+            const base64Data = attachmentData.split(',')[1];
+            
+            // Create MIME message
+            const boundary = 'boundary_' + Date.now();
+            
+            const mimeMessage = [
+                `To: ${to}`,
+                `Subject: ${subject}`,
+                `Content-Type: multipart/mixed; boundary="${boundary}"`,
+                '',
+                `--${boundary}`,
+                'Content-Type: text/plain; charset=utf-8',
+                '',
+                body,
+                '',
+                `--${boundary}`,
+                'Content-Type: image/png; name="' + attachmentName + '"',
+                'Content-Disposition: attachment; filename="' + attachmentName + '"',
+                'Content-Transfer-Encoding: base64',
+                '',
+                base64Data,
+                `--${boundary}--`
+            ].join('\n');
+
+            // Encode message for Gmail API
+            const encodedMessage = btoa(mimeMessage).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+            // Send via Gmail API
+            const response = await gapi.client.gmail.users.messages.send({
+                userId: 'me',
+                resource: {
+                    raw: encodedMessage
+                }
+            });
+
+            return response;
         }
 
         function showEmailStatus(message, type) {
@@ -2469,11 +2271,6 @@ HBoard Operations Team`;
             statusDiv.textContent = message;
             statusDiv.className = `email-status ${type}`;
             statusDiv.style.display = 'block';
-        }
-
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
         }
 
         // ========================================
@@ -2504,7 +2301,7 @@ HBoard Operations Team`;
             updateSkillsList();
             updateStatistics();
             
-            console.log('✅ Dashboard initialized successfully with SMTP and Firebase integration');
+            console.log('✅ Dashboard initialized successfully with Gmail API configured');
         }
 
         function switchView(viewType) {
@@ -3071,7 +2868,7 @@ HBoard Operations Team`;
                 action: action,
                 details: details,
                 timestamp: new Date().toLocaleString(),
-                user: window.isAdminMode ? 'Admin User' : window.firebaseUser ? window.firebaseUser.email : 'Current User',
+                user: isGmailAuthenticated ? currentUser.getBasicProfile().getEmail() : 'Anonymous User',
                 landscape: currentLandscape
             };
             
@@ -3128,16 +2925,6 @@ HBoard Operations Team`;
                     }
                 });
             }
-            
-            // Quick admin access (Ctrl+Alt+A)
-            if (event.ctrlKey && event.altKey && event.key === 'a') {
-                if (!window.isAdminMode) {
-                    document.getElementById('email').value = 'admin';
-                    document.getElementById('password').value = 'admin123';
-                    document.getElementById('auth-status').innerHTML = '<div>👑 Quick Admin Access - Click Sign In</div>';
-                    document.getElementById('auth-status').className = 'auth-status success';
-                }
-            }
         });
 
         // Add keyboard support for skill input
@@ -3174,33 +2961,14 @@ HBoard Operations Team`;
                 historyLog = JSON.parse(savedHistoryLog);
             }
             
-            // Firebase Auth State Listener
-            if (window.firebaseAuth && window.firebaseAuthStateChanged) {
-                window.firebaseAuthStateChanged(window.firebaseAuth, (user) => {
-                    if (user) {
-                        window.firebaseUser = user;
-                        updateConnectionStatus('connected');
-                        showDashboard();
-                        
-                        // Show user info
-                        const userInfo = document.getElementById('userInfo');
-                        const userEmail = document.getElementById('userEmail');
-                        userInfo.style.display = 'block';
-                        userEmail.textContent = user.email;
-                    } else {
-                        window.firebaseUser = null;
-                        if (!window.isAdminMode) {
-                            hideDashboard();
-                        }
-                    }
-                });
-            }
-            
             // Log system startup
-            logAction('System Startup', 'HBoard Operations Dashboard initialized with SMTP and Firebase integration');
+            logAction('System Startup', 'HBoard Operations Dashboard initialized with Gmail API');
             
             console.log('✅ Dashboard data loaded from localStorage');
             updateConnectionStatus('connecting');
+            
+            // Initialize Gmail API
+            initializeGmailAPI();
         });
 
         // Add CSS animation keyframes dynamically
@@ -3221,17 +2989,21 @@ HBoard Operations Team`;
 
         // Console welcome message
         console.log(`
-🔹 HBoard - Advanced Operations Excellence Dashboard v2024.09.07 🔹
+🔹 HBoard - Advanced Operations Excellence Dashboard v2024.09.08 🔹
 ✅ Production-ready dashboard loaded successfully
-🔐 Authentication: Firebase + Admin access (admin/admin123)
-📧 Email Integration: SMTP.js + EmailJS with screenshot preview
+📧 Gmail API: CONFIGURED - Replace CLIENT_ID and API_KEY with your credentials
 🎯 Dynamic KPIs: Monthly/Yearly performance tracking
-📊 Skills Management: Full CRUD operations (REDUCED WIDTH)
+📊 Skills Management: Full CRUD operations
 🔄 Real-time Sync: Active and functional
 🎨 Responsive Design: Optimized for all devices
 📱 Mobile Ready: Touch-friendly interface
 🚀 Ready for enterprise deployment and internship presentation
+
+⚠️  SETUP REQUIRED:
+1. Replace GMAIL_CONFIG values with your Google Cloud Console credentials
+2. Set up OAuth consent screen and authorized domains
+3. Enable Gmail API in your Google Cloud project
         `);
     </script>
 </body>
-</html>
+</html>                                                                        
