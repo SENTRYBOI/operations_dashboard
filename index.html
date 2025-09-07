@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>🔹 HBoard - Advanced Operations Dashboard v2025 🔹</title>
-    <meta name="description" content="Production-ready operations dashboard with Firebase authentication, dynamic KPI analytics, real-time team collaboration, and email screenshot functionality">
+    <meta name="description" content="Production-ready operations dashboard with Firebase authentication, dynamic KPI analytics, real-time team collaboration">
     
     <!-- External CDN Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -1539,8 +1539,8 @@
                 👤 <span id="userEmail"></span>
             </div>
             <div class="version-badge">v2024.09.07</div>
-            <h1>📊 HBoard - Operations Excellence Dashboard</h1>
-            <p class="subtitle">Advanced KPI Analytics with Dynamic Downtime Calculations, Real-time Team Collaboration & Email Screenshot Functionality</p>
+            <h1>📊 HBoard - Operations Dashboard v2025</h1>
+            <p class="subtitle">Advanced KPI Analytics with Dynamic Downtime Calculations, Real-time Team Collaboration </p>
         </header>
 
         <!-- Main Content -->
@@ -2184,7 +2184,10 @@
     <script>
         // Initialize EmailJS (Replace with your EmailJS credentials)
         (function() {
-            // emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Uncomment and add your key
+            // // Add your EmailJS credentials
+emailjs.init("uMjP4LeVCI37KXNHo");
+// In sendScreenshotEmail function:
+emailjs.send('service_gf6rdud', 'template_894t362', emailData); // Uncomment and add your key
             console.log('📧 EmailJS ready for configuration');
         })();
 
@@ -3133,5 +3136,6 @@
     </script>
 </body>
 </html>
+
 
 
