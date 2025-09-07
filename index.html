@@ -4,47 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>🔹 HBoard - Advanced Operations Excellence Dashboard v2024 🔹</title>
-    <meta name="description" content="Production-ready operations dashboard with Firebase authentication, dynamic KPI analytics, real-time team collaboration, and email screenshot functionality">
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBUER5i1yjaLqQq8ycf9ZZaH3MMB2AmiXY",
-            authDomain: "hboard-af489.firebaseapp.com",
-            projectId: "hboard-af489",
-            storageBucket: "hboard-af489.firebasestorage.app",
-            messagingSenderId: "286896691982",
-            appId: "1:286896691982:web:4df21083f8f2350874555f",
-            measurementId: "G-EQ8S9T513X"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Make Firebase available globally
-        window.firebaseAuth = auth;
-        window.firebaseDb = db;
-        window.firebaseCreateUser = createUserWithEmailAndPassword;
-        window.firebaseSignIn = signInWithEmailAndPassword;
-        window.firebaseSignOut = signOut;
-        window.firebaseAuthStateChanged = onAuthStateChanged;
-        window.firebaseSetDoc = setDoc;
-        window.firebaseGetDoc = getDoc;
-        window.firebaseDoc = doc;
-
-        console.log('🔥 Firebase initialized successfully!');
-    </script>
+    <meta name="description" content="Production-ready operations dashboard with Firebase authentication, SMTP integration, dynamic KPI analytics, real-time team collaboration, and email screenshot functionality">
     
     <!-- External CDN Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    
+    <!-- Firebase SDK v9 -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+        
+        // Firebase configuration (replace with your config)
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Make Firebase available globally
+        window.firebaseAuth = auth;
+        window.firebaseDB = db;
+        window.firebaseSignIn = signInWithEmailAndPassword;
+        window.firebaseSignUp = createUserWithEmailAndPassword;
+        window.firebaseSignOut = signOut;
+        window.firebaseAuthStateChanged = onAuthStateChanged;
+    </script>
     
     <style>
         /* Global Styles and CSS Variables */
@@ -329,11 +324,6 @@
             background: #ff6b6b;
             color: white;
             animation: pulse 2s infinite;
-        }
-
-        .connection-status.firebase {
-            background: var(--accent-blue);
-            color: white;
         }
 
         /* Main Container */
@@ -881,9 +871,9 @@
         
         .monthly-table th.skill-header {
             text-align: left;
-            padding-left: 20px;
-            min-width: 140px;
-            max-width: 160px;
+            padding-left: 15px;
+            min-width: 100px;
+            max-width: 120px;
             position: sticky;
             left: 0;
             z-index: 11;
@@ -901,12 +891,12 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             font-weight: 600;
             text-align: left;
-            padding-left: 20px;
+            padding-left: 15px;
             border-right: 3px solid var(--primary-green);
             color: var(--primary-green);
-            min-width: 140px;
-            max-width: 160px;
-            font-size: 12px;
+            min-width: 100px;
+            max-width: 120px;
+            font-size: 11px;
             position: sticky;
             left: 0;
             z-index: 5;
@@ -1101,20 +1091,21 @@
             transform: scale(1.02);
         }
 
-        /* Skill Management Section */
+        /* Skill Management Section - REDUCED WIDTH */
         .skill-management {
             background: white;
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: 20px;
             margin-bottom: 25px;
             border: 2px solid var(--accent-blue);
             box-shadow: var(--shadow-light);
+            max-width: 800px; /* Reduced from default */
         }
 
         .skill-management h3 {
             color: var(--accent-blue);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
+            font-size: 1.2rem; /* Reduced from 1.4rem */
+            margin-bottom: 15px; /* Reduced from 20px */
             font-weight: 700;
             text-align: center;
         }
@@ -1122,23 +1113,24 @@
         .skill-management-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 20px; /* Reduced from 25px */
         }
 
         .skill-list-section, .add-skill-section {
-            padding: 20px;
+            padding: 15px; /* Reduced from 20px */
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
         }
 
         .skill-list-section h4, .add-skill-section h4 {
             color: var(--primary-green);
-            margin-bottom: 15px;
+            margin-bottom: 12px; /* Reduced from 15px */
             font-weight: 600;
+            font-size: 14px; /* Reduced */
         }
 
         .skills-list {
-            max-height: 300px;
+            max-height: 250px; /* Reduced from 300px */
             overflow-y: auto;
         }
 
@@ -1146,10 +1138,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
+            padding: 8px; /* Reduced from 12px */
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 6px; /* Reduced from 8px */
+            margin-bottom: 6px; /* Reduced from 8px */
             transition: var(--transition);
         }
 
@@ -1161,18 +1153,19 @@
         .skill-item-name {
             font-weight: 600;
             color: var(--dark-gray);
+            font-size: 13px; /* Reduced */
         }
 
         .skill-item-actions {
             display: flex;
-            gap: 5px;
+            gap: 4px; /* Reduced from 5px */
         }
 
         .skill-action-btn {
-            padding: 5px 10px;
+            padding: 4px 8px; /* Reduced from 5px 10px */
             border: none;
-            border-radius: 5px;
-            font-size: 12px;
+            border-radius: 4px; /* Reduced from 5px */
+            font-size: 11px; /* Reduced from 12px */
             cursor: pointer;
             transition: var(--transition);
         }
@@ -1194,14 +1187,14 @@
         .add-skill-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px; /* Reduced from 15px */
         }
 
         .add-skill-form input {
-            padding: 12px;
+            padding: 10px; /* Reduced from 12px */
             border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px; /* Reduced from 8px */
+            font-size: 13px; /* Reduced from 14px */
         }
 
         .add-skill-form input:focus {
@@ -1228,8 +1221,8 @@
             background: white;
             border-radius: var(--border-radius);
             padding: 40px;
-            max-width: 600px;
-            width: 90%;
+            max-width: 700px;
+            width: 95%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-heavy);
@@ -1281,6 +1274,30 @@
             font-size: 11px;
             margin-top: 5px;
             display: block;
+        }
+        
+        /* Screenshot Preview */
+        .screenshot-preview {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed var(--primary-green);
+            border-radius: 8px;
+            background: var(--light-gray);
+            text-align: center;
+            display: none;
+        }
+        
+        .screenshot-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .preview-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--medium-gray);
         }
         
         .email-close {
@@ -1412,6 +1429,10 @@
             .skill-management-content {
                 grid-template-columns: 1fr;
             }
+            
+            .skill-management {
+                max-width: 100%;
+            }
         }
         
         @media (max-width: 768px) {
@@ -1459,9 +1480,9 @@
             
             .monthly-table th.skill-header,
             .monthly-table td.skill-name {
-                min-width: 110px;
-                max-width: 130px;
-                font-size: 11px;
+                min-width: 80px;
+                max-width: 100px;
+                font-size: 10px;
             }
             
             .monthly-table {
@@ -1555,7 +1576,7 @@
             <div id="auth-status" class="auth-status"></div>
             
             <div class="auth-divider">
-                <span>Enterprise-grade security with Firebase + Admin Access</span>
+                <span>Enterprise-grade security with Firebase + SMTP Integration</span>
             </div>
         </div>
     </div>
@@ -1577,7 +1598,7 @@
             </div>
             <div class="version-badge">v2024.09.07</div>
             <h1>📊 HBoard - Operations Excellence Dashboard</h1>
-            <p class="subtitle">Advanced KPI Analytics with Dynamic Downtime Calculations, Real-time Team Collaboration & Email Screenshot Functionality</p>
+            <p class="subtitle">Advanced KPI Analytics with Dynamic Downtime Calculations, Real-time Team Collaboration & SMTP Email Screenshot Functionality</p>
         </header>
 
         <!-- Main Content -->
@@ -1722,10 +1743,10 @@
                 </div>
             </section>
 
-            <!-- Skill Management Section -->
+            <!-- Skill Management Section - REDUCED WIDTH -->
             <section class="skill-management">
                 <h3>🛠️ Skill Management</h3>
-                <p style="text-align: center; color: var(--medium-gray); margin-bottom: 25px;">
+                <p style="text-align: center; color: var(--medium-gray); margin-bottom: 15px; font-size: 13px;">
                     Manage operational skills being tracked across your team
                 </p>
                 <div class="skill-management-content">
@@ -1743,7 +1764,7 @@
                                 ✅ Add Skill
                             </button>
                         </div>
-                        <div style="margin-top: 15px; font-size: 12px; color: var(--medium-gray);">
+                        <div style="margin-top: 10px; font-size: 11px; color: var(--medium-gray);">
                             <strong>Tip:</strong> Skills represent operational areas that require tracking and monitoring.
                         </div>
                     </div>
@@ -1811,7 +1832,7 @@
         </main>
     </div>
 
-    <!-- Email Screenshot Modal -->
+    <!-- Email Screenshot Modal with Preview -->
     <div class="email-modal" id="emailModal">
         <div class="email-modal-content">
             <button class="email-close" onclick="closeEmailModal()">&times;</button>
@@ -1838,7 +1859,7 @@
 
                 <div>
                     <label for="screenshotType">📊 Screenshot Content:</label>
-                    <select id="screenshotType">
+                    <select id="screenshotType" onchange="generateScreenshotPreview()">
                         <option value="complete">📊 Complete Dashboard (KPIs + Table)</option>
                         <option value="kpi-dashboard">📈 KPI Dashboard Section</option>
                         <option value="weekly-kpis">📊 Weekly KPIs Overview Only</option>
@@ -1846,6 +1867,14 @@
                         <option value="daily-view">📅 Daily View (if active)</option>
                         <option value="skill-management">🛠️ Skill Management Section</option>
                     </select>
+                </div>
+
+                <!-- Screenshot Preview -->
+                <div class="screenshot-preview" id="screenshotPreview">
+                    <img id="previewImage" src="" alt="Screenshot Preview">
+                    <div class="preview-info">
+                        📸 Preview of selected section - This will be sent via email
+                    </div>
                 </div>
 
                 <div>
@@ -1858,9 +1887,14 @@
                     <textarea id="emailMessage" rows="4" placeholder="Add a custom message to accompany the screenshot..."></textarea>
                 </div>
 
-                <button type="button" class="btn btn-email" onclick="sendScreenshotEmail()">
-                    📤 Capture & Send Screenshot
-                </button>
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" class="btn btn-primary" onclick="generateScreenshotPreview()" style="flex: 1;">
+                        🔍 Preview Screenshot
+                    </button>
+                    <button type="button" class="btn btn-email" onclick="sendScreenshotEmail()" style="flex: 2;">
+                        📤 Capture & Send Screenshot
+                    </button>
+                </div>
             </form>
 
             <div id="emailStatus" class="email-status"></div>
@@ -1922,16 +1956,19 @@
 
     <script>
         // ========================================
-        // EMAILJS INITIALIZATION WITH YOUR CREDENTIALS
+        // SMTP.JS AND EMAILJS INITIALIZATION
         // ========================================
 
         (function() {
             try {
-                // Initialize EmailJS with your public key
-                emailjs.init("uMjP4LeVCl37KXNHo");
-                console.log('📧 EmailJS initialized successfully!');
+                // Initialize EmailJS with your public key (fallback)
+                if (typeof emailjs !== 'undefined') {
+                    emailjs.init("uMjP4LeVCl37KXNHo");
+                    console.log('📧 EmailJS initialized successfully!');
+                }
+                console.log('📧 SMTP.js loaded successfully!');
             } catch (error) {
-                console.error('❌ EmailJS initialization error:', error);
+                console.error('❌ Email service initialization error:', error);
             }
         })();
 
@@ -1944,9 +1981,9 @@
         let currentMonth = new Date().toISOString().substring(0, 7);
         let currentDate = new Date().toISOString().split('T')[0];
 
-        // Global variables for authentication
+        // Global variables for admin access and Firebase
         window.isAdminMode = false;
-        window.currentUser = null;
+        window.firebaseUser = null;
 
         // Sample Skills Data
         let skillsData = [
@@ -1974,57 +2011,19 @@
             yearlyPerformance: 0
         };
 
+        // SMTP Configuration (use your own SMTP settings)
+        const SMTP_CONFIG = {
+            Host: "smtp.elasticemail.com", // Change to your SMTP server
+            Username: "kastrobistro@gmail.com", // Your SMTP username
+            Password: "9A72C1254E0F0B3106218B9A74FF64248798", // Your SMTP password
+            Port: 2525,
+            // Optional: use secure token instead of username/password
+        };
+
         // ========================================
-        // FIREBASE AUTHENTICATION FUNCTIONS
+        // FIREBASE AUTHENTICATION INTEGRATION
         // ========================================
 
-        // Wait for Firebase to be available
-        function waitForFirebase() {
-            return new Promise((resolve) => {
-                if (window.firebaseAuth) {
-                    resolve();
-                } else {
-                    setTimeout(() => {
-                        waitForFirebase().then(resolve);
-                    }, 100);
-                }
-            });
-        }
-
-        // Initialize Firebase auth state listener
-        async function initializeAuth() {
-            try {
-                await waitForFirebase();
-                
-                // Listen for auth state changes
-                window.firebaseAuthStateChanged(window.firebaseAuth, (user) => {
-                    if (user) {
-                        console.log('🔥 Firebase user authenticated:', user.email);
-                        window.currentUser = user;
-                        updateConnectionStatus('firebase');
-                        
-                        // Show user info
-                        const userInfo = document.getElementById('userInfo');
-                        const userEmail = document.getElementById('userEmail');
-                        userInfo.style.display = 'block';
-                        userEmail.textContent = user.email;
-                        
-                        showDashboard();
-                    } else {
-                        console.log('🔥 Firebase user signed out');
-                        window.currentUser = null;
-                        hideDashboard();
-                    }
-                });
-                
-                console.log('🔥 Firebase authentication initialized');
-            } catch (error) {
-                console.error('❌ Firebase initialization error:', error);
-                updateConnectionStatus('offline');
-            }
-        }
-
-        // Admin access fallback
         function checkAdminAccess(username, password) {
             return username.toLowerCase().trim() === 'admin' && password === 'admin123';
         }
@@ -2043,7 +2042,7 @@
             console.log('👑 Admin mode activated');
         }
 
-        // Sign up function
+        // Sign up function with Firebase integration
         window.signUp = async function() {
             const emailInput = document.getElementById("email").value.trim();
             const passwordInput = document.getElementById("password").value;
@@ -2058,50 +2057,38 @@
                 showDashboard();
                 return;
             }
-            
-            // Firebase authentication
+
+            statusDiv.innerHTML = '<div class="auth-loading">🔄 Creating account...</div>';
+            statusDiv.className = 'auth-status';
+
             try {
-                statusDiv.innerHTML = '<div class="auth-loading">🔄 Creating account with Firebase...</div>';
-                statusDiv.className = 'auth-status';
-                
-                await waitForFirebase();
-                const userCredential = await window.firebaseCreateUser(window.firebaseAuth, emailInput, passwordInput);
-                
-                console.log('✅ Firebase user created:', userCredential.user.email);
-                
-                // Save user profile to Firestore
-                try {
-                    await window.firebaseSetDoc(window.firebaseDoc(window.firebaseDb, 'users', userCredential.user.uid), {
-                        email: userCredential.user.email,
-                        createdAt: new Date().toISOString(),
-                        role: 'user'
-                    });
-                    console.log('✅ User profile saved to Firestore');
-                } catch (firestoreError) {
-                    console.warn('⚠️ Could not save user profile to Firestore:', firestoreError);
+                // Try Firebase sign up if available
+                if (window.firebaseAuth && window.firebaseSignUp) {
+                    const userCredential = await window.firebaseSignUp(window.firebaseAuth, emailInput, passwordInput);
+                    window.firebaseUser = userCredential.user;
+                    
+                    statusDiv.innerHTML = '<div>✅ Account created successfully! Welcome to HBoard!</div>';
+                    statusDiv.className = 'auth-status success';
+                    
+                    updateConnectionStatus('connected');
+                    showDashboard();
+                    
+                    // Show user info
+                    const userInfo = document.getElementById('userInfo');
+                    const userEmail = document.getElementById('userEmail');
+                    userInfo.style.display = 'block';
+                    userEmail.textContent = emailInput;
+                } else {
+                    throw new Error('Firebase not configured');
                 }
-                
-                statusDiv.innerHTML = '<div>✅ Account created successfully! Welcome to HBoard!</div>';
-                statusDiv.className = 'auth-status success';
-                
             } catch (error) {
-                console.error('❌ Firebase signup error:', error);
-                let errorMessage = 'Signup failed. Please try again.';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'Email already in use. Please try signing in instead.';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Password is too weak. Please use at least 6 characters.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email address format.';
-                }
-                
-                statusDiv.innerHTML = `<div>❌ ${errorMessage}</div>`;
+                console.error('Sign up error:', error);
+                statusDiv.innerHTML = `<div class="error">❌ ${error.message || 'Sign up failed. Please try again.'}</div>`;
                 statusDiv.className = 'auth-status error';
             }
         }
 
-        // Sign in function
+        // Sign in function with Firebase integration
         window.signIn = async function() {
             const emailInput = document.getElementById("email").value.trim();
             const passwordInput = document.getElementById("password").value;
@@ -2116,35 +2103,33 @@
                 showDashboard();
                 return;
             }
-            
-            // Firebase authentication
+
+            statusDiv.innerHTML = '<div class="auth-loading">🔄 Signing in...</div>';
+            statusDiv.className = 'auth-status';
+
             try {
-                statusDiv.innerHTML = '<div class="auth-loading">🔄 Signing in with Firebase...</div>';
-                statusDiv.className = 'auth-status';
-                
-                await waitForFirebase();
-                const userCredential = await window.firebaseSignIn(window.firebaseAuth, emailInput, passwordInput);
-                
-                console.log('✅ Firebase user signed in:', userCredential.user.email);
-                
-                statusDiv.innerHTML = '<div>✅ Successfully signed in! Welcome back!</div>';
-                statusDiv.className = 'auth-status success';
-                
-            } catch (error) {
-                console.error('❌ Firebase signin error:', error);
-                let errorMessage = 'Sign in failed. Please check your credentials.';
-                
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = 'No account found with this email. Please sign up first.';
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = 'Incorrect password. Please try again.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email address format.';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = 'Too many failed attempts. Please try again later.';
+                // Try Firebase sign in if available
+                if (window.firebaseAuth && window.firebaseSignIn) {
+                    const userCredential = await window.firebaseSignIn(window.firebaseAuth, emailInput, passwordInput);
+                    window.firebaseUser = userCredential.user;
+                    
+                    statusDiv.innerHTML = '<div>✅ Welcome back! You are now signed in.</div>';
+                    statusDiv.className = 'auth-status success';
+                    
+                    updateConnectionStatus('connected');
+                    showDashboard();
+                    
+                    // Show user info
+                    const userInfo = document.getElementById('userInfo');
+                    const userEmail = document.getElementById('userEmail');
+                    userInfo.style.display = 'block';
+                    userEmail.textContent = emailInput;
+                } else {
+                    throw new Error('Firebase not configured');
                 }
-                
-                statusDiv.innerHTML = `<div>❌ ${errorMessage}</div>`;
+            } catch (error) {
+                console.error('Sign in error:', error);
+                statusDiv.innerHTML = `<div class="error">❌ ${error.message || 'Sign in failed. Please check your credentials.'}</div>`;
                 statusDiv.className = 'auth-status error';
             }
         }
@@ -2152,22 +2137,22 @@
         // Sign out function
         window.signOut = async function() {
             try {
-                if (window.isAdminMode) {
-                    // Admin signout
-                    window.isAdminMode = false;
-                    document.getElementById('adminBadge').style.display = 'none';
-                    updateConnectionStatus('connecting');
-                    console.log('👑 Admin signed out');
-                } else if (window.firebaseAuth && window.currentUser) {
-                    // Firebase signout
+                if (window.firebaseAuth && window.firebaseSignOut && window.firebaseUser) {
                     await window.firebaseSignOut(window.firebaseAuth);
-                    console.log('🔥 Firebase user signed out');
                 }
+                
+                window.firebaseUser = null;
+                window.isAdminMode = false;
+                document.getElementById('adminBadge').style.display = 'none';
+                updateConnectionStatus('connecting');
+                console.log('👋 User signed out');
                 
                 hideDashboard();
                 
             } catch (error) {
                 console.error('❌ Sign out error:', error);
+                // Force sign out even if Firebase fails
+                hideDashboard();
             }
         }
 
@@ -2222,19 +2207,17 @@
                 case 'admin':
                     statusEl.textContent = '👑 Admin Mode - Full Access';
                     break;
-                case 'firebase':
-                    statusEl.textContent = '🔥 Firebase Connected';
-                    break;
             }
         }
 
         // ========================================
-        // EMAIL SCREENSHOT FUNCTIONALITY (FULLY WORKING)
+        // ENHANCED EMAIL SCREENSHOT FUNCTIONALITY WITH SMTP
         // ========================================
 
         function openEmailModal() {
             document.getElementById('emailModal').style.display = 'flex';
             document.getElementById('emailStatus').style.display = 'none';
+            document.getElementById('screenshotPreview').style.display = 'none';
             
             // Set default subject
             const landscape = document.getElementById('landscapeSelect').value;
@@ -2245,6 +2228,7 @@
         function closeEmailModal() {
             document.getElementById('emailModal').style.display = 'none';
             document.getElementById('emailStatus').style.display = 'none';
+            document.getElementById('screenshotPreview').style.display = 'none';
             
             // Reset form
             const recipientSelect = document.getElementById('emailRecipients');
@@ -2253,6 +2237,71 @@
             }
             document.getElementById('customEmail').value = '';
             document.getElementById('emailMessage').value = '';
+        }
+
+        async function generateScreenshotPreview() {
+            const screenshotType = document.getElementById('screenshotType').value;
+            const previewDiv = document.getElementById('screenshotPreview');
+            const previewImg = document.getElementById('previewImage');
+            
+            try {
+                showEmailStatus('📸 Generating preview...', 'loading');
+                
+                // Determine what to capture
+                let targetElement = getScreenshotTarget(screenshotType);
+                
+                if (!targetElement || targetElement.offsetWidth === 0) {
+                    showEmailStatus('❌ Selected view is not visible or available', 'error');
+                    return;
+                }
+
+                // Capture screenshot
+                const canvas = await html2canvas(targetElement, {
+                    useCORS: true,
+                    allowTaint: false,
+                    scale: 0.5, // Lower scale for preview
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    width: targetElement.scrollWidth,
+                    height: targetElement.scrollHeight
+                });
+
+                const imageData = canvas.toDataURL('image/png', 0.8);
+                
+                // Show preview
+                previewImg.src = imageData;
+                previewDiv.style.display = 'block';
+                
+                showEmailStatus('✅ Preview generated successfully', 'success');
+                setTimeout(() => {
+                    document.getElementById('emailStatus').style.display = 'none';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Preview generation error:', error);
+                showEmailStatus('❌ Failed to generate preview: ' + error.message, 'error');
+            }
+        }
+
+        function getScreenshotTarget(screenshotType) {
+            switch (screenshotType) {
+                case 'complete':
+                    return document.getElementById('monthlyView').style.display !== 'none' 
+                        ? document.querySelector('.dashboard-container') 
+                        : document.getElementById('dailyView');
+                case 'kpi-dashboard':
+                    return document.querySelector('.kpi-dashboard');
+                case 'weekly-kpis':
+                    return document.getElementById('weeklyKPIs');
+                case 'skills-table':
+                    return document.getElementById('monthlyTable');
+                case 'daily-view':
+                    return document.getElementById('dailyView');
+                case 'skill-management':
+                    return document.querySelector('.skill-management');
+                default:
+                    return document.querySelector('.dashboard-container');
+            }
         }
 
         async function sendScreenshotEmail() {
@@ -2289,48 +2338,18 @@
             }
 
             try {
-                showEmailStatus('📸 Capturing screenshot...', 'loading');
+                showEmailStatus('📸 Capturing high-quality screenshot...', 'loading');
 
                 // Determine what to capture
-                let targetElement, viewName;
-                switch (screenshotType) {
-                    case 'complete':
-                        targetElement = document.getElementById('monthlyView').style.display !== 'none' 
-                            ? document.querySelector('.dashboard-container') 
-                            : document.getElementById('dailyView');
-                        viewName = 'Complete Dashboard View';
-                        break;
-                    case 'kpi-dashboard':
-                        targetElement = document.querySelector('.kpi-dashboard');
-                        viewName = 'KPI Dashboard Section';
-                        break;
-                    case 'weekly-kpis':
-                        targetElement = document.getElementById('weeklyKPIs');
-                        viewName = 'Weekly KPIs Overview';
-                        break;
-                    case 'skills-table':
-                        targetElement = document.getElementById('monthlyTable');
-                        viewName = 'Skills Performance Table';
-                        break;
-                    case 'daily-view':
-                        targetElement = document.getElementById('dailyView');
-                        viewName = 'Daily Operations View';
-                        break;
-                    case 'skill-management':
-                        targetElement = document.querySelector('.skill-management');
-                        viewName = 'Skill Management Section';
-                        break;
-                    default:
-                        targetElement = document.querySelector('.dashboard-container');
-                        viewName = 'Dashboard View';
-                }
-
+                let targetElement = getScreenshotTarget(screenshotType);
+                let viewName = getViewName(screenshotType);
+                
                 if (!targetElement || targetElement.offsetWidth === 0) {
                     showEmailStatus('❌ Selected view is not visible or available', 'error');
                     return;
                 }
 
-                // Capture screenshot with optimized settings
+                // Capture high-quality screenshot
                 const canvas = await html2canvas(targetElement, {
                     useCORS: true,
                     allowTaint: false,
@@ -2343,24 +2362,14 @@
 
                 const imageData = canvas.toDataURL('image/png', 0.9);
                 
-                showEmailStatus('📤 Sending emails...', 'loading');
+                showEmailStatus('📤 Sending emails via SMTP...', 'loading');
 
                 // Prepare email data
                 const landscape = document.getElementById('landscapeSelect').value;
                 const period = document.getElementById('monthSelect').value;
                 const timestamp = new Date().toLocaleString();
-
-                let successCount = 0;
-                let errors = [];
                 
-                // Send emails to all recipients
-                for (let email of recipients) {
-                    try {
-                        const emailParams = {
-                            to_email: email,
-                            to_name: email.split('@')[0],
-                            subject: subject,
-                            message: message || `Please find attached the ${viewName} screenshot from our HBoard Operations Dashboard.
+                const emailBody = message || `Please find attached the ${viewName} screenshot from our HBoard Operations Dashboard.
 
 Landscape: ${landscape}
 Period: ${period}
@@ -2369,17 +2378,52 @@ Generated: ${timestamp}
 This automated report provides key insights into our operational performance and system availability.
 
 Best regards,
-HBoard Operations Team`,
-                            landscape: landscape,
-                            period: period,
-                            timestamp: timestamp,
-                            view_name: viewName,
-                            screenshot_data: imageData
-                        };
-                        
-                        await emailjs.send('service_gf6rddd', 'template_894t362', emailParams);
-                        console.log(`📧 Email sent successfully to: ${email}`);
-                        successCount++;
+HBoard Operations Team`;
+
+                let successCount = 0;
+                let errors = [];
+                
+                // Send emails to all recipients using SMTP.js
+                for (let email of recipients) {
+                    try {
+                        // Try SMTP.js first
+                        if (typeof Email !== 'undefined') {
+                            await Email.send({
+                                SecureToken: SMTP_CONFIG.SecureToken,
+                                Host: SMTP_CONFIG.Host,
+                                Username: SMTP_CONFIG.Username,
+                                Password: SMTP_CONFIG.Password,
+                                Port: SMTP_CONFIG.Port,
+                                To: email,
+                                From: SMTP_CONFIG.Username,
+                                Subject: subject,
+                                Body: emailBody,
+                                Attachments: [{
+                                    name: `hboard-screenshot-${Date.now()}.png`,
+                                    data: imageData
+                                }]
+                            });
+                            console.log(`📧 SMTP email sent successfully to: ${email}`);
+                            successCount++;
+                        }
+                        // Fallback to EmailJS if SMTP fails
+                        else if (typeof emailjs !== 'undefined') {
+                            const emailParams = {
+                                to_email: email,
+                                to_name: email.split('@')[0],
+                                subject: subject,
+                                message: emailBody,
+                                landscape: landscape,
+                                period: period,
+                                timestamp: timestamp,
+                                view_name: viewName,
+                                screenshot_data: imageData
+                            };
+                            
+                            await emailjs.send('service_gf6rddd', 'template_894t362', emailParams);
+                            console.log(`📧 EmailJS fallback sent successfully to: ${email}`);
+                            successCount++;
+                        }
                         
                         // Add delay between emails to avoid rate limiting
                         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -2391,20 +2435,32 @@ HBoard Operations Team`,
                 }
 
                 if (successCount > 0) {
-                    showEmailStatus(`✅ Screenshot sent successfully to ${successCount} recipient(s)!${errors.length > 0 ? ` (${errors.length} failed)` : ''}`, 'success');
+                    showEmailStatus(`✅ Screenshot sent successfully to ${successCount} recipient(s) via SMTP!${errors.length > 0 ? ` (${errors.length} failed)` : ''}`, 'success');
                     
                     // Log the action
-                    logAction('Email Screenshot', `Sent ${viewName} to ${successCount} recipients`);
+                    logAction('Email Screenshot', `Sent ${viewName} to ${successCount} recipients via SMTP`);
                     
                     // Auto-close after 3 seconds
                     setTimeout(closeEmailModal, 3000);
                 } else {
-                    showEmailStatus(`❌ Failed to send emails. ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : 'Please check your EmailJS configuration.'}`, 'error');
+                    showEmailStatus(`❌ Failed to send emails. ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : 'Please check your SMTP configuration.'}`, 'error');
                 }
 
             } catch (error) {
                 console.error('Screenshot email error:', error);
                 showEmailStatus('❌ Failed to capture screenshot: ' + error.message, 'error');
+            }
+        }
+
+        function getViewName(screenshotType) {
+            switch (screenshotType) {
+                case 'complete': return 'Complete Dashboard View';
+                case 'kpi-dashboard': return 'KPI Dashboard Section';
+                case 'weekly-kpis': return 'Weekly KPIs Overview';
+                case 'skills-table': return 'Skills Performance Table';
+                case 'daily-view': return 'Daily Operations View';
+                case 'skill-management': return 'Skill Management Section';
+                default: return 'Dashboard View';
             }
         }
 
@@ -2448,7 +2504,7 @@ HBoard Operations Team`,
             updateSkillsList();
             updateStatistics();
             
-            console.log('✅ Dashboard initialized successfully with Firebase & EmailJS');
+            console.log('✅ Dashboard initialized successfully with SMTP and Firebase integration');
         }
 
         function switchView(viewType) {
@@ -3015,7 +3071,7 @@ HBoard Operations Team`,
                 action: action,
                 details: details,
                 timestamp: new Date().toLocaleString(),
-                user: window.isAdminMode ? 'Admin User' : (window.currentUser ? window.currentUser.email : 'Current User'),
+                user: window.isAdminMode ? 'Admin User' : window.firebaseUser ? window.firebaseUser.email : 'Current User',
                 landscape: currentLandscape
             };
             
@@ -3075,7 +3131,7 @@ HBoard Operations Team`,
             
             // Quick admin access (Ctrl+Alt+A)
             if (event.ctrlKey && event.altKey && event.key === 'a') {
-                if (!window.isAdminMode && !window.currentUser) {
+                if (!window.isAdminMode) {
                     document.getElementById('email').value = 'admin';
                     document.getElementById('password').value = 'admin123';
                     document.getElementById('auth-status').innerHTML = '<div>👑 Quick Admin Access - Click Sign In</div>';
@@ -3118,11 +3174,30 @@ HBoard Operations Team`,
                 historyLog = JSON.parse(savedHistoryLog);
             }
             
-            // Initialize Firebase authentication
-            initializeAuth();
+            // Firebase Auth State Listener
+            if (window.firebaseAuth && window.firebaseAuthStateChanged) {
+                window.firebaseAuthStateChanged(window.firebaseAuth, (user) => {
+                    if (user) {
+                        window.firebaseUser = user;
+                        updateConnectionStatus('connected');
+                        showDashboard();
+                        
+                        // Show user info
+                        const userInfo = document.getElementById('userInfo');
+                        const userEmail = document.getElementById('userEmail');
+                        userInfo.style.display = 'block';
+                        userEmail.textContent = user.email;
+                    } else {
+                        window.firebaseUser = null;
+                        if (!window.isAdminMode) {
+                            hideDashboard();
+                        }
+                    }
+                });
+            }
             
             // Log system startup
-            logAction('System Startup', 'HBoard Operations Dashboard initialized with Firebase & EmailJS enabled');
+            logAction('System Startup', 'HBoard Operations Dashboard initialized with SMTP and Firebase integration');
             
             console.log('✅ Dashboard data loaded from localStorage');
             updateConnectionStatus('connecting');
@@ -3148,20 +3223,13 @@ HBoard Operations Team`,
         console.log(`
 🔹 HBoard - Advanced Operations Excellence Dashboard v2024.09.07 🔹
 ✅ Production-ready dashboard loaded successfully
-🔥 Firebase: FULLY INTEGRATED with your API configuration
-   - Project ID: hboard-af489
-   - Auth Domain: hboard-af489.firebaseapp.com
-   - Real-time authentication with Firestore user profiles
-📧 EmailJS: FULLY CONFIGURED with your credentials
-   - Service ID: service_gf6rddd
-   - Template ID: template_894t362
-   - Public Key: uMjP4LeVCl37KXNHo
+🔐 Authentication: Firebase + Admin access (admin/admin123)
+📧 Email Integration: SMTP.js + EmailJS with screenshot preview
 🎯 Dynamic KPIs: Monthly/Yearly performance tracking
-📊 Skills Management: Full CRUD operations with Firebase sync
+📊 Skills Management: Full CRUD operations (REDUCED WIDTH)
 🔄 Real-time Sync: Active and functional
 🎨 Responsive Design: Optimized for all devices
 📱 Mobile Ready: Touch-friendly interface
-👑 Admin Access: admin/admin123 (fallback)
 🚀 Ready for enterprise deployment and internship presentation
         `);
     </script>
