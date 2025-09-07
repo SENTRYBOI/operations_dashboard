@@ -20,88 +20,76 @@
 
     <style>
         :root {
-            /* Primitive Color Tokens */
-            --color-white: rgba(255, 255, 255, 1);
-            --color-black: rgba(0, 0, 0, 1);
-            --color-cream-50: rgba(252, 252, 249, 1);
-            --color-cream-100: rgba(255, 255, 253, 1);
-            --color-gray-200: rgba(245, 245, 245, 1);
-            --color-gray-300: rgba(167, 169, 169, 1);
-            --color-gray-400: rgba(119, 124, 124, 1);
-            --color-slate-500: rgba(98, 108, 113, 1);
-            --color-brown-600: rgba(94, 82, 64, 1);
-            --color-charcoal-700: rgba(31, 33, 33, 1);
-            --color-charcoal-800: rgba(38, 40, 40, 1);
-            --color-slate-900: rgba(19, 52, 59, 1);
-            --color-teal-300: rgba(50, 184, 198, 1);
-            --color-teal-400: rgba(45, 166, 178, 1);
-            --color-teal-500: rgba(33, 128, 141, 1);
-            --color-teal-600: rgba(29, 116, 128, 1);
-            --color-teal-700: rgba(26, 104, 115, 1);
-            --color-teal-800: rgba(41, 150, 161, 1);
-            --color-red-400: rgba(255, 84, 89, 1);
-            --color-red-500: rgba(192, 21, 47, 1);
-            --color-orange-400: rgba(230, 129, 97, 1);
-            --color-orange-500: rgba(168, 75, 47, 1);
-
-            /* RGB versions for opacity control */
-            --color-brown-600-rgb: 94, 82, 64;
-            --color-teal-500-rgb: 33, 128, 141;
-            --color-slate-900-rgb: 19, 52, 59;
-            --color-slate-500-rgb: 98, 108, 113;
-            --color-red-500-rgb: 192, 21, 47;
-            --color-red-400-rgb: 255, 84, 89;
-            --color-orange-500-rgb: 168, 75, 47;
-            --color-orange-400-rgb: 230, 129, 97;
-
-            /* Background color tokens (Light Mode) */
-            --color-bg-1: rgba(59, 130, 246, 0.08); /* Light blue */
-            --color-bg-2: rgba(245, 158, 11, 0.08); /* Light yellow */
-            --color-bg-3: rgba(34, 197, 94, 0.08); /* Light green */
-            --color-bg-4: rgba(239, 68, 68, 0.08); /* Light red */
-            --color-bg-5: rgba(147, 51, 234, 0.08); /* Light purple */
-            --color-bg-6: rgba(249, 115, 22, 0.08); /* Light orange */
-            --color-bg-7: rgba(236, 72, 153, 0.08); /* Light pink */
-            --color-bg-8: rgba(6, 182, 212, 0.08); /* Light cyan */
-
-            /* Semantic Color Tokens (Light Mode) */
-            --color-background: var(--color-cream-50);
-            --color-surface: var(--color-cream-100);
-            --color-text: var(--color-charcoal-700);
-            --color-text-secondary: var(--color-slate-500);
-            --color-text-subtle: var(--color-gray-400);
-            --color-text-muted: var(--color-gray-300);
+            /* Color System - Green and White Theme */
+            --color-white: #ffffff;
+            --color-black: #000000;
+            
+            /* Green Palette */
+            --color-green-50: #f0fdf4;
+            --color-green-100: #dcfce7;
+            --color-green-200: #bbf7d0;
+            --color-green-300: #86efac;
+            --color-green-400: #4ade80;
+            --color-green-500: #22c55e;
+            --color-green-600: #16a34a;
+            --color-green-700: #15803d;
+            --color-green-800: #166534;
+            --color-green-900: #14532d;
+            
+            /* Gray Palette for text and borders */
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-400: #9ca3af;
+            --color-gray-500: #6b7280;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --color-gray-900: #111827;
+            
+            /* Red for critical status */
+            --color-red-400: #f87171;
+            --color-red-500: #ef4444;
+            --color-red-600: #dc2626;
+            
+            /* Orange for warning */
+            --color-orange-400: #fb923c;
+            --color-orange-500: #f97316;
+            --color-orange-600: #ea580c;
+            
+            /* Semantic colors */
+            --color-primary: var(--color-green-600);
+            --color-primary-hover: var(--color-green-700);
+            --color-primary-light: var(--color-green-100);
+            --color-secondary: var(--color-gray-500);
+            --color-success: var(--color-green-500);
+            --color-warning: var(--color-orange-500);
+            --color-error: var(--color-red-500);
+            
+            /* Background colors */
+            --color-background: var(--color-white);
+            --color-surface: var(--color-white);
+            --color-surface-secondary: var(--color-gray-50);
+            
+            /* Text colors */
+            --color-text-primary: var(--color-gray-900);
+            --color-text-secondary: var(--color-gray-600);
+            --color-text-muted: var(--color-gray-400);
+            
+            /* Border colors */
             --color-border: var(--color-gray-200);
             --color-border-strong: var(--color-gray-300);
-            --color-border-subtle: rgba(245, 245, 245, 0.5);
-            --color-primary: var(--color-teal-500);
-            --color-primary-hover: var(--color-teal-600);
-            --color-primary-subtle: var(--color-bg-8);
-            --color-success: rgba(34, 197, 94, 1);
-            --color-success-subtle: var(--color-bg-3);
-            --color-warning: var(--color-orange-400);
-            --color-warning-subtle: var(--color-bg-6);
-            --color-error: var(--color-red-400);
-            --color-error-subtle: var(--color-bg-4);
-            --color-info: rgba(59, 130, 246, 1);
-            --color-info-subtle: var(--color-bg-1);
-
-            /* Shadow tokens */
-            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
+            
+            /* Shadows */
+            --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
             /* Typography */
-            --font-family-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-weight-light: 300;
-            --font-weight-regular: 400;
-            --font-weight-medium: 500;
-            --font-weight-semibold: 600;
-            --font-weight-bold: 700;
-
-            /* Font sizes */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --font-size-xs: 0.75rem;
             --font-size-sm: 0.875rem;
             --font-size-base: 1rem;
@@ -110,16 +98,8 @@
             --font-size-2xl: 1.5rem;
             --font-size-3xl: 1.875rem;
             --font-size-4xl: 2.25rem;
-
-            /* Line heights */
-            --line-height-tight: 1.25;
-            --line-height-snug: 1.375;
-            --line-height-normal: 1.5;
-            --line-height-relaxed: 1.625;
-            --line-height-loose: 2;
-
+            
             /* Spacing */
-            --space-0: 0;
             --space-1: 0.25rem;
             --space-2: 0.5rem;
             --space-3: 0.75rem;
@@ -131,10 +111,8 @@
             --space-12: 3rem;
             --space-16: 4rem;
             --space-20: 5rem;
-            --space-24: 6rem;
-
+            
             /* Border radius */
-            --radius-none: 0;
             --radius-sm: 0.125rem;
             --radius-base: 0.25rem;
             --radius-md: 0.375rem;
@@ -143,10 +121,10 @@
             --radius-2xl: 1rem;
             --radius-3xl: 1.5rem;
             --radius-full: 9999px;
-
+            
             /* Transitions */
-            --transition-all: all 0.15s ease-in-out;
-            --transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 300ms ease-in-out;
         }
 
         /* Reset and base styles */
@@ -158,14 +136,13 @@
 
         html {
             font-size: 16px;
-            scroll-behavior: smooth;
         }
 
         body {
-            font-family: var(--font-family-inter);
+            font-family: var(--font-family);
             font-size: var(--font-size-base);
-            line-height: var(--line-height-normal);
-            color: var(--color-text);
+            line-height: 1.5;
+            color: var(--color-text-primary);
             background-color: var(--color-background);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -174,18 +151,6 @@
         /* Utility classes */
         .hidden {
             display: none !important;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
         }
 
         .container {
@@ -203,19 +168,18 @@
             gap: var(--space-2);
             padding: var(--space-2) var(--space-4);
             font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-medium);
-            line-height: var(--line-height-tight);
+            font-weight: 500;
             text-decoration: none;
-            border: none;
+            border: 1px solid transparent;
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: var(--transition-all);
+            transition: var(--transition-fast);
             white-space: nowrap;
             user-select: none;
         }
 
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
@@ -226,19 +190,16 @@
 
         .btn-primary:hover:not(:disabled) {
             background-color: var(--color-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
         }
 
         .btn-secondary {
             background-color: var(--color-surface);
-            color: var(--color-text);
-            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            border-color: var(--color-border);
         }
 
         .btn-secondary:hover:not(:disabled) {
-            background-color: var(--color-gray-200);
-            border-color: var(--color-border-strong);
+            background-color: var(--color-surface-secondary);
         }
 
         .btn-success {
@@ -246,26 +207,14 @@
             color: var(--color-white);
         }
 
-        .btn-success:hover:not(:disabled) {
-            background-color: rgba(34, 197, 94, 0.9);
-        }
-
         .btn-warning {
             background-color: var(--color-warning);
             color: var(--color-white);
         }
 
-        .btn-warning:hover:not(:disabled) {
-            background-color: rgba(230, 129, 97, 0.9);
-        }
-
         .btn-danger {
             background-color: var(--color-error);
             color: var(--color-white);
-        }
-
-        .btn-danger:hover:not(:disabled) {
-            background-color: rgba(255, 84, 89, 0.9);
         }
 
         .btn-sm {
@@ -278,6 +227,35 @@
             font-size: var(--font-size-lg);
         }
 
+        /* Toggle button group */
+        .btn-group {
+            display: inline-flex;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .btn-group .btn {
+            border-radius: 0;
+            border-right: none;
+        }
+
+        .btn-group .btn:first-child {
+            border-top-left-radius: var(--radius-md);
+            border-bottom-left-radius: var(--radius-md);
+        }
+
+        .btn-group .btn:last-child {
+            border-right: 1px solid var(--color-border);
+            border-top-right-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+        }
+
+        .btn-group .btn.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
         /* Form styles */
         .form-group {
             margin-bottom: var(--space-4);
@@ -285,8 +263,8 @@
 
         .form-label {
             display: block;
-            font-weight: var(--font-weight-medium);
-            color: var(--color-text);
+            font-weight: 500;
+            color: var(--color-text-primary);
             margin-bottom: var(--space-2);
         }
 
@@ -294,59 +272,25 @@
             width: 100%;
             padding: var(--space-3);
             font-size: var(--font-size-base);
-            line-height: var(--line-height-normal);
-            color: var(--color-text);
+            color: var(--color-text-primary);
             background-color: var(--color-surface);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-md);
-            transition: var(--transition-colors);
+            transition: var(--transition-fast);
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(var(--color-teal-500-rgb), 0.1);
+            box-shadow: 0 0 0 3px rgb(34 197 94 / 0.1);
         }
 
-        .form-control::placeholder {
-            color: var(--color-text-subtle);
-        }
-
-        .form-text {
-            font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
-            margin-top: var(--space-1);
-        }
-
-        .form-error {
-            font-size: var(--font-size-sm);
-            color: var(--color-error);
-            margin-top: var(--space-1);
-        }
-
-        /* Card styles */
-        .card {
-            background-color: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: var(--space-6);
-            border-bottom: 1px solid var(--color-border);
-            background-color: var(--color-background);
-        }
-
-        .card-body {
-            padding: var(--space-6);
-        }
-
-        .card-footer {
-            padding: var(--space-6);
-            border-top: 1px solid var(--color-border);
-            background-color: var(--color-background);
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
         }
 
         /* Loading overlay */
@@ -390,7 +334,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-teal-400) 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-success) 100%);
             padding: var(--space-6);
         }
 
@@ -406,13 +350,13 @@
         .login-header {
             padding: var(--space-8) var(--space-6) var(--space-6);
             text-align: center;
-            background-color: var(--color-background);
+            background-color: var(--color-surface-secondary);
         }
 
         .login-header h1 {
             font-size: var(--font-size-2xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-text);
+            font-weight: 700;
+            color: var(--color-text-primary);
             margin-bottom: var(--space-2);
         }
 
@@ -439,7 +383,7 @@
             text-align: center;
             margin: var(--space-6) 0;
             position: relative;
-            color: var(--color-text-subtle);
+            color: var(--color-text-muted);
             font-size: var(--font-size-sm);
         }
 
@@ -478,10 +422,6 @@
             padding: 0;
         }
 
-        .login-toggle button:hover {
-            color: var(--color-primary-hover);
-        }
-
         /* Dashboard styles */
         .dashboard-container {
             min-height: 100vh;
@@ -507,8 +447,8 @@
             align-items: center;
             gap: var(--space-3);
             font-size: var(--font-size-xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-text);
+            font-weight: 700;
+            color: var(--color-text-primary);
         }
 
         .dashboard-brand i {
@@ -529,295 +469,326 @@
             font-size: var(--font-size-sm);
         }
 
+        /* Toolbar */
+        .toolbar {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toolbar-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .toolbar-label {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        /* Main content */
         .dashboard-main {
             padding: var(--space-8) 0;
         }
 
         /* Section styles */
         .section {
-            margin-bottom: var(--space-12);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
         }
 
         .section-header {
-            margin-bottom: var(--space-8);
+            padding: var(--space-6) var(--space-6) var(--space-4);
         }
 
         .section-title {
-            font-size: var(--font-size-3xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-text);
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-text-primary);
             margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         .section-subtitle {
             color: var(--color-text-secondary);
-            font-size: var(--font-size-base);
+            font-size: var(--font-size-sm);
         }
 
-        /* KPI grid */
+        .section-body {
+            padding: 0 var(--space-6) var(--space-6);
+        }
+
+        /* KPI styles */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: var(--space-6);
         }
 
         .kpi-card {
             background-color: var(--color-surface);
             border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             padding: var(--space-6);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-all);
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .kpi-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: var(--space-4);
-        }
-
-        .kpi-title {
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-text);
+            text-align: center;
         }
 
         .kpi-value {
             font-size: var(--font-size-4xl);
-            font-weight: var(--font-weight-bold);
+            font-weight: 700;
             margin: var(--space-4) 0;
-            color: var(--color-error);
+            color: var(--color-success);
+        }
+
+        .kpi-label {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .kpi-trend {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: var(--space-2);
+            margin-top: var(--space-2);
             font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
         }
 
-        .kpi-green .kpi-value {
-            color: var(--color-success);
-        }
-
-        .kpi-amber .kpi-value {
-            color: var(--color-warning);
-        }
-
-        .kpi-red .kpi-value {
-            color: var(--color-error);
-        }
-
-        /* Status guide */
-        .status-guide {
-            background-color: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .status-guide h3 {
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            margin-bottom: var(--space-4);
-            color: var(--color-text);
-        }
-
-        .status-list {
-            list-style: none;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-3);
-            padding: var(--space-3) 0;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .status-item:last-child {
-            border-bottom: none;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
-
-        .status-indicator.green {
-            background-color: var(--color-success);
-        }
-
-        .status-indicator.amber {
-            background-color: var(--color-warning);
-        }
-
-        .status-indicator.red {
-            background-color: var(--color-error);
-        }
-
-        .status-content {
-            flex: 1;
-        }
-
-        .status-range {
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-text);
-        }
-
-        .status-description {
-            font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
-            margin-top: var(--space-1);
-        }
-
-        /* Statistics grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-6);
-            margin-bottom: var(--space-8);
-        }
-
-        .stat-card {
-            background-color: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-all);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-value {
-            font-size: var(--font-size-3xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-primary);
-            margin-bottom: var(--space-2);
-        }
-
-        .stat-label {
-            font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
-            font-weight: var(--font-weight-medium);
-        }
-
-        /* Chart container */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-top: var(--space-6);
-        }
-
-        .chart-container canvas {
-            max-height: 100%;
-        }
-
-        /* Skills section */
-        .skills-section {
-            background-color: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-
-        .skills-header {
-            padding: var(--space-6);
-            border-bottom: 1px solid var(--color-border);
-            background-color: var(--color-background);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .skills-header h3 {
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-text);
-        }
-
-        .skills-body {
-            padding: var(--space-6);
-        }
-
-        .skills-list {
-            list-style: none;
+        /* Skills */
+        .skills-container {
             margin-bottom: var(--space-6);
         }
 
-        .skill-item {
+        .skills-input {
+            margin-bottom: var(--space-4);
+        }
+
+        .skills-list {
             display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .skill-tag {
+            display: inline-flex;
             align-items: center;
-            justify-content: space-between;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+
+        .skill-remove {
+            background: none;
+            border: none;
+            color: var(--color-white);
+            cursor: pointer;
+            font-size: var(--font-size-xs);
+            opacity: 0.8;
+            transition: var(--transition-fast);
+        }
+
+        .skill-remove:hover {
+            opacity: 1;
+        }
+
+        /* Weekly overview table */
+        .weekly-overview {
+            overflow-x: auto;
+        }
+
+        .weekly-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--space-4);
+        }
+
+        .weekly-table th,
+        .weekly-table td {
+            padding: var(--space-3);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+
+        .weekly-table th {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .weekly-table .skill-name {
+            text-align: left;
+            background-color: var(--color-surface-secondary);
+            font-weight: 500;
+        }
+
+        .week-header {
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .week-header:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        /* Weekly availability cards */
+        .weekly-cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .weekly-card {
+            background-color: var(--color-surface-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
             padding: var(--space-4);
-            background-color: var(--color-background);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-3);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
         }
 
-        .skill-item:last-child {
-            margin-bottom: 0;
+        .weekly-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
         }
 
-        .skill-info {
-            flex: 1;
-        }
-
-        .skill-name {
-            font-weight: var(--font-weight-medium);
-            color: var(--color-text);
+        .weekly-card-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-error);
             margin-bottom: var(--space-1);
         }
 
-        .skill-description {
+        .weekly-card-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
+
+        /* Daily grid */
+        .daily-grid {
+            overflow-x: auto;
+        }
+
+        .daily-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .daily-table th,
+        .daily-table td {
+            padding: var(--space-3);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+
+        .daily-table th {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .daily-table .skill-name {
+            text-align: left;
+            background-color: var(--color-primary-light);
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        /* Performance indicators */
+        .performance-indicator {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .progress-circle.green {
+            border-color: var(--color-success);
+            color: var(--color-success);
+        }
+
+        .progress-circle.amber {
+            border-color: var(--color-warning);
+            color: var(--color-warning);
+        }
+
+        .progress-circle.red {
+            border-color: var(--color-error);
+            color: var(--color-error);
+        }
+
+        .progress-text {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        /* Daily stats */
+        .daily-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .daily-stat {
+            text-align: center;
+        }
+
+        .daily-stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-error);
+            margin-bottom: var(--space-1);
+        }
+
+        .daily-stat-label {
             font-size: var(--font-size-sm);
             color: var(--color-text-secondary);
         }
 
-        .skill-actions {
-            display: flex;
-            gap: var(--space-2);
-        }
-
-        .add-skill-form {
-            background-color: var(--color-background);
-            border-radius: var(--radius-md);
-            padding: var(--space-6);
-            margin-top: var(--space-6);
-        }
-
-        .add-skill-form h4 {
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-text);
-            margin-bottom: var(--space-4);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: var(--space-4);
-            align-items: end;
-        }
-
-        /* Modal styles */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -849,28 +820,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: var(--color-background);
+            background-color: var(--color-surface-secondary);
         }
 
         .modal-title {
             font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-text);
+            font-weight: 600;
+            color: var(--color-text-primary);
         }
 
         .modal-close {
             background: none;
             border: none;
             font-size: var(--font-size-xl);
-            color: var(--color-text-subtle);
+            color: var(--color-text-muted);
             cursor: pointer;
             padding: var(--space-2);
             border-radius: var(--radius-md);
-            transition: var(--transition-colors);
+            transition: var(--transition-fast);
         }
 
         .modal-close:hover {
-            background-color: var(--color-background);
+            background-color: var(--color-surface-secondary);
             color: var(--color-text-secondary);
         }
 
@@ -884,78 +855,10 @@
             display: flex;
             gap: var(--space-4);
             justify-content: flex-end;
-            background-color: var(--color-background);
+            background-color: var(--color-surface-secondary);
         }
 
-        /* View selector */
-        .view-selector {
-            margin-bottom: var(--space-6);
-        }
-
-        .view-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-4);
-        }
-
-        .view-option {
-            background-color: var(--color-background);
-            border: 2px solid var(--color-border);
-            border-radius: var(--radius-md);
-            padding: var(--space-4);
-            cursor: pointer;
-            transition: var(--transition-all);
-            text-align: center;
-        }
-
-        .view-option:hover {
-            border-color: var(--color-primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .view-option.selected {
-            border-color: var(--color-primary);
-            background-color: var(--color-primary-subtle);
-        }
-
-        .view-option-title {
-            font-weight: var(--font-weight-medium);
-            color: var(--color-text);
-            margin-bottom: var(--space-1);
-        }
-
-        .view-option-description {
-            font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
-        }
-
-        /* Preview area */
-        .preview-container {
-            margin: var(--space-6) 0;
-            text-align: center;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-        }
-
-        .preview-placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 200px;
-            background-color: var(--color-background);
-            border: 2px dashed var(--color-border);
-            border-radius: var(--radius-md);
-            color: var(--color-text-secondary);
-            font-size: var(--font-size-lg);
-        }
-
-        /* Notification styles */
+        /* Notification */
         .notification {
             position: fixed;
             top: var(--space-6);
@@ -974,27 +877,27 @@
         }
 
         .notification.success {
-            background-color: var(--color-success-subtle);
-            color: var(--color-success);
+            background-color: var(--color-green-50);
+            color: var(--color-green-800);
             border-left-color: var(--color-success);
         }
 
         .notification.error {
-            background-color: var(--color-error-subtle);
-            color: var(--color-error);
+            background-color: #fef2f2;
+            color: #b91c1c;
             border-left-color: var(--color-error);
         }
 
         .notification.warning {
-            background-color: var(--color-warning-subtle);
-            color: var(--color-warning);
+            background-color: #fffbeb;
+            color: #d97706;
             border-left-color: var(--color-warning);
         }
 
         .notification.info {
-            background-color: var(--color-info-subtle);
-            color: var(--color-info);
-            border-left-color: var(--color-info);
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-left-color: #3b82f6;
         }
 
         .notification-icon {
@@ -1014,7 +917,7 @@
             opacity: 0.7;
             padding: var(--space-1);
             border-radius: var(--radius-sm);
-            transition: var(--transition-all);
+            transition: var(--transition-fast);
         }
 
         .notification-close:hover {
@@ -1031,25 +934,6 @@
                 transform: translateX(0);
                 opacity: 1;
             }
-        }
-
-        /* Team sync indicator */
-        .team-sync {
-            text-align: center;
-            padding: var(--space-6);
-            background-color: var(--color-success-subtle);
-            border: 1px solid var(--color-success);
-            border-radius: var(--radius-xl);
-            margin-bottom: var(--space-12);
-        }
-
-        .team-sync h3 {
-            color: var(--color-success);
-            margin-bottom: var(--space-2);
-        }
-
-        .sync-icon {
-            animation: spin 2s linear infinite;
         }
 
         /* Responsive design */
@@ -1070,22 +954,21 @@
                 justify-content: center;
             }
 
+            .toolbar-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-group {
+                justify-content: center;
+            }
+
             .kpi-grid {
                 grid-template-columns: 1fr;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .form-row {
+            .weekly-cards {
                 grid-template-columns: 1fr;
-            }
-
-            .skills-header {
-                flex-direction: column;
-                gap: var(--space-4);
-                align-items: flex-start;
             }
 
             .modal {
@@ -1098,69 +981,16 @@
                 left: var(--space-3);
                 min-width: auto;
             }
-
-            .view-options {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
+            .daily-stats {
                 grid-template-columns: 1fr;
             }
 
-            .skill-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--space-3);
-            }
-
-            .skill-actions {
-                align-self: flex-end;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            .dashboard-actions,
-            .btn,
-            .loading-overlay,
-            .modal-overlay,
-            .notification {
-                display: none !important;
-            }
-
-            .dashboard-container {
-                background-color: white;
-            }
-
-            .card,
-            .kpi-card,
-            .stat-card {
-                box-shadow: none;
-                border: 1px solid #ccc;
-            }
-        }
-
-        /* Focus styles for accessibility */
-        .btn:focus,
-        .form-control:focus,
-        button:focus {
-            outline: 2px solid transparent;
-            outline-offset: 2px;
-            box-shadow: 0 0 0 3px rgba(var(--color-teal-500-rgb), 0.3);
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --color-background: var(--color-charcoal-800);
-                --color-surface: var(--color-charcoal-700);
-                --color-text: var(--color-cream-100);
-                --color-text-secondary: var(--color-gray-300);
-                --color-text-subtle: var(--color-gray-400);
-                --color-border: var(--color-slate-500);
-                --color-border-strong: var(--color-gray-400);
+            .weekly-overview,
+            .daily-grid {
+                font-size: var(--font-size-sm);
             }
         }
     </style>
@@ -1182,7 +1012,6 @@
                 <p>Sign in to access your dashboard</p>
             </div>
             
-            <!-- Login Form -->
             <form id="login-form" class="login-form">
                 <div class="form-group">
                     <label for="email" class="form-label">Email Address</label>
@@ -1227,11 +1056,6 @@
                     </div>
                     
                     <div class="dashboard-actions">
-                        <button class="btn btn-success" id="download-btn">
-                            <i class="fas fa-download"></i>
-                            Download View
-                        </button>
-                        
                         <div class="user-menu">
                             <i class="fas fa-user"></i>
                             <span id="user-email">user@example.com</span>
@@ -1248,282 +1072,277 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <div class="container">
-                <!-- KPI Section -->
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">📈 Key Performance Indicators</h2>
-                        <p class="section-subtitle">📅 Monthly Performance - September 2024</p>
-                    </div>
-                    
-                    <div class="kpi-grid">
-                        <!-- Monthly Performance -->
-                        <div class="kpi-card kpi-red">
-                            <div class="kpi-header">
-                                <h3 class="kpi-title">📅 Monthly Performance</h3>
-                            </div>
-                            <div class="kpi-value" id="monthly-availability">0%</div>
-                            <div class="kpi-trend">
-                                <span>Overall Availability</span>
-                                <i class="fas fa-chart-line"></i>
-                                <span id="monthly-trend">📊 Monthly Trend</span>
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-row">
+                        <div class="toolbar-group">
+                            <span class="toolbar-label">
+                                <i class="fas fa-globe"></i>
+                                Landscape:
+                            </span>
+                            <select id="landscape-select" class="form-control form-select" style="width: 120px;">
+                                <option value="Europe">Europe</option>
+                                <option value="Asia">Asia</option>
+                                <option value="America">America</option>
+                                <option value="Global">Global</option>
+                            </select>
+                        </div>
+                        
+                        <div class="toolbar-group">
+                            <span class="toolbar-label">
+                                <i class="fas fa-calendar"></i>
+                                Month:
+                            </span>
+                            <input type="month" id="month-select" class="form-control" value="2025-09" style="width: 150px;">
+                        </div>
+                        
+                        <div class="toolbar-group">
+                            <span class="toolbar-label">
+                                <i class="fas fa-eye"></i>
+                                View Mode:
+                            </span>
+                            <div class="btn-group">
+                                <button class="btn btn-primary active" id="monthly-view-btn">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Monthly
+                                </button>
+                                <button class="btn btn-secondary" id="daily-view-btn">
+                                    <i class="fas fa-calendar-day"></i>
+                                    Daily
+                                </button>
                             </div>
                         </div>
                         
-                        <!-- Yearly Performance -->
-                        <div class="kpi-card kpi-red">
-                            <div class="kpi-header">
-                                <h3 class="kpi-title">📊 Yearly Performance</h3>
-                            </div>
-                            <div class="kpi-value" id="yearly-availability">0%</div>
-                            <div class="kpi-trend">
-                                <span>Overall Availability</span>
-                                <i class="fas fa-chart-line"></i>
-                                <span id="yearly-trend">📊 Yearly Trend</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Status Guide -->
-                        <div class="status-guide">
-                            <h3>🤖 Dynamic Percentage Calculation (Downtime-Based) + Real-time Team Sync</h3>
-                            <ul class="status-list">
-                                <li class="status-item">
-                                    <div class="status-indicator green"></div>
-                                    <div class="status-content">
-                                        <div class="status-range">Green (95-100%):</div>
-                                        <div class="status-description">Minimal downtime (≤1.2 hours/day)</div>
-                                    </div>
-                                </li>
-                                <li class="status-item">
-                                    <div class="status-indicator amber"></div>
-                                    <div class="status-content">
-                                        <div class="status-range">Amber (45-95%):</div>
-                                        <div class="status-description">Moderate downtime (1.2-13.2 hours/day)</div>
-                                    </div>
-                                </li>
-                                <li class="status-item">
-                                    <div class="status-indicator red"></div>
-                                    <div class="status-content">
-                                        <div class="status-range">Red (0-45%):</div>
-                                        <div class="status-description">High downtime (>13.2 hours/day)</div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="form-text">
-                                <strong>📊 Monthly View:</strong> Shows weekly averages calculated from daily data<br>
-                                <strong>🔥 Team Sync:</strong> Changes sync in real-time across all team members
-                            </div>
+                        <div class="toolbar-group">
+                            <button class="btn btn-success" id="refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                            <button class="btn btn-primary" id="add-skill-btn">
+                                <i class="fas fa-plus"></i>
+                                Add Skill
+                            </button>
+                            <button class="btn btn-primary" id="export-btn">
+                                <i class="fas fa-file-excel"></i>
+                                Export Excel Report
+                            </button>
+                            <button class="btn btn-primary" id="import-btn">
+                                <i class="fas fa-upload"></i>
+                                Import
+                            </button>
+                            <button class="btn btn-primary" id="history-btn">
+                                <i class="fas fa-history"></i>
+                                History
+                            </button>
+                            <button class="btn btn-danger" id="clear-btn">
+                                <i class="fas fa-trash"></i>
+                                Clear
+                            </button>
+                            <button class="btn btn-danger" id="clear-all-btn">
+                                <i class="fas fa-trash-alt"></i>
+                                Clear All History
+                            </button>
+                            <button class="btn btn-primary" id="sync-btn">
+                                <i class="fas fa-sync"></i>
+                                Sync Now
+                            </button>
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- Performance Statistics -->
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">📊 Performance Statistics</h2>
-                        <p class="section-subtitle">📌 Status Guide: Green - Optimal Performance (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)</p>
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value" id="total-entries">0</div>
-                            <div class="stat-label">Total Entries</div>
+                <!-- Monthly View -->
+                <div id="monthly-view" class="view-container">
+                    <!-- KPI Section -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                📈 Key Performance Indicators
+                            </h2>
+                            <p class="section-subtitle">📅 Monthly Performance - <span id="current-month">September 2025</span></p>
                         </div>
                         
-                        <div class="stat-card">
-                            <div class="stat-value" id="optimal-performance">0</div>
-                            <div class="stat-label">Optimal Performance</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-value" id="needs-attention">0</div>
-                            <div class="stat-label">Needs Attention</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-value" id="critical-issues">0</div>
-                            <div class="stat-label">Critical Issues</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Performance Chart -->
-                    <div class="card" id="performance-chart-section">
-                        <div class="card-header">
-                            <h3>Performance Trend</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="performance-chart"></canvas>
+                        <div class="section-body">
+                            <div class="kpi-grid">
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Overall Availability</div>
+                                    <div class="kpi-value" id="monthly-availability">0%</div>
+                                    <div class="kpi-trend">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Monthly Trend</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Yearly Trend</div>
+                                    <div class="kpi-value" id="yearly-availability">0%</div>
+                                    <div class="kpi-trend">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Yearly Trend</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- Skills Management -->
-                <section class="section" id="skills-section">
-                    <div class="skills-section">
-                        <div class="skills-header">
-                            <h3>🛠️ Skill Management</h3>
-                            <div class="form-text">Manage operational skills being tracked across your team</div>
+                    <!-- Skill Management -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                🛠️ Skill Management
+                            </h2>
+                            <p class="section-subtitle">Manage operational skills being tracked across your team</p>
                         </div>
                         
-                        <div class="skills-body">
-                            <h4>📋 Current Skills</h4>
-                            <ul id="skills-list" class="skills-list">
-                                <li class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">No skills added yet</div>
-                                        <div class="skill-description">Add your first skill below</div>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="section-body">
+                            <div class="skills-container">
+                                <div class="skills-input">
+                                    <input type="text" id="new-skill-input" class="form-control" placeholder="Enter new skill name" style="display: none;">
+                                </div>
+                                <div class="skills-list" id="skills-list">
+                                    <!-- Skills will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Skill Availability Overview -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                📊 Weekly Skill Availability Overview
+                            </h2>
+                        </div>
+                        
+                        <div class="section-body">
+                            <div class="weekly-cards">
+                                <div class="weekly-card" data-week="1">
+                                    <div class="weekly-card-value">0%</div>
+                                    <div class="weekly-card-label">WK 1 Availability</div>
+                                </div>
+                                <div class="weekly-card" data-week="2">
+                                    <div class="weekly-card-value">0%</div>
+                                    <div class="weekly-card-label">WK 2 Availability</div>
+                                </div>
+                                <div class="weekly-card" data-week="3">
+                                    <div class="weekly-card-value">0%</div>
+                                    <div class="weekly-card-label">WK 3 Availability</div>
+                                </div>
+                                <div class="weekly-card" data-week="4">
+                                    <div class="weekly-card-value">0%</div>
+                                    <div class="weekly-card-label">WK 4 Availability</div>
+                                </div>
+                                <div class="weekly-card" data-week="5">
+                                    <div class="weekly-card-value">0%</div>
+                                    <div class="weekly-card-label">WK 5 Availability</div>
+                                </div>
+                            </div>
                             
-                            <div class="add-skill-form">
-                                <h4>➕ Add New Skill</h4>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <input type="text" id="skill-name" class="form-control" placeholder="Skill name">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" id="skill-description" class="form-control" placeholder="Description">
-                                    </div>
-                                    <button type="button" class="btn btn-primary" id="add-skill-btn">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">
-                                    <strong>Tip:</strong> Skills represent operational areas that require tracking and monitoring.
-                                </div>
+                            <div class="weekly-overview">
+                                <table class="weekly-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Skills / Operational Areas</th>
+                                            <th class="week-header" data-week="1">WK 1<br><small>1-7</small></th>
+                                            <th class="week-header" data-week="2">WK 2<br><small>8-14</small></th>
+                                            <th class="week-header" data-week="3">WK 3<br><small>15-21</small></th>
+                                            <th class="week-header" data-week="4">WK 4<br><small>22-28</small></th>
+                                            <th class="week-header" data-week="5">WK 5<br><small>29-5</small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="weekly-table-body">
+                                        <!-- Weekly data will be populated here -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- Weekly Overview -->
-                <section class="section" id="weekly-section">
-                    <div class="section-header">
-                        <h2 class="section-title">📊 Weekly Skill Availability Overview</h2>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="weekly-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Daily Performance -->
-                <section class="section" id="daily-section">
-                    <div class="section-header">
-                        <h2 class="section-title">📊 Daily Performance Statistics</h2>
-                    </div>
-                    
-                    <div class="kpi-grid">
-                        <div class="kpi-card kpi-red">
-                            <div class="kpi-header">
-                                <h3 class="kpi-title">Today's Average</h3>
-                            </div>
-                            <div class="kpi-value" id="today-average">0%</div>
+                <!-- Daily View -->
+                <div id="daily-view" class="view-container hidden">
+                    <!-- Daily Performance Statistics -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                📊 Daily Performance Statistics
+                            </h2>
+                            <p class="section-subtitle">Week <span id="current-week">1</span> - <span id="week-range">1-7</span></p>
                         </div>
                         
-                        <div class="kpi-card kpi-red">
-                            <div class="kpi-header">
-                                <h3 class="kpi-title">Weekly Average</h3>
+                        <div class="section-body">
+                            <div class="daily-stats">
+                                <div class="daily-stat">
+                                    <div class="daily-stat-value">0%</div>
+                                    <div class="daily-stat-label">Today's Average</div>
+                                </div>
+                                <div class="daily-stat">
+                                    <div class="daily-stat-value">0%</div>
+                                    <div class="daily-stat-label">Weekly Average</div>
+                                </div>
+                                <div class="daily-stat">
+                                    <div style="color: var(--color-primary); font-size: var(--font-size-lg);">📈</div>
+                                    <div class="daily-stat-label">Performance Trend</div>
+                                </div>
+                                <div class="daily-stat">
+                                    <div style="color: var(--color-success); font-size: var(--font-size-lg);">🔥</div>
+                                    <div class="daily-stat-label">Team Sync</div>
+                                </div>
                             </div>
-                            <div class="kpi-value" id="weekly-average">0%</div>
-                        </div>
-                        
-                        <div class="status-guide">
-                            <h3>Performance Trend</h3>
-                            <div class="chart-container" style="height: 200px;">
-                                <canvas id="daily-trend-chart"></canvas>
+                            
+                            <div class="daily-grid">
+                                <table class="daily-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Skills</th>
+                                            <th>Sun<br><small>7/9</small></th>
+                                            <th>Mon<br><small>8/9</small></th>
+                                            <th>Tue<br><small>9/9</small></th>
+                                            <th>Wed<br><small>10/9</small></th>
+                                            <th>Thu<br><small>11/9</small></th>
+                                            <th>Fri<br><small>12/9</small></th>
+                                            <th>Sat<br><small>13/9</small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="daily-table-body">
+                                        <!-- Daily data will be populated here -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <!-- Team Sync Status -->
-                <section class="section" id="team-sync-section">
-                    <div class="team-sync">
-                        <h3>
-                            <i class="fas fa-sync-alt sync-icon"></i>
-                            Team Sync Active
-                        </h3>
-                        <p class="form-text">Real-time synchronization is active across all team members</p>
-                    </div>
-                </section>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Download Modal -->
-    <div id="download-modal" class="modal-overlay hidden">
+    <!-- Add Skill Modal -->
+    <div id="add-skill-modal" class="modal-overlay hidden">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">📥 Download Dashboard View</h3>
-                <button class="modal-close" id="close-download-modal">
+                <h3 class="modal-title">➕ Add New Skill</h3>
+                <button class="modal-close" id="close-skill-modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
             <div class="modal-body">
-                <div class="view-selector">
-                    <label class="form-label">Select View to Download:</label>
-                    <div class="view-options">
-                        <div class="view-option" data-view="full-dashboard">
-                            <div class="view-option-title">📊 Full Dashboard</div>
-                            <div class="view-option-description">Complete dashboard with all sections</div>
-                        </div>
-                        <div class="view-option" data-view="kpi-only">
-                            <div class="view-option-title">📈 KPI Only</div>
-                            <div class="view-option-description">Key Performance Indicators section</div>
-                        </div>
-                        <div class="view-option" data-view="statistics-only">
-                            <div class="view-option-title">📊 Statistics Only</div>
-                            <div class="view-option-description">Performance statistics and charts</div>
-                        </div>
-                        <div class="view-option" data-view="skills-only">
-                            <div class="view-option-title">🛠️ Skills Only</div>
-                            <div class="view-option-description">Skills management section</div>
-                        </div>
-                        <div class="view-option" data-view="weekly-only">
-                            <div class="view-option-title">📅 Weekly Overview</div>
-                            <div class="view-option-description">Weekly skill availability chart</div>
-                        </div>
-                        <div class="view-option" data-view="daily-only">
-                            <div class="view-option-title">📈 Daily Performance</div>
-                            <div class="view-option-description">Daily performance statistics</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="preview-container" id="preview-container">
-                    <div class="preview-placeholder">
-                        <i class="fas fa-eye"></i>
-                        <span style="margin-left: 8px;">Select a view to see preview</span>
-                    </div>
+                <div class="form-group">
+                    <label for="skill-name-input" class="form-label">Skill Name</label>
+                    <input type="text" id="skill-name-input" class="form-control" placeholder="Enter skill name" required>
                 </div>
             </div>
             
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancel-download-btn">Cancel</button>
-                <button class="btn btn-success" id="generate-preview-btn" disabled>
-                    <i class="fas fa-eye"></i>
-                    Generate Preview
-                </button>
-                <button class="btn btn-primary" id="download-image-btn" disabled>
-                    <i class="fas fa-download"></i>
-                    Download PNG
+                <button class="btn btn-secondary" id="cancel-skill-btn">Cancel</button>
+                <button class="btn btn-primary" id="save-skill-btn">
+                    <i class="fas fa-plus"></i>
+                    Add Skill
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Performance Dashboard Application JavaScript
-        // Firebase Integration
-
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBUER5i1yjaLqQq8ycf9ZZaH3MMB2AmiXY",
@@ -1537,21 +1356,24 @@
 
         // Application State
         let currentUser = null;
-        let skills = [];
+        let currentView = 'monthly';
+        let currentWeek = 1;
+        let skills = [
+            'Business Clarity',
+            'Revenue',
+            'BPT Processing', 
+            'Stock Aging',
+            'Inventory',
+            'AMB for Manufacturing',
+            'PMI for Manufacturing',
+            'BPM Stock Reconciliation'
+        ];
         let performanceData = {
             monthly: { availability: 0, trend: "stable" },
             yearly: { availability: 0, trend: "stable" },
-            statistics: {
-                totalEntries: 0,
-                optimalPerformance: 0,
-                needsAttention: 0,
-                criticalIssues: 0
-            },
-            daily: { todayAverage: 0, weeklyAverage: 0 }
+            weekly: Array(5).fill(null).map(() => ({})),
+            daily: {}
         };
-        let charts = {};
-        let selectedView = null;
-        let currentPreviewData = null;
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -1606,36 +1428,16 @@
             
             document.body.appendChild(notification);
             
-            // Add close functionality
             const closeBtn = notification.querySelector('.notification-close');
             closeBtn.addEventListener('click', () => {
                 notification.remove();
             });
             
-            // Auto remove after duration
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.remove();
                 }
             }, duration);
-        }
-
-        function updateKPICard(elementId, value, type = 'red') {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = `${value}%`;
-                const card = element.closest('.kpi-card');
-                if (card) {
-                    card.className = 'kpi-card';
-                    card.classList.add(`kpi-${type}`);
-                }
-            }
-        }
-
-        function getPerformanceType(value) {
-            if (value >= 95) return 'green';
-            if (value >= 45) return 'amber';
-            return 'red';
         }
 
         // Authentication Functions
@@ -1644,22 +1446,11 @@
                 showLoading();
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 
-                // Save user data to Firestore
                 await firestore.collection('users').doc(userCredential.user.uid).set({
                     email: email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    skills: [],
-                    performanceData: {
-                        monthly: { availability: 0, trend: "stable" },
-                        yearly: { availability: 0, trend: "stable" },
-                        statistics: {
-                            totalEntries: 0,
-                            optimalPerformance: 0,
-                            needsAttention: 0,
-                            criticalIssues: 0
-                        },
-                        daily: { todayAverage: 0, weeklyAverage: 0 }
-                    }
+                    skills: skills,
+                    performanceData: performanceData
                 });
                 
                 showNotification('Account created successfully!', 'success');
@@ -1708,7 +1499,7 @@
             }
         }
 
-        // Data Management Functions
+        // Data Management
         async function loadUserData() {
             if (!currentUser) return;
             
@@ -1716,7 +1507,7 @@
                 const userDoc = await firestore.collection('users').doc(currentUser.uid).get();
                 if (userDoc.exists) {
                     const userData = userDoc.data();
-                    skills = userData.skills || [];
+                    skills = userData.skills || skills;
                     performanceData = userData.performanceData || performanceData;
                     
                     renderSkills();
@@ -1743,341 +1534,170 @@
             }
         }
 
-        // Skills Management Functions
-        async function addSkill(name, description) {
-            if (!name.trim()) {
+        // Skills Management
+        function renderSkills() {
+            const skillsList = document.getElementById('skills-list');
+            skillsList.innerHTML = skills.map(skill => `
+                <div class="skill-tag">
+                    ${skill}
+                    <button class="skill-remove" onclick="removeSkill('${skill}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function addSkill(skillName) {
+            if (!skillName.trim()) {
                 showNotification('Please enter a skill name', 'warning');
                 return;
             }
             
-            const skill = {
-                id: Date.now().toString(),
-                name: name.trim(),
-                description: description.trim() || 'No description provided',
-                createdAt: new Date().toISOString()
-            };
+            if (skills.includes(skillName.trim())) {
+                showNotification('Skill already exists', 'warning');
+                return;
+            }
             
-            skills.push(skill);
+            skills.push(skillName.trim());
             renderSkills();
-            
-            // Clear form
-            document.getElementById('skill-name').value = '';
-            document.getElementById('skill-description').value = '';
-            
+            updateTables();
             showNotification('Skill added successfully!', 'success');
-            
-            // Update statistics and save to Firebase
-            updatePerformanceData();
             await saveUserData();
         }
 
-        async function removeSkill(skillId) {
-            skills = skills.filter(skill => skill.id !== skillId);
+        async function removeSkill(skillName) {
+            skills = skills.filter(skill => skill !== skillName);
             renderSkills();
+            updateTables();
             showNotification('Skill removed successfully!', 'success');
-            updatePerformanceData();
             await saveUserData();
         }
 
-        function renderSkills() {
-            const skillsList = document.getElementById('skills-list');
-            
-            if (skills.length === 0) {
-                skillsList.innerHTML = `
-                    <li class="skill-item">
-                        <div class="skill-info">
-                            <div class="skill-name">No skills added yet</div>
-                            <div class="skill-description">Add your first skill below</div>
-                        </div>
-                    </li>
-                `;
-                return;
-            }
-            
-            skillsList.innerHTML = skills.map(skill => `
-                <li class="skill-item">
-                    <div class="skill-info">
-                        <div class="skill-name">${skill.name}</div>
-                        <div class="skill-description">${skill.description}</div>
-                    </div>
-                    <div class="skill-actions">
-                        <button class="btn btn-danger btn-sm" onclick="removeSkill('${skill.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </li>
-            `).join('');
-        }
-
-        // Performance Data Functions
+        // Performance Data
         function updatePerformanceData() {
-            // Simulate some random data for demonstration
-            const randomPerformance = () => Math.floor(Math.random() * 100);
+            // Simulate random performance data
+            performanceData.monthly.availability = Math.floor(Math.random() * 100);
+            performanceData.yearly.availability = Math.floor(Math.random() * 100);
             
-            performanceData.monthly.availability = randomPerformance();
-            performanceData.yearly.availability = randomPerformance();
-            performanceData.daily.todayAverage = randomPerformance();
-            performanceData.daily.weeklyAverage = randomPerformance();
+            // Update KPI displays
+            document.getElementById('monthly-availability').textContent = `${performanceData.monthly.availability}%`;
+            document.getElementById('yearly-availability').textContent = `${performanceData.yearly.availability}%`;
             
-            performanceData.statistics.totalEntries = skills.length * 10 + Math.floor(Math.random() * 50);
-            performanceData.statistics.optimalPerformance = Math.floor(performanceData.statistics.totalEntries * 0.3);
-            performanceData.statistics.needsAttention = Math.floor(performanceData.statistics.totalEntries * 0.4);
-            performanceData.statistics.criticalIssues = performanceData.statistics.totalEntries - 
-                performanceData.statistics.optimalPerformance - performanceData.statistics.needsAttention;
-            
-            renderPerformanceData();
-            updateCharts();
-        }
-
-        function renderPerformanceData() {
-            // Update KPI cards
-            updateKPICard('monthly-availability', performanceData.monthly.availability, 
-                getPerformanceType(performanceData.monthly.availability));
-            updateKPICard('yearly-availability', performanceData.yearly.availability,
-                getPerformanceType(performanceData.yearly.availability));
-            updateKPICard('today-average', performanceData.daily.todayAverage,
-                getPerformanceType(performanceData.daily.todayAverage));
-            updateKPICard('weekly-average', performanceData.daily.weeklyAverage,
-                getPerformanceType(performanceData.daily.weeklyAverage));
-            
-            // Update statistics
-            document.getElementById('total-entries').textContent = performanceData.statistics.totalEntries;
-            document.getElementById('optimal-performance').textContent = performanceData.statistics.optimalPerformance;
-            document.getElementById('needs-attention').textContent = performanceData.statistics.needsAttention;
-            document.getElementById('critical-issues').textContent = performanceData.statistics.criticalIssues;
-        }
-
-        // Chart Functions
-        function createChart(canvasId, type, data, options = {}) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return null;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Destroy existing chart if it exists
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
-            }
-            
-            const defaultOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                },
-                scales: type !== 'doughnut' && type !== 'pie' ? {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                } : {}
-            };
-            
-            charts[canvasId] = new Chart(ctx, {
-                type: type,
-                data: data,
-                options: { ...defaultOptions, ...options }
+            // Update weekly cards
+            document.querySelectorAll('.weekly-card-value').forEach((card, index) => {
+                const value = Math.floor(Math.random() * 100);
+                card.textContent = `${value}%`;
+                card.style.color = getPerformanceColor(value);
             });
             
-            return charts[canvasId];
+            updateTables();
         }
 
-        function updateCharts() {
-            // Performance Trend Chart
-            const performanceChartData = {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                datasets: [{
-                    label: 'Performance %',
-                    data: [65, 59, 80, 81, 56, 55, 40, 35, performanceData.monthly.availability],
-                    borderColor: 'rgba(33, 128, 141, 1)',
-                    backgroundColor: 'rgba(33, 128, 141, 0.1)',
-                    tension: 0.4
-                }]
-            };
-            
-            createChart('performance-chart', 'line', performanceChartData);
-            
-            // Weekly Chart
-            const weeklyChartData = {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Availability %',
-                    data: [92, 85, 78, 90, 95, 88, 82],
-                    backgroundColor: [
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(230, 129, 97, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(230, 129, 97, 0.8)'
-                    ]
-                }]
-            };
-            
-            createChart('weekly-chart', 'bar', weeklyChartData);
-            
-            // Daily Trend Chart
-            const dailyTrendData = {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Daily Average %',
-                    data: [75, 82, 68, performanceData.daily.todayAverage],
-                    borderColor: 'rgba(230, 129, 97, 1)',
-                    backgroundColor: 'rgba(230, 129, 97, 0.1)',
-                    tension: 0.4
-                }]
-            };
-            
-            createChart('daily-trend-chart', 'line', dailyTrendData);
+        function getPerformanceColor(value) {
+            if (value >= 95) return 'var(--color-success)';
+            if (value >= 45) return 'var(--color-warning)';
+            return 'var(--color-error)';
         }
 
-        // Download Functions
-        function selectView(viewType) {
-            // Remove previous selection
-            document.querySelectorAll('.view-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Add selection to clicked option
-            const selectedOption = document.querySelector(`[data-view="${viewType}"]`);
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
-                selectedView = viewType;
+        function getPerformanceClass(value) {
+            if (value >= 95) return 'green';
+            if (value >= 45) return 'amber';
+            return 'red';
+        }
+
+        // Table Updates
+        function updateTables() {
+            updateWeeklyTable();
+            updateDailyTable();
+        }
+
+        function updateWeeklyTable() {
+            const tbody = document.getElementById('weekly-table-body');
+            tbody.innerHTML = skills.map(skill => {
+                const weekData = Array(5).fill(null).map(() => {
+                    const value = Math.floor(Math.random() * 100);
+                    return `
+                        <td>
+                            <div class="performance-indicator">
+                                <div class="progress-circle ${getPerformanceClass(value)}">
+                                    ${value}%
+                                </div>
+                                <div class="progress-text">0h down</div>
+                            </div>
+                        </td>
+                    `;
+                }).join('');
                 
-                // Enable preview button
-                document.getElementById('generate-preview-btn').disabled = false;
-                
-                // Clear preview
-                const previewContainer = document.getElementById('preview-container');
-                previewContainer.innerHTML = `
-                    <div class="preview-placeholder">
-                        <i class="fas fa-eye"></i>
-                        <span style="margin-left: 8px;">Click "Generate Preview" to see selected view</span>
-                    </div>
+                return `
+                    <tr>
+                        <td class="skill-name">${skill}</td>
+                        ${weekData}
+                    </tr>
                 `;
-                
-                // Disable download button until preview is generated
-                document.getElementById('download-image-btn').disabled = true;
-            }
+            }).join('');
         }
 
-        async function generatePreview() {
-            if (!selectedView) return;
-            
-            try {
-                showLoading();
+        function updateDailyTable() {
+            const tbody = document.getElementById('daily-table-body');
+            tbody.innerHTML = skills.map(skill => {
+                const dailyData = Array(7).fill(null).map(() => {
+                    const value = Math.floor(Math.random() * 100);
+                    return `
+                        <td>
+                            <div class="performance-indicator">
+                                <div class="progress-circle ${getPerformanceClass(value)}">
+                                    ${value}%
+                                </div>
+                                <div class="progress-text">0h down</div>
+                            </div>
+                        </td>
+                    `;
+                }).join('');
                 
-                // Get the elements to capture based on selected view
-                let elementsToCapture = [];
-                let captureElement = null;
-                
-                switch (selectedView) {
-                    case 'full-dashboard':
-                        captureElement = document.querySelector('.dashboard-main');
-                        break;
-                    case 'kpi-only':
-                        captureElement = document.querySelector('.section:first-child');
-                        break;
-                    case 'statistics-only':
-                        captureElement = document.getElementById('performance-chart-section').parentElement;
-                        break;
-                    case 'skills-only':
-                        captureElement = document.getElementById('skills-section');
-                        break;
-                    case 'weekly-only':
-                        captureElement = document.getElementById('weekly-section');
-                        break;
-                    case 'daily-only':
-                        captureElement = document.getElementById('daily-section');
-                        break;
-                    default:
-                        captureElement = document.querySelector('.dashboard-main');
-                }
-                
-                if (!captureElement) {
-                    throw new Error('Selected view not found');
-                }
-                
-                // Temporarily hide buttons and overlays for clean screenshot
-                const elementsToHide = [
-                    'download-btn',
-                    'logout-btn',
-                    'loading-overlay'
-                ];
-                
-                elementsToHide.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.style.visibility = 'hidden';
-                    }
-                });
-                
-                // Wait a bit for elements to hide
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                const canvas = await html2canvas(captureElement, {
-                    useCORS: true,
-                    allowTaint: true,
-                    scale: 2, // Higher quality
-                    backgroundColor: '#fcfcf9',
-                    scrollX: 0,
-                    scrollY: 0
-                });
-                
-                // Restore hidden elements
-                elementsToHide.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.style.visibility = 'visible';
-                    }
-                });
-                
-                const previewData = canvas.toDataURL('image/png', 1.0);
-                currentPreviewData = previewData;
-                
-                // Show preview in modal
-                const previewContainer = document.getElementById('preview-container');
-                previewContainer.innerHTML = `
-                    <img src="${previewData}" alt="Preview" class="preview-image">
+                return `
+                    <tr>
+                        <td class="skill-name">${skill}</td>
+                        ${dailyData}
+                    </tr>
                 `;
-                
-                // Enable download button
-                document.getElementById('download-image-btn').disabled = false;
-                
-                showNotification('Preview generated successfully!', 'success');
-                
-            } catch (error) {
-                console.error('Preview generation error:', error);
-                showNotification('Failed to generate preview', 'error');
-            } finally {
-                hideLoading();
-            }
+            }).join('');
         }
 
-        function downloadImage() {
-            if (!currentPreviewData) {
-                showNotification('No preview available to download', 'error');
-                return;
-            }
+        // View Management
+        function switchToMonthlyView() {
+            currentView = 'monthly';
+            hideElement('daily-view');
+            showElement('monthly-view');
             
-            try {
-                const link = document.createElement('a');
-                link.download = `dashboard-${selectedView}-${new Date().toISOString().split('T')[0]}.png`;
-                link.href = currentPreviewData;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showNotification('Image downloaded successfully!', 'success');
-                hideElement('download-modal');
-                
-            } catch (error) {
-                console.error('Download error:', error);
-                showNotification('Failed to download image', 'error');
-            }
+            document.getElementById('monthly-view-btn').classList.add('active');
+            document.getElementById('daily-view-btn').classList.remove('active');
+            
+            document.getElementById('monthly-view-btn').classList.remove('btn-secondary');
+            document.getElementById('monthly-view-btn').classList.add('btn-primary');
+            document.getElementById('daily-view-btn').classList.remove('btn-primary');
+            document.getElementById('daily-view-btn').classList.add('btn-secondary');
+        }
+
+        function switchToDailyView(week = 1) {
+            currentView = 'daily';
+            currentWeek = week;
+            hideElement('monthly-view');
+            showElement('daily-view');
+            
+            document.getElementById('daily-view-btn').classList.add('active');
+            document.getElementById('monthly-view-btn').classList.remove('active');
+            
+            document.getElementById('daily-view-btn').classList.remove('btn-secondary');
+            document.getElementById('daily-view-btn').classList.add('btn-primary');
+            document.getElementById('monthly-view-btn').classList.remove('btn-primary');
+            document.getElementById('monthly-view-btn').classList.add('btn-secondary');
+            
+            // Update daily view header
+            document.getElementById('current-week').textContent = week;
+            const ranges = ['1-7', '8-14', '15-21', '22-28', '29-5'];
+            document.getElementById('week-range').textContent = ranges[week - 1] || '1-7';
+            
+            updateDailyTable();
         }
 
         // Event Listeners
@@ -2092,12 +1712,7 @@
                 e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
-                
-                try {
-                    await signIn(email, password);
-                } catch (error) {
-                    // Error already handled in signIn function
-                }
+                await signIn(email, password);
             });
             
             signupBtn.addEventListener('click', async () => {
@@ -2114,11 +1729,7 @@
                     return;
                 }
                 
-                try {
-                    await signUp(email, password);
-                } catch (error) {
-                    // Error already handled in signUp function
-                }
+                await signUp(email, password);
             });
             
             forgotPasswordBtn.addEventListener('click', async () => {
@@ -2127,7 +1738,6 @@
                     showNotification('Please enter your email address', 'warning');
                     return;
                 }
-                
                 await resetPassword(email);
             });
             
@@ -2135,68 +1745,102 @@
                 signOut();
             });
             
-            // Download functionality
-            const downloadBtn = document.getElementById('download-btn');
-            downloadBtn.addEventListener('click', () => {
-                showElement('download-modal');
+            // View switching
+            document.getElementById('monthly-view-btn').addEventListener('click', () => {
+                switchToMonthlyView();
             });
             
-            // Download modal
-            const downloadModal = document.getElementById('download-modal');
-            const closeDownloadModal = document.getElementById('close-download-modal');
-            const cancelDownloadBtn = document.getElementById('cancel-download-btn');
-            const generatePreviewBtn = document.getElementById('generate-preview-btn');
-            const downloadImageBtn = document.getElementById('download-image-btn');
-            
-            closeDownloadModal.addEventListener('click', () => {
-                hideElement(downloadModal);
+            document.getElementById('daily-view-btn').addEventListener('click', () => {
+                switchToDailyView(currentWeek);
             });
             
-            cancelDownloadBtn.addEventListener('click', () => {
-                hideElement(downloadModal);
-            });
-            
-            generatePreviewBtn.addEventListener('click', () => {
-                generatePreview();
-            });
-            
-            downloadImageBtn.addEventListener('click', () => {
-                downloadImage();
-            });
-            
-            // Close modal when clicking outside
-            downloadModal.addEventListener('click', (e) => {
-                if (e.target === downloadModal) {
-                    hideElement(downloadModal);
-                }
-            });
-            
-            // View selection
-            document.querySelectorAll('.view-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    const viewType = option.dataset.view;
-                    selectView(viewType);
+            // Week navigation
+            document.querySelectorAll('.week-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const week = parseInt(header.dataset.week);
+                    switchToDailyView(week);
                 });
             });
             
-            // Skills management
-            const addSkillBtn = document.getElementById('add-skill-btn');
-            addSkillBtn.addEventListener('click', () => {
-                const name = document.getElementById('skill-name').value;
-                const description = document.getElementById('skill-description').value;
-                addSkill(name, description);
+            document.querySelectorAll('.weekly-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const week = parseInt(card.dataset.week);
+                    switchToDailyView(week);
+                });
             });
             
-            // Allow adding skills with Enter key
-            document.getElementById('skill-name').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addSkillBtn.click();
+            // Toolbar buttons
+            document.getElementById('refresh-btn').addEventListener('click', () => {
+                updatePerformanceData();
+                showNotification('Data refreshed!', 'success');
+            });
+            
+            document.getElementById('add-skill-btn').addEventListener('click', () => {
+                showElement('add-skill-modal');
+            });
+            
+            document.getElementById('export-btn').addEventListener('click', () => {
+                showNotification('Export functionality coming soon!', 'info');
+            });
+            
+            document.getElementById('import-btn').addEventListener('click', () => {
+                showNotification('Import functionality coming soon!', 'info');
+            });
+            
+            document.getElementById('history-btn').addEventListener('click', () => {
+                showNotification('History functionality coming soon!', 'info');
+            });
+            
+            document.getElementById('clear-btn').addEventListener('click', () => {
+                showNotification('Clear functionality coming soon!', 'warning');
+            });
+            
+            document.getElementById('clear-all-btn').addEventListener('click', () => {
+                showNotification('Clear all functionality coming soon!', 'warning');
+            });
+            
+            document.getElementById('sync-btn').addEventListener('click', () => {
+                updatePerformanceData();
+                showNotification('Data synchronized!', 'success');
+            });
+            
+            // Add skill modal
+            const addSkillModal = document.getElementById('add-skill-modal');
+            const closeSkillModal = document.getElementById('close-skill-modal');
+            const cancelSkillBtn = document.getElementById('cancel-skill-btn');
+            const saveSkillBtn = document.getElementById('save-skill-btn');
+            const skillNameInput = document.getElementById('skill-name-input');
+            
+            closeSkillModal.addEventListener('click', () => {
+                hideElement(addSkillModal);
+                skillNameInput.value = '';
+            });
+            
+            cancelSkillBtn.addEventListener('click', () => {
+                hideElement(addSkillModal);
+                skillNameInput.value = '';
+            });
+            
+            saveSkillBtn.addEventListener('click', async () => {
+                const skillName = skillNameInput.value.trim();
+                if (skillName) {
+                    await addSkill(skillName);
+                    hideElement(addSkillModal);
+                    skillNameInput.value = '';
                 }
             });
             
-            document.getElementById('skill-description').addEventListener('keypress', (e) => {
+            skillNameInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    addSkillBtn.click();
+                    saveSkillBtn.click();
+                }
+            });
+            
+            // Close modal when clicking outside
+            addSkillModal.addEventListener('click', (e) => {
+                if (e.target === addSkillModal) {
+                    hideElement(addSkillModal);
+                    skillNameInput.value = '';
                 }
             });
         }
@@ -2204,9 +1848,7 @@
         // Initialize Application
         async function initializeApp() {
             try {
-                // Setup event listeners
                 setupEventListeners();
-                
                 console.log('Application initialized successfully');
             } catch (error) {
                 console.error('Application initialization error:', error);
@@ -2220,47 +1862,36 @@
                 currentUser = user;
                 document.getElementById('user-email').textContent = user.email;
                 
-                // Show dashboard, hide login
                 hideElement('login-container');
                 showElement('dashboard-container');
                 
-                // Load user data and initialize dashboard
                 await loadUserData();
                 updatePerformanceData();
                 hideLoading();
             } else {
                 currentUser = null;
-                
-                // Show login, hide dashboard
                 showElement('login-container');
                 hideElement('dashboard-container');
                 hideLoading();
             }
         });
 
-        // Start the application when DOM is loaded
+        // Global functions
+        window.removeSkill = removeSkill;
+
+        // Start the application
         document.addEventListener('DOMContentLoaded', () => {
             showLoading();
             initializeApp();
         });
 
-        // Global functions for button clicks
-        window.removeSkill = removeSkill;
-
-        // Auto-refresh performance data every 30 seconds
+        // Auto-refresh data every 30 seconds
         setInterval(async () => {
             if (currentUser) {
                 updatePerformanceData();
                 await saveUserData();
             }
         }, 30000);
-
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && currentUser) {
-                updatePerformanceData();
-            }
-        });
     </script>
 </body>
 </html>
