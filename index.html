@@ -363,6 +363,12 @@
             gap: 8px;
             min-width: 180px;
         }
+
+        .control-group-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         
         .control-group label {
             font-weight: 700;
@@ -370,6 +376,24 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .add-landscape-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            border: 2px solid var(--secondary-teal);
+            background: var(--secondary-teal);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .add-landscape-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
         }
         
         /* Form Elements */
@@ -1612,14 +1636,12 @@
                 <div class="control-row">
                     <div class="control-group">
                         <label for="landscapeSelect">🌍 Landscape</label>
-                        <select id="landscapeSelect">
-                            <option value="Europe">Europe</option>
-                            <option value="NAM">North America</option>
-                            <option value="APAC">Asia Pacific</option>
-                            <option value="SEA">Southeast Asia</option>
-                            <option value="IA">India & Australia</option>
-                            <option value="Global">Global Operations</option>
-                        </select>
+                        <div class="control-group-inline">
+                            <select id="landscapeSelect"></select>
+                            <button type="button" class="add-landscape-btn" onclick="addNewLandscape()">
+                                ➕ Add
+                            </button>
+                        </div>
                     </div>
 
                     <div class="control-group" id="monthControl">
@@ -1925,6 +1947,24 @@
         </div>
     </div>
 
+    <!-- Add Landscape Modal -->
+    <div class="modal" id="addLandscapeModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('addLandscapeModal')">&times;</button>
+            <h2 style="color: var(--secondary-teal); margin-bottom: 20px;">🌍 Add New Landscape</h2>
+            <form onsubmit="return submitNewLandscape();">
+                <div style="margin-bottom: 20px;">
+                    <label for="newLandscapeName" style="display: block; margin-bottom: 10px; font-weight: bold;">Landscape Name:</label>
+                    <input type="text" id="newLandscapeName" placeholder="Enter new landscape/region..." required>
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('addLandscapeModal')">❌ Cancel</button>
+                    <button type="submit" class="btn btn-success">✅ Add Landscape</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Import Data Modal -->
     <div class="modal" id="importModal">
         <div class="modal-content">
@@ -1968,13 +2008,12 @@
         // Firebase Config - REPLACE WITH YOUR ACTUAL CONFIG
         const firebaseConfig = {
             // Add your Firebase configuration here
-          apiKey: "AIzaSyBUER5i1yjaLqQq8ycf9ZZaH3MMB2AmiXY",
-  authDomain: "hboard-af489.firebaseapp.com",
-  projectId: "hboard-af489",
-  storageBucket: "hboard-af489.firebasestorage.app",
-  messagingSenderId: "286896691982",
-  appId: "1:286896691982:web:4df21083f8f2350874555f",
-  measurementId: "G-EQ8S9T513X"
+            apiKey: "your-api-key-here",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
         };
 
         // Initialize Firebase
@@ -2003,6 +2042,16 @@
             'AMB for Manufacturing',
             'PMI for Manufacturing',
             'BPM Stock Reconciliation'
+        ];
+
+        // Landscapes Data
+        let landscapesData = [
+            'Europe',
+            'NAM',
+            'APAC',
+            'SEA',
+            'IA',
+            'Global'
         ];
 
         // Operational Data Storage
@@ -2447,6 +2496,57 @@
         });
 
         // ========================================
+        // LANDSCAPE MANAGEMENT FUNCTIONS
+        // ========================================
+
+        function updateLandscapeSelect() {
+            const landscapeSelect = document.getElementById('landscapeSelect');
+            landscapeSelect.innerHTML = '';
+            
+            landscapesData.forEach(landscape => {
+                const option = document.createElement('option');
+                option.value = landscape;
+                option.textContent = landscape;
+                if (landscape === currentLandscape) {
+                    option.selected = true;
+                }
+                landscapeSelect.appendChild(option);
+            });
+        }
+
+        function addNewLandscape() {
+            document.getElementById('addLandscapeModal').style.display = 'block';
+            document.getElementById('newLandscapeName').focus();
+        }
+
+        function submitNewLandscape() {
+            const landscapeName = document.getElementById('newLandscapeName').value.trim();
+            
+            if (!landscapeName) {
+                alert('Please enter a landscape name');
+                return false;
+            }
+            
+            if (landscapesData.includes(landscapeName)) {
+                alert('This landscape already exists');
+                return false;
+            }
+            
+            landscapesData.push(landscapeName);
+            logAction('Add Landscape', `Added new landscape: ${landscapeName}`);
+            closeModal('addLandscapeModal');
+            updateLandscapeSelect();
+            saveUserData(); // Auto-save
+            
+            // Switch to the newly added landscape
+            currentLandscape = landscapeName;
+            document.getElementById('landscapeSelect').value = landscapeName;
+            refreshData();
+            
+            return false;
+        }
+
+        // ========================================
         // MAIN DASHBOARD FUNCTIONALITY
         // ========================================
 
@@ -2456,7 +2556,6 @@
             // Set current date values
             document.getElementById('monthSelect').value = currentMonth;
             document.getElementById('dateSelect').value = currentDate;
-            document.getElementById('landscapeSelect').value = currentLandscape;
             
             // Update current month display
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -2471,6 +2570,9 @@
             
             // Load user-specific data from Firestore
             loadUserData();
+            
+            // Initialize landscapes dropdown
+            updateLandscapeSelect();
             
             // Load initial data
             refreshData();
@@ -2491,6 +2593,12 @@
                 const skillsDoc = await userDataRef.doc('skills').get();
                 if (skillsDoc.exists) {
                     skillsData = skillsDoc.data().skills || skillsData;
+                }
+                
+                // Load landscapes data
+                const landscapesDoc = await userDataRef.doc('landscapes').get();
+                if (landscapesDoc.exists) {
+                    landscapesData = landscapesDoc.data().landscapes || landscapesData;
                 }
                 
                 // Load operational data
@@ -2520,6 +2628,11 @@
                 skillsData = JSON.parse(savedSkills);
             }
             
+            const savedLandscapes = localStorage.getItem('hboard_landscapes_data');
+            if (savedLandscapes) {
+                landscapesData = JSON.parse(savedLandscapes);
+            }
+            
             const savedOperationalData = localStorage.getItem('hboard_operational_data');
             if (savedOperationalData) {
                 operationalData = JSON.parse(savedOperationalData);
@@ -2535,6 +2648,7 @@
             if (!currentUser) {
                 // Fallback to localStorage if not authenticated
                 localStorage.setItem('hboard_skills_data', JSON.stringify(skillsData));
+                localStorage.setItem('hboard_landscapes_data', JSON.stringify(landscapesData));
                 localStorage.setItem('hboard_operational_data', JSON.stringify(operationalData));
                 localStorage.setItem('hboard_history_log', JSON.stringify(historyLog));
                 return;
@@ -2547,6 +2661,12 @@
                 // Save skills data
                 await userDataRef.doc('skills').set({
                     skills: skillsData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Save landscapes data
+                await userDataRef.doc('landscapes').set({
+                    landscapes: landscapesData,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -2571,6 +2691,7 @@
                 console.error('❌ Error saving user data:', error);
                 // Fallback to localStorage
                 localStorage.setItem('hboard_skills_data', JSON.stringify(skillsData));
+                localStorage.setItem('hboard_landscapes_data', JSON.stringify(landscapesData));
                 localStorage.setItem('hboard_operational_data', JSON.stringify(operationalData));
                 localStorage.setItem('hboard_history_log', JSON.stringify(historyLog));
             }
@@ -3000,6 +3121,7 @@
                 landscape: currentLandscape,
                 month: currentMonth,
                 skills: skillsData,
+                landscapes: landscapesData,
                 statistics: statisticsData,
                 timestamp: new Date().toISOString(),
                 user: currentUser ? currentUser.email : 'anonymous'
@@ -3041,6 +3163,10 @@
                     if (data.skills && Array.isArray(data.skills)) {
                         skillsData = [...new Set([...skillsData, ...data.skills])]; // Merge and deduplicate
                     }
+
+                    if (data.landscapes && Array.isArray(data.landscapes)) {
+                        landscapesData = [...new Set([...landscapesData, ...data.landscapes])]; // Merge and deduplicate
+                    }
                     
                     if (data.operationalData) {
                         Object.assign(operationalData, data.operationalData);
@@ -3049,6 +3175,7 @@
                     logAction('Import Data', `Imported data from ${file.name}`);
                     closeModal('importModal');
                     updateSkillsList();
+                    updateLandscapeSelect();
                     refreshData();
                     saveUserData(); // Auto-save
                     alert('✅ Data imported successfully!');
@@ -3090,7 +3217,7 @@
         }
 
         function clearData() {
-            if (confirm('⚠️ Are you sure you want to clear all operational data?\n\nThis will not delete skills, but will remove all performance data.\n\nThis action cannot be undone.')) {
+            if (confirm('⚠️ Are you sure you want to clear all operational data?\n\nThis will not delete skills or landscapes, but will remove all performance data.\n\nThis action cannot be undone.')) {
                 operationalData = {};
                 logAction('Clear Data', 'All operational data cleared');
                 refreshData();
@@ -3223,7 +3350,7 @@
             loadDataFromLocalStorage();
             
             // Log system startup
-            logAction('System Startup', 'HBoard Operations Dashboard initialized with Firebase Authentication');
+            logAction('System Startup', 'HBoard Operations Dashboard initialized with Firebase Authentication and Landscape Management');
             
             console.log('✅ Dashboard data loaded');
             updateConnectionStatus('connecting');
@@ -3250,6 +3377,7 @@
 🔹 HBoard - Advanced Operations Excellence Dashboard v2024.09.08 🔹
 ✅ Production-ready dashboard loaded successfully
 🔐 Authentication: Firebase Email/Password Only
+🌍 Landscape Management: Add custom landscapes dynamically
 📸 Screenshot Download: High-quality PNG/JPEG with view selection
 📊 Skills Management: Full CRUD operations with Firestore sync
 🔄 Real-time Sync: Firebase Firestore integration
@@ -3260,4 +3388,3 @@
     </script>
 </body>
 </html>
-
