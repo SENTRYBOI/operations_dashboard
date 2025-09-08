@@ -1469,7 +1469,40 @@
             </section>
 
             <!-- KPI Dashboard Section -->
-            
+            <section class="kpi-dashboard">
+                <h3>📈 Key Performance Indicators</h3>
+                
+                <!-- Monthly KPIs -->
+                <div class="kpi-section">
+                    <h4>📅 Monthly Performance - <span id="currentMonthDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Monthly Trend</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yearly KPIs -->
+                <div class="kpi-section">
+                    <h4>📊 Yearly Performance - <span id="currentYearDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Yearly Trend</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Dynamic Percentage Information -->
             <section class="percentage-info">
                 <h4>🤖 Dynamic Percentage Calculation (Downtime-Based) + Real-time Team Sync</h4>
@@ -1552,7 +1585,35 @@
                     
                     
     <!-- Combined KPI and Daily Performance Section for Screenshots -->
-  
+    <div class="combined-kpi-daily-section" id="combinedKpiSection" style="background: #f8f9fa; margin: 20px; padding: 30px; border-radius: 15px; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <!-- KPI Section -->
+        <div class="kpi-section" style="margin-bottom: 30px;">
+            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                <span>📈</span> Key Performance Indicators
+            </h3>
+
+            <!-- Monthly and Yearly Performance -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                  
+                 <div style="font-size: 3rem; font-weight: 800; color: #28a745; margin: 15px 0;">0%</div>
+                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
+                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
+                        📊 Monthly Trend
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                    <h4 style="color: #17a2b8; margin-bottom: 15px; font-size: 1.2rem;">
+                        📊 Yearly Performance - 2025
+                    </h4>
+                    <div style="font-size: 3rem; font-weight: 800; color: #17a2b8; margin: 15px 0;">0%</div>
+                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
+                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
+                        📊 Yearly Trend
+                    </div>
+                </div>
+            </div>
 
             <!-- Performance Statistics -->
             <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -1606,35 +1667,7 @@
             </div>
         </div>
     </div>
-  <div class="combined-kpi-daily-section" id="combinedKpiSection" style="background: #f8f9fa; margin: 20px; padding: 30px; border-radius: 15px; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <!-- KPI Section -->
-        <div class="kpi-section" style="margin-bottom: 30px;">
-            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-                <span>📈</span> Key Performance Indicators
-            </h3>
 
-            <!-- Monthly and Yearly Performance -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
-                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
-                  
-                 <div style="font-size: 3rem; font-weight: 800; color: #28a745; margin: 15px 0;">0%</div>
-                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
-                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
-                        📊 Monthly Trend
-                    </div>
-                </div>
-
-                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
-                    <h4 style="color: #17a2b8; margin-bottom: 15px; font-size: 1.2rem;">
-                        📊 Yearly Performance - 2025
-                    </h4>
-                    <div style="font-size: 3rem; font-weight: 800; color: #17a2b8; margin: 15px 0;">0%</div>
-                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
-                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
-                        📊 Yearly Trend
-                    </div>
-                </div>
-            </div>
     <table class="grid-table" id="monthlyTable">
                         <thead id="monthlyHeaders">
                             <!-- Headers generated dynamically by JavaScript -->
@@ -2857,17 +2890,16 @@ function formatDateToDDMMYY(dateInput) {
 
         function generateDailyView() {
             const date = new Date(currentDate);
-            // Compute each day’s date dynamically
-const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-const startDate = new Date(); // adjust to your current week start
-
-for (let i = 0; i < 7; i++) {
-  const cellDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
-  const dayName = days[cellDate.getDay()];
-  const formatted = `${cellDate.getDate()}/${cellDate.getMonth()+1}/${cellDate.getFullYear()}`;
-  headerCells[i+1].innerHTML = `${dayName}<br><small>${formatted}</small>`;
-}
-
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            let gridHTML = '<div class="daily-header">Skills</div>';
+            
+            // Create day headers
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(date);
+                dayDate.setDate(date.getDate() - date.getDay() + i);
+                gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}</small></div>`;
+            }
             
             // Create skill rows
             skillsList.forEach(skill => {
@@ -3888,8 +3920,6 @@ for (let i = 0; i < 7; i++) {
     </div>
 </body>
 </html>
-
-
 
 
 
