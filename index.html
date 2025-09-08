@@ -2857,16 +2857,17 @@ function formatDateToDDMMYY(dateInput) {
 
         function generateDailyView() {
             const date = new Date(currentDate);
-            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            
-            let gridHTML = '<div class="daily-header">Skills</div>';
-            
-            // Create day headers
-            for (let i = 0; i < 7; i++) {
-                const dayDate = new Date(date);
-                dayDate.setDate(date.getDate() - date.getDay() + i);
-                gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}</small></div>`;
-            }
+            // Compute each day’s date dynamically
+const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const startDate = new Date(); // adjust to your current week start
+
+for (let i = 0; i < 7; i++) {
+  const cellDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+  const dayName = days[cellDate.getDay()];
+  const formatted = `${cellDate.getDate()}/${cellDate.getMonth()+1}/${cellDate.getFullYear()}`;
+  headerCells[i+1].innerHTML = `${dayName}<br><small>${formatted}</small>`;
+}
+
             
             // Create skill rows
             skillsList.forEach(skill => {
@@ -3887,6 +3888,7 @@ function formatDateToDDMMYY(dateInput) {
     </div>
 </body>
 </html>
+
 
 
 
