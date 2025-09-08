@@ -1410,7 +1410,7 @@
     <div id="connectionStatus" class="connection-status connecting">🔄 Connecting to Firebase...</div>
 
     <!-- Main Application Container -->
-    <div class="main-container" id="main-container">
+    <div class="main-container">
         <!-- Header Section -->
         <header class="header">
             <div id="userInfo" class="user-info" style="display:none">
@@ -1458,6 +1458,7 @@
                 <nav class="action-buttons">
                     <button class="btn btn-primary" onclick="loadCurrentView()">🔄 Refresh</button>
                     <button class="btn btn-success" onclick="showAddSkillModal()">➕ Add Skill</button>
+                <button class="btn btn-primary" onclick="showScreenshotModal()">📸 Screenshots</button>
                     <button class="btn btn-primary" onclick="exportToExcel()">📊 Export Excel Report</button>
                     <button class="btn btn-primary" onclick="importData()">📤 Import</button>
                     <button class="btn btn-primary" onclick="showHistoryModal()">📋 History</button>
@@ -1469,7 +1470,78 @@
 
             <!-- KPI Dashboard Section -->
             <section class="kpi-dashboard">
-                <h3 id="totalCount">0</h3>
+                <h3>📈 Key Performance Indicators</h3>
+                
+                <!-- Monthly KPIs -->
+                <div class="kpi-section">
+                    <h4>📅 Monthly Performance - <span id="currentMonthDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Monthly Trend</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yearly KPIs -->
+                <div class="kpi-section">
+                    <h4>📊 Yearly Performance - <span id="currentYearDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Yearly Trend</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Percentage Information -->
+            <section class="percentage-info">
+                <h4>🤖 Dynamic Percentage Calculation (Downtime-Based) + Real-time Team Sync</h4>
+                <ul>
+                    <li>🟢 <strong>Green (95-100%):</strong> Minimal downtime (≤1.2 hours/day)</li>
+                    <li>🟡 <strong>Amber (45-95%):</strong> Moderate downtime (1.2-13.2 hours/day)</li>
+                    <li>🔴 <strong>Red (0-45%):</strong> High downtime (>13.2 hours/day)</li>
+                    <li>📊 <strong>Monthly View:</strong> Shows weekly averages calculated from daily data</li>
+                    <li>🔥 <strong>Team Sync:</strong> Changes sync in real-time across all team members</li>
+                </ul>
+            </section>
+
+            <!-- Legend Section -->
+            <section class="legend-section">
+                <div class="legend">
+                    <strong style="color: #28a745; font-size: 18px;">📌 Status Guide:</strong>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-green"></div>
+                        <span>Green - Optimal Performance (95-100%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-amber"></div>
+                        <span>Amber - Needs Attention (45-95%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-red"></div>
+                        <span>Red - Critical Issues (0-45%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-none"></div>
+                        <span>No Data Available (0%)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Summary Cards -->
+            <section class="summary-cards">
+                <div class="summary-card">
+                    <h3 id="totalCount">0</h3>
                     <p>Total Entries</p>
                 </div>
                 <div class="summary-card green">
@@ -2422,8 +2494,13 @@
                 const statusClass = weekKPI.status;
                 
                 kpiHTML += `
-                    
-                        
+                    <div class="weekly-kpi-item">
+                        <div class="weekly-kpi-value" style="color: ${getStatusColor(statusClass)}">
+                            ${weekKPI.percentage}%
+                        </div>
+                        <div class="weekly-kpi-label">
+                            ${weekKPI.week} Availability
+                        </div>
                     </div>
                 `;
             });
@@ -3014,7 +3091,7 @@
             
             let htmlTable = `
                 <!DOCTYPE html>
-                <html>
+                
                 <head>
                     <meta charset="utf-8">
                     <style>
@@ -3032,7 +3109,7 @@
                         .admin-cell { background-color: #FFE4E1; color: #8B0000; }
                     </style>
                 </head>
-                <body>
+                
                     <table border="1">
                         <tr>
                             <td colspan="${weeks.length + 1}" class="header">
@@ -3124,9 +3201,7 @@
                             </td>
                         </tr>
                     </table>
-                </body>
-                </html>
-            `;
+                </body           </html       `;
             
             return htmlTable;
         }
@@ -3161,7 +3236,7 @@
                 
             let htmlTable = `
                 <!DOCTYPE html>
-                <html>
+                
                 <head>
                     <meta charset="utf-8">
                     <style>
@@ -3175,7 +3250,7 @@
                         .admin-cell { background-color: #FFE4E1; color: #8B0000; }
                     </style>
                 </head>
-                <body>
+                
                     <table border="1">
                         <tr>
                             <td colspan="9" class="header">${reportTitle}</td>
@@ -3211,8 +3286,8 @@
                 `;
             });
             
-            htmlTable += '</table></body></html>';
-            return htmlTable;
+            htmlTable += '</table>';
+  rn htmlTable;
         }
 
         // ========================================
@@ -3507,39 +3582,43 @@
             let targetElement;
             let filename = 'hboard-screenshot';
 
-            // Hide dropdowns and other UI elements for clean view
-            const dropdowns = document.querySelectorAll('select, .dropdown, .menu');
-            dropdowns.forEach(dd => dd.style.display = 'none');
-
             // Get the target element
+            // Hide dropdowns for clean view
+            const dropdowns = document.querySelectorAll('select, .dropdown, .menu');
+            const originalDisplays = [];
+            dropdowns.forEach((dd, index) => {
+                originalDisplays[index] = dd.style.display;
+                dd.style.display = 'none';
+            });
+
             switch (selectedScreenshotTarget) {
                 case 'monthlyView':
-                    targetElement = document.querySelector('table') || document.getElementById('monthlyTable');
+                    targetElement = document.querySelector('#grid-table') || document.querySelector('table');
                     filename = 'hboard-monthly-view';
                     break;
                 case 'dailyView':
-                    targetElement = document.getElementById('dailyTable') || document.querySelectorAll('table')[1];
+                    targetElement = document.querySelector('#daily-grid') || document.querySelectorAll('table')[1];
                     filename = 'hboard-daily-view';
                     break;
                 case 'monthlyWithKpi':
-                    // Create a temporary container with KPI + Monthly table
+                    // Create container with KPI + Monthly table
                     const kpiSection = document.getElementById('combinedKpiSection');
-                    const monthlyTable = document.querySelector('table');
+                    const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
                     if (kpiSection && monthlyTable) {
                         const tempContainer = document.createElement('div');
                         tempContainer.style.backgroundColor = '#ffffff';
                         tempContainer.style.padding = '20px';
                         tempContainer.appendChild(kpiSection.cloneNode(true));
-                        tempContainer.appendChild(monthlyTable.parentNode.cloneNode(true));
+                        tempContainer.appendChild(monthlyTable.closest('.table-container') ? monthlyTable.closest('.table-container').cloneNode(true) : monthlyTable.cloneNode(true));
                         document.body.appendChild(tempContainer);
                         targetElement = tempContainer;
                     } else {
-                        targetElement = document.getElementById('combinedKpiSection');
+                        targetElement = kpiSection || monthlyTable;
                     }
                     filename = 'hboard-monthly-with-kpi';
                     break;
                 case 'entireDashboard':
-                    targetElement = document.querySelector('.main-container') || document.body;
+                    targetElement = document.querySelector('.main-container') || document.querySelector('body > div');
                     filename = 'hboard-entire-dashboard';
                     break;
                 default:
@@ -3597,15 +3676,17 @@
                 console.error('Screenshot error:', error);
                 alert('❌ Error generating screenshot. Please try again.');
             } finally {
-                // Cleanup: restore dropdowns and remove temporary elements
-                const dropdowns = document.querySelectorAll('select, .dropdown, .menu');
-                dropdowns.forEach(dd => dd.style.display = '');
+                
+                // Restore dropdowns
+                dropdowns.forEach((dd, index) => {
+                    dd.style.display = originalDisplays[index] || '';
+                });
 
-                // Remove temporary containers created for screenshots
+                // Remove temporary containers
                 document.querySelectorAll('div').forEach(container => {
                     if (container.style.backgroundColor === 'rgb(255, 255, 255)' && 
                         container.style.padding === '20px' && 
-                        container.children.length === 2) {
+                        container.children.length >= 2) {
                         try { document.body.removeChild(container); } catch(e) {}
                     }
                 });
@@ -3619,8 +3700,10 @@
 
         // Add screenshot button to existing controls (if control area exists)
         function addScreenshotButton() {
+            // Button manually added to dashboard - this function disabled
+            return;
             const controlAreas = document.querySelectorAll('[class*="control"], [class*="button"], .header, .toolbar');
-            if (controlAreas.length > 0) {
+            if (false) {
                 const screenshotBtn = document.createElement('button');
                 screenshotBtn.onclick = showScreenshotModal;
                 screenshotBtn.innerHTML = '<span>📸</span> Download Screenshots';
@@ -3673,7 +3756,8 @@
 
         // Initialize screenshot functionality when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(addScreenshotButton, 1000);
+            // Screenshot button manually added to dashboard - auto-add disabled
+        // setTimeout(addScreenshotButton, 1000);
         });
 
     </script>
@@ -3704,7 +3788,8 @@
                     <p style="color: #666; font-size: 0.9rem;">Daily performance table only</p>
                 </div>
 
-                
+                <div class="screenshot-option" data-target="monthlyWithKpi" onclick="selectScreenshotOption(this)" style="padding: 20px; border: 3px solid #e9ecef; border-radius: 15px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: #f8f9fa;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📈</div>
                     <h4 style="color: #28a745; margin-bottom: 8px;">Monthly View + KPI</h4>
                     <p style="color: #666; font-size: 0.9rem;">KPI section with monthly table</p>
                 </div>
@@ -3713,7 +3798,7 @@
                     <div style="font-size: 2.5rem; margin-bottom: 10px;">📋</div>
                     <h4 style="color: #20c997; margin-bottom: 8px;">Entire Dashboard</h4>
                     <p style="color: #666; font-size: 0.9rem;">Complete clean dashboard view</p>
-                </div>
+                </div></div>
             </div>
 
             <div class="modal-actions" style="display: flex; gap: 15px; justify-content: center;">
