@@ -2200,6 +2200,15 @@
 
         // Core data storage
         let operationalData = JSON.parse(localStorage.getItem('operationalData')) || {};
+        // Date formatting helper function for dd-mm-yy format
+function formatDateToDDMMYY(dateInput) {
+    const date = new Date(dateInput);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}-${month}-${year}`;
+}
+
         let skillsList = JSON.parse(localStorage.getItem('skillsList')) || [
             'Business Clarity',
             'Revenue',
@@ -2554,7 +2563,7 @@
             const yearlyKPIs = calculateYearlyKPIs();
             
             // Update monthly KPIs
-            document.getElementById('currentMonthDisplay').textContent = new Date(currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            document.getElementById('currentMonthDisplay').textContent = formatDateToDDMMYY(currentMonth);
             document.getElementById('monthlyOverallAvailability').textContent = `${monthlyKPIs.overallAvg}%`;
             document.getElementById('monthlyTrendIndicator').textContent = monthlyKPIs.trendIndicator;
             
@@ -3151,7 +3160,7 @@
         function exportToExcel() {
             const weeks = generateWeeksForMonth();
             const [year, month] = currentMonth.split('-').map(Number);
-            const monthName = new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            const monthName = formatDateToDDMMYY(new Date(year, month - 1));
             
             let htmlTable = generateExcelTable(weeks, monthName);
             downloadExcelFile(htmlTable, `Operations_Report_${currentLandscape}_${monthName.replace(' ', '_')}.xls`);
@@ -3200,7 +3209,7 @@
                         </tr>
                         <tr>
                             <td colspan="${weeks.length + 1}" class="subheader">
-                                Landscape: ${currentLandscape} | Report Generated: ${new Date().toLocaleDateString()} | ${window.isAdminMode ? '👑 Admin Full Access' : 'Real-time Team Collaboration'}
+                                Landscape: ${currentLandscape} | Report Generated: ${formatDateToDDMMYY(new Date())} | ${window.isAdminMode ? '👑 Admin Full Access' : 'Real-time Team Collaboration'}
                             </td>
                         </tr>
                         <tr>
@@ -3410,7 +3419,7 @@
                     <tr onclick="editHistoryEntry('${entry.key}')" style="cursor: pointer;" 
                         onmouseover="this.style.backgroundColor='#f8f9fa'" 
                         onmouseout="this.style.backgroundColor='white'">
-                        <td>${new Date(entry.timestamp).toLocaleDateString()}</td>
+                        <td>${formatDateToDDMMYY(entry.timestamp)}</td>
                         <td>${entry.landscape}</td>
                         <td>${entry.skill}</td>
                         <td>${entry.period}</td>
@@ -3669,22 +3678,27 @@
             // Get the target element
             switch (selectedScreenshotTarget) {
                 case 'kpiWithMonthly':
-                    // Capture KPI section + Monthly table together
-                    const kpiSection = document.getElementById('combinedKpiSection');
-                    const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
-                    if (kpiSection && monthlyTable) {
-                        const tempContainer = document.createElement('div');
-                        tempContainer.style.backgroundColor = '#ffffff';
-                        tempContainer.style.padding = '20px';
-                        tempContainer.appendChild(kpiSection.cloneNode(true));
-                        tempContainer.appendChild(monthlyTable.parentNode ? monthlyTable.parentNode.cloneNode(true) : monthlyTable.cloneNode(true));
-                        document.body.appendChild(tempContainer);
-                        targetElement = tempContainer;
-                    } else {
-                        targetElement = kpiSection || monthlyTable || document.body;
-                    }
-                    filename = 'hboard-kpi-monthly-view';
-                    break;
+    // Capture only the first KPI section + Monthly table
+    const kpiSection = document.querySelector('#combinedKpiSection');
+    const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
+    if (kpiSection && monthlyTable) {
+        const tempContainer = document.createElement('div');
+        tempContainer.style.backgroundColor = '#ffffff';
+        tempContainer.style.padding = '20px';
+        // Clone only the first KPI section
+        const kpiClone = kpiSection.cloneNode(true);
+        tempContainer.appendChild(kpiClone);
+        // Clone the table container  
+        const tableContainer = monthlyTable.closest('.table-container') || monthlyTable.parentNode;
+        tempContainer.appendChild(tableContainer ? tableContainer.cloneNode(true) : monthlyTable.cloneNode(true));
+        document.body.appendChild(tempContainer);
+        targetElement = tempContainer;
+    } else {
+        targetElement = kpiSection || monthlyTable || document.body;
+    }
+    filename = 'hboard-kpi-monthly-view';
+    break;
+
                 case 'kpiWithDaily':
                     // Capture KPI section + Daily table together  
                     const kpiSectionDaily = document.getElementById('combinedKpiSection');
@@ -3908,4 +3922,5 @@
     </div>
 </body>
 </html>
+
 
