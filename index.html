@@ -929,9 +929,12 @@
         .daily-indicator.none { background: #f8f9fa; }
 
         /* Daily View Styles */
-        .daily-container {
-            padding: 25px;
-        }
+        /* This is the NEW CSS for a compact layout */
+.daily-container {
+    padding: 25px;
+    max-width: 1400px; /* Prevents the view from spreading out too wide */
+    margin: 0 auto;    /* Centers the container horizontally */
+}
 
         .daily-stats {
             background: white;
@@ -2653,30 +2656,36 @@ function formatDateToDDMMYY(dateInput) {
         // VIEW MANAGEMENT & NAVIGATION
         // ========================================
 
-        function switchView(view) {
-            currentView = view;
-            
-            // Update toggle buttons
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Show/hide controls and views
-            if (view === 'daily') {
-                document.getElementById('monthControl').style.display = 'none';
-                document.getElementById('dateControl').style.display = 'flex';
-                document.getElementById('monthlyView').style.display = 'none';
-                document.getElementById('dailyView').style.display = 'block';
-            } else {
-                document.getElementById('monthControl').style.display = 'flex';
-                document.getElementById('dateControl').style.display = 'none';
-                document.getElementById('monthlyView').style.display = 'block';
-                document.getElementById('dailyView').style.display = 'none';
-            }
-            
-            loadCurrentView();
-        }
+       function switchView(view) {
+    currentView = view;
+    const monthlyView = document.getElementById('monthlyView');
+    const dailyView = document.getElementById('dailyView');
+    const monthControl = document.getElementById('monthControl');
+    const dateControl = document.getElementById('dateControl');
+    const monthlyBtn = document.querySelector('.toggle-btn[onclick="switchView(\'monthly\')"]');
+    const dailyBtn = document.querySelector('.toggle-btn[onclick="switchView(\'daily\')"]');
+
+    if (view === 'daily') {
+        // Configure UI for Daily View
+        monthControl.style.display = 'none';
+        dateControl.style.display = 'flex';
+        monthlyView.style.display = 'none';
+        dailyView.style.display = 'block';
+        monthlyBtn.classList.remove('active');
+        dailyBtn.classList.add('active');
+    } else { // 'monthly'
+        // Configure UI for Monthly View
+        monthControl.style.display = 'flex';
+        dateControl.style.display = 'none';
+        monthlyView.style.display = 'block';
+        dailyView.style.display = 'none';
+        dailyBtn.classList.remove('active');
+        monthlyBtn.classList.add('active');
+    }
+    
+    // This function is now called correctly for both Monthly and Daily views.
+    loadCurrentView();
+}
 
         function loadCurrentView() {
             currentLandscape = document.getElementById('landscapeSelect').value;
@@ -2820,25 +2829,14 @@ function formatDateToDDMMYY(dateInput) {
         }
 
         function goToDailyView(date) {
-            // Switch to daily view and set the date
-            document.getElementById('dateSelect').value = date;
-            currentDate = date;
-            
-            // Update view
-            currentView = 'daily';
-            document.getElementById('monthControl').style.display = 'none';
-            document.getElementById('dateControl').style.display = 'flex';
-            document.getElementById('monthlyView').style.display = 'none';
-            document.getElementById('dailyView').style.display = 'block';
-            
-            // Update toggle buttons
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.toggle-btn:last-child').classList.add('active');
-            
-            generateDailyView();
-        }
+    // Set the date for the daily view
+    document.getElementById('dateSelect').value = date;
+    currentDate = date;
+    
+    // This now calls the main switchView function to handle everything.
+    // This is more efficient and reliable.
+    switchView('daily');
+}
 
         function editWeeklyEntry(skill, weekNumber, weekDatesStr) {
             const weekDates = JSON.parse(weekDatesStr.replace(/&quot;/g, '"'));
@@ -3897,6 +3895,7 @@ case 'kpiWithMonthly':
     </div>
 </body>
 </html>
+
 
 
 
