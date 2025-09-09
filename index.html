@@ -2888,18 +2888,20 @@
         function updateSummaryCards() {
             let total = 0, green = 0, amber = 0, red = 0;
             
-            const scope = currentView === 'monthly' ? generateWeeksForMonth().flatMap(w => w.dates) : (() => {
-                const date = new Date(currentDate);
-                const weekDates = [];
-                for (let i = 0; i < 7; i++) {
-                    const dayDate = new Date(date);
-                    dayDate.setDate(date.getDate() - date.getDay() + i);
-                    weekDates.push(dayDate.toISOString().split('T')[0]);
-                }
-                return weekDates;
-            })();
+            const scopeDates = currentView === 'monthly' 
+                ? generateWeeksForMonth().flatMap(w => w.dates) 
+                : (() => {
+                    const date = new Date(currentDate);
+                    const weekDates = [];
+                    for (let i = 0; i < 7; i++) {
+                        const dayDate = new Date(date);
+                        dayDate.setDate(date.getDate() - date.getDay() + i);
+                        weekDates.push(dayDate.toISOString().split('T')[0]);
+                    }
+                    return weekDates;
+                })();
 
-            scope.forEach(date => {
+            scopeDates.forEach(date => {
                 skillsList.forEach(skill => {
                     const entryKey = `${currentLandscape}_${skill}_${date}`;
                     const entry = operationalData[entryKey];
@@ -2917,7 +2919,7 @@
             const performanceHTML = `
                 <h4>📊 Performance Statistics</h4>
                 <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>📌 Status Guide:</strong> Green - Optimal Performance (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
+                    <strong>📌 Status Guide:</strong> Green - Optimal (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
                 </div>
                 <div class="performance-stats-grid">
                     <div class="stat-card total"><div class="stat-value">${total}</div><div class="stat-label">Total Entries</div></div>
