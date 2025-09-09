@@ -2444,7 +2444,7 @@
             updateMonthlyKPIs(weeks);
             createMonthlyHeaders(weeks);
             createMonthlyBody(weeks);
-            updateSummaryCards(); // Also update performance stats
+            updateSummaryCards(weeks.flatMap(w => w.dates));
         }
 
         function updateMonthlyKPIs(weeks) {
@@ -2635,9 +2635,10 @@
         // ========================================
 
         function generateDailyView() {
-            updateDailyStats();
             const date = new Date(currentDate);
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            updateDailyStats();
             
             let gridHTML = '<div class="daily-header">Skills</div>';
             
@@ -2675,16 +2676,68 @@
             });
             
             document.getElementById('dailyGrid').innerHTML = gridHTML;
-            
+
+            const weekData = (()=>{
+                const d = new Date(currentDate);
+                d.setDate(d.getDate() - d.getDay());
+                const weekDates = [];
+                 for (let i = 0; i < 7; i++) {
+                    weekDates.push(new Date(d).toISOString().split('T')[0]);
+                    d.setDate(d.getDate() + 1);
+                }
+                return [{
+                    label: 'Current Week',
+                    dates: weekDates
+                }];
+            })();
+
+            updateSummaryCards(weekData[0].dates);
+            generateWeeklyKPIsHTML(weekData, 'daily-weekly-kpis');
         }
 
-        // CORRECTED: New function to update the new KPI section in the Daily View
+        // ========================================
+        // KPI & STATS UPDATE FUNCTIONS
+        // ========================================
+
+        function generateWeeklyKPIsHTML(weeks, containerId) {
+            let kpiHTML = '<h4>📊 Weekly Skill Availability Overview</h4><div class="weekly-kpi-grid">';
+            
+            weeks.forEach(week => {
+                let totalPercentage = 0;
+                let validEntries = 0;
+                week.dates.forEach(dateStr => {
+                     skillsList.forEach(skill => {
+                        const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                        const entry = operationalData[entryKey];
+                        if (entry && entry.percentage !== undefined) {
+                            totalPercentage += entry.percentage;
+                            validEntries++;
+                        }
+                    });
+                });
+                const avgPercentage = validEntries > 0 ? Math.round(totalPercentage / validEntries) : 0;
+
+                kpiHTML += `
+                    <div class="weekly-kpi-item">
+                        <div class="weekly-kpi-value" style="color: ${getStatusColor(getStatusFromPercentage(avgPercentage))}">
+                            ${avgPercentage}%
+                        </div>
+                        <div class="weekly-kpi-label">
+                            ${week.label} Availability
+                        </div>
+                    </div>
+                `;
+            });
+            kpiHTML += '</div>';
+            document.getElementById(containerId).innerHTML = kpiHTML;
+        }
+
+
         function updateDailyStats() {
             const date = new Date(currentDate);
             let todaySum = 0;
             let weekSum = 0;
 
-            // Today's stats calculation
             const todayKey = currentDate;
             let todayEntries = 0;
             skillsList.forEach(skill => {
@@ -2697,7 +2750,6 @@
             });
             const dailyCompletion = todayEntries > 0 ? Math.round(todaySum / todayEntries) : 0;
 
-            // Week's stats calculation
             let weekEntries = 0;
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
@@ -2714,17 +2766,49 @@
             }
             const weeklyAverage = weekEntries > 0 ? Math.round(weekSum / weekEntries) : 0;
             
-            // Monthly and Yearly stats calculation
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
 
-            // Update the new KPI elements in the daily view
             document.getElementById('dailyTodayAvg').textContent = `${dailyCompletion}%`;
             document.getElementById('dailyWeekAvg').textContent = `${weeklyAverage}%`;
             document.getElementById('dailyMonthAvg').textContent = `${monthlyKPIs.overallAvg}%`;
             document.getElementById('dailyYearAvg').textContent = `${yearlyKPIs.overallAvg}%`;
         }
 
+        function updateSummaryCards(scopeDates) {
+            let total = 0, green = 0, amber = 0, red = 0;
+            
+            scopeDates.forEach(date => {
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${date}`;
+                    const entry = operationalData[entryKey];
+                    if (entry) {
+                        total++;
+                        switch(entry.status) {
+                            case 'green': green++; break;
+                            case 'amber': amber++; break;
+                            case 'red': red++; break;
+                        }
+                    }
+                });
+            });
+
+            const performanceHTML = `
+                <h4>📊 Performance Statistics</h4>
+                <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
+                    <strong>📌 Status Guide:</strong> Green - Optimal (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
+                </div>
+                <div class="performance-stats-grid">
+                    <div class="stat-card total"><div class="stat-value">${total}</div><div class="stat-label">Total Entries</div></div>
+                    <div class="stat-card green"><div class="stat-value">${green}</div><div class="stat-label">🟢 Optimal</div></div>
+                    <div class="stat-card amber"><div class="stat-value">${amber}</div><div class="stat-label">🟡 Needs Attention</div></div>
+                    <div class="stat-card red"><div class="stat-value">${red}</div><div class="stat-label">🔴 Critical</div></div>
+                </div>
+            `;
+            
+            document.getElementById('monthly-performance-stats').innerHTML = performanceHTML;
+            document.getElementById('daily-performance-stats').innerHTML = performanceHTML;
+        }
 
         // ========================================
         // ENTRY MANAGEMENT (WITH ADMIN SUPPORT)
@@ -2879,58 +2963,6 @@
                 const syncMessage = window.isAdminMode ? 'Admin mode - changes local!' : 'team!';
                 alert(`✅ Skill removed from ${syncMessage}`);
             }
-        }
-
-        // ========================================
-        // SUMMARY CARDS & STATISTICS
-        // ========================================
-
-        function updateSummaryCards() {
-            let total = 0, green = 0, amber = 0, red = 0;
-            
-            const scopeDates = currentView === 'monthly' 
-                ? generateWeeksForMonth().flatMap(w => w.dates) 
-                : (() => {
-                    const date = new Date(currentDate);
-                    const weekDates = [];
-                    for (let i = 0; i < 7; i++) {
-                        const dayDate = new Date(date);
-                        dayDate.setDate(date.getDate() - date.getDay() + i);
-                        weekDates.push(dayDate.toISOString().split('T')[0]);
-                    }
-                    return weekDates;
-                })();
-
-            scopeDates.forEach(date => {
-                skillsList.forEach(skill => {
-                    const entryKey = `${currentLandscape}_${skill}_${date}`;
-                    const entry = operationalData[entryKey];
-                    if (entry) {
-                        total++;
-                        switch(entry.status) {
-                            case 'green': green++; break;
-                            case 'amber': amber++; break;
-                            case 'red': red++; break;
-                        }
-                    }
-                });
-            });
-
-            const performanceHTML = `
-                <h4>📊 Performance Statistics</h4>
-                <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>📌 Status Guide:</strong> Green - Optimal (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
-                </div>
-                <div class="performance-stats-grid">
-                    <div class="stat-card total"><div class="stat-value">${total}</div><div class="stat-label">Total Entries</div></div>
-                    <div class="stat-card green"><div class="stat-value">${green}</div><div class="stat-label">🟢 Optimal</div></div>
-                    <div class="stat-card amber"><div class="stat-value">${amber}</div><div class="stat-label">🟡 Needs Attention</div></div>
-                    <div class="stat-card red"><div class="stat-value">${red}</div><div class="stat-label">🔴 Critical</div></div>
-                </div>
-            `;
-            
-            document.getElementById('monthly-performance-stats').innerHTML = performanceHTML;
-            document.getElementById('daily-performance-stats').innerHTML = performanceHTML;
         }
 
         // ========================================
