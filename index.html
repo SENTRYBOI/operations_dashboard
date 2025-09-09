@@ -2866,7 +2866,7 @@ function formatDateToDDMMYY(dateInput) {
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
                 dayDate.setDate(date.getDate() - date.getDay() + i);
-                gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}</small></div>`;
+               gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}/${dayDate.getFullYear()}</small></div>`;
             }
             
             // Create skill rows
@@ -3897,6 +3897,7 @@ case 'kpiWithMonthly':
     </div>
 </body>
 </html>
+
 
 
 
