@@ -2442,13 +2442,13 @@
         function generateMonthlyView() {
             const weeks = generateWeeksForMonth();
             updateMonthlyKPIs(weeks);
+            generateWeeklyKPIsHTML(weeks, 'monthly-weekly-kpis');
             createMonthlyHeaders(weeks);
             createMonthlyBody(weeks);
             updateSummaryCards(weeks.flatMap(w => w.dates));
         }
 
         function updateMonthlyKPIs(weeks) {
-            // Today's Average (calculated for the actual current date if it's in the selected month)
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
             const [currentYear, currentMonthNum] = currentMonth.split('-').map(Number);
@@ -2467,7 +2467,6 @@
                 todayAvg = todayEntries > 0 ? Math.round(todaySum / todayEntries) : 0;
             }
 
-            // Weekly Average (for the first week of the month)
             let weekSum = 0;
             let weekEntries = 0;
             if (weeks.length > 0) {
@@ -2484,11 +2483,9 @@
             }
             const weekAvg = weekEntries > 0 ? Math.round(weekSum / weekEntries) : 0;
             
-            // Monthly and Yearly stats calculation
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
 
-            // Update the new KPI elements in the monthly view
             document.getElementById('monthlyTodayAvg').textContent = `${todayAvg}%`;
             document.getElementById('monthlyWeekAvg').textContent = `${weekAvg}%`;
             document.getElementById('monthlyMonthAvg').textContent = `${monthlyKPIs.overallAvg}%`;
@@ -2509,7 +2506,6 @@
                 const weekEnd = new Date(currentDate);
                 weekEnd.setDate(currentDate.getDate() + 6);
                 
-                // Get all dates in this week
                 const weekDates = [];
                 for (let d = new Date(weekStart); d <= weekEnd && d <= lastDay; d.setDate(d.getDate() + 1)) {
                     weekDates.push(d.toISOString().split('T')[0]);
@@ -2552,7 +2548,6 @@
                     const statusClass = weeklyData.status;
                     const percentage = weeklyData.percentage;
                     
-                    // Create daily indicators
                     let dailyIndicators = '<div class="daily-indicators">';
                     week.dates.forEach((date, index) => {
                         const entryKey = `${currentLandscape}_${skill}_${date}`;
@@ -2635,21 +2630,18 @@
         // ========================================
 
         function generateDailyView() {
+            updateDailyStats();
             const date = new Date(currentDate);
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             
-            updateDailyStats();
-            
             let gridHTML = '<div class="daily-header">Skills</div>';
             
-            // Create day headers
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
                 dayDate.setDate(date.getDate() - date.getDay() + i);
                gridHTML += `<div class="daily-header">${dayNames[i]}<br><small>${dayDate.getDate()}/${dayDate.getMonth() + 1}/${dayDate.getFullYear()}</small></div>`;
             }
             
-            // Create skill rows
             skillsList.forEach(skill => {
                 gridHTML += `<div class="daily-skill">${skill}</div>`;
                 
@@ -2679,8 +2671,8 @@
 
             const weekData = (()=>{
                 const d = new Date(currentDate);
-                d.setDate(d.getDate() - d.getDay());
                 const weekDates = [];
+                d.setDate(d.getDate() - d.getDay());
                  for (let i = 0; i < 7; i++) {
                     weekDates.push(new Date(d).toISOString().split('T')[0]);
                     d.setDate(d.getDate() + 1);
