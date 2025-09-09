@@ -929,8 +929,11 @@
         .daily-indicator.none { background: #f8f9fa; }
 
         /* Daily View Styles */
-        .daily-container {
-            padding: 25px;
+       .daily-container {
+    padding: 25px;
+    max-width: 1400px; /* This prevents it from spreading out too wide */
+    margin: 0 auto;    /* This centers the container */
+
         }
 
         .daily-stats {
@@ -2546,30 +2549,38 @@ function formatDateToDDMMYY(dateInput) {
         // VIEW MANAGEMENT & NAVIGATION
         // ========================================
 
-        function switchView(view) {
-            currentView = view;
-            
-            // Update toggle buttons
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Show/hide controls and views
-            if (view === 'daily') {
-                document.getElementById('monthControl').style.display = 'none';
-                document.getElementById('dateControl').style.display = 'flex';
-                document.getElementById('monthlyView').style.display = 'none';
-                document.getElementById('dailyView').style.display = 'block';
-            } else {
-                document.getElementById('monthControl').style.display = 'flex';
-                document.getElementById('dateControl').style.display = 'none';
-                document.getElementById('monthlyView').style.display = 'block';
-                document.getElementById('dailyView').style.display = 'none';
-            }
-            
-            loadCurrentView();
-        }
+      function switchView(view) {
+    currentView = view;
+    const monthlyView = document.getElementById('monthlyView');
+    const dailyView = document.getElementById('dailyView');
+    const monthControl = document.getElementById('monthControl');
+    const dateControl = document.getElementById('dateControl');
+
+    // Update toggle buttons
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        // Fallback for programmatic calls
+        const selector = view === 'daily' ? '.toggle-btn:last-child' : '.toggle-btn:first-child';
+        document.querySelector(selector).classList.add('active');
+    }
+    
+    // Show/hide controls and views
+    if (view === 'daily') {
+        monthControl.style.display = 'none';
+        dateControl.style.display = 'flex';
+        monthlyView.style.display = 'none';
+        dailyView.style.display = 'block';
+    } else { // 'monthly'
+        monthControl.style.display = 'flex';
+        dateControl.style.display = 'none';
+        monthlyView.style.display = 'block';
+        dailyView.style.display = 'none';
+    }
+    
+    loadCurrentView();
+}
 
         function loadCurrentView() {
             currentLandscape = document.getElementById('landscapeSelect').value;
@@ -3790,6 +3801,7 @@ case 'kpiWithMonthly':
     </div>
 </body>
 </html>
+
 
 
 
