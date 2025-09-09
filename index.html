@@ -1630,27 +1630,33 @@
                 <!-- Daily View -->
                 <div id="dailyView" style="display: none;">
                     <div class="daily-container">
-                        <div class="daily-stats">
-                            <h3 style="color: #28a745; margin-bottom: 15px;">📊 Daily Performance Statistics</h3>
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="dailyCompletion">0%</div>
-                                    <div style="font-weight: 600;">Today's Average</div>
+                        <!-- NEW Daily KPI Section -->
+                        <div class="kpi-section" style="margin-bottom: 25px;">
+                            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700;">Key Performance Indicators</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                                <!-- Today's Average -->
+                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                                    <div id="dailyTodayAvg" style="font-size: 2.5rem; font-weight: 700; color: #28a745;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Today's Average</div>
                                 </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="weeklyAverage">0%</div>
-                                    <div style="font-weight: 600;">Weekly Average</div>
+                                <!-- Weekly Average -->
+                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                                    <div id="dailyWeekAvg" style="font-size: 2.5rem; font-weight: 700; color: #17a2b8;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Weekly Average</div>
                                 </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="trendIndicator">📈</div>
-                                    <div style="font-weight: 600;">Performance Trend</div>
+                                <!-- Monthly Performance -->
+                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #ffc107;">
+                                    <div id="dailyMonthAvg" style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Monthly Performance</div>
                                 </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2rem; color: #20c997; font-weight: bold;" id="syncStatus">🔥</div>
-                                    <div style="font-weight: 600;">Team Sync</div>
+                                <!-- Yearly Performance -->
+                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #dc3545;">
+                                    <div id="dailyYearAvg" style="font-size: 2.5rem; font-weight: 700; color: #dc3545;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Yearly Performance</div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Daily Grid Table -->
                         <div class="daily-grid" id="dailyGrid">
                             <!-- Daily grid generated dynamically by JavaScript -->
                         </div>
@@ -2208,7 +2214,7 @@
             document.getElementById('dateSelect').addEventListener('change', loadCurrentView);
             
             updateSkillList();
-            updateKPIDisplays();
+            // updateKPIDisplays(); // This line caused the error, it's removed.
             loadCurrentView();
             
             // Load team data after initial UI setup (only if not admin mode)
@@ -2303,7 +2309,7 @@
                 
                 // Update UI
                 loadCurrentView();
-                updateKPIDisplays();
+                // updateKPIDisplays();
                 
                 console.log('✅ Team data synchronized');
                 updateConnectionStatus('connected');
@@ -2343,7 +2349,7 @@
                     operationalData = { ...operationalData, ...teamData };
                     localStorage.setItem('operationalData', JSON.stringify(operationalData));
                     loadCurrentView();
-                    updateKPIDisplays();
+                    // updateKPIDisplays();
                     console.log('🔄 Real-time data updated');
                 }
                 
@@ -2505,10 +2511,9 @@
             return weeklyKPIs;
         }
 
-        // CORRECTED FUNCTION TO PREVENT ERROR
+        // This function is no longer called on init to prevent errors
         function updateKPIDisplays() {
-            // This function is no longer needed as the new UI doesn't use these specific element IDs.
-            // Keeping it here but empty to prevent any potential calls from causing errors.
+            // Logic is now handled within generateWeeklyKPIs and updateDailyStats
         }
 
         function generateWeeklyKPIs(weeks) {
@@ -2854,46 +2859,51 @@
             updateDailyStats();
         }
 
+        // CORRECTED: New function to update the new KPI section in the Daily View
         function updateDailyStats() {
             const date = new Date(currentDate);
-            let todayTotal = 0, todaySum = 0;
-            let weekTotal = 0, weekSum = 0;
+            let todaySum = 0;
+            let weekSum = 0;
 
-            // Today's stats
+            // Today's stats calculation
             const todayKey = currentDate;
             skillsList.forEach(skill => {
                 const entryKey = `${currentLandscape}_${skill}_${todayKey}`;
                 const entry = operationalData[entryKey];
-                todayTotal++;
-                if (entry) {
-                    todaySum += entry.percentage || 0;
+                if (entry && entry.percentage !== undefined) {
+                    todaySum += entry.percentage;
                 }
             });
+            const dailyCompletion = skillsList.length > 0 ? Math.round(todaySum / skillsList.length) : 0;
 
-            // Week's stats
+            // Week's stats calculation
+            let weekDayCount = 0;
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
                 dayDate.setDate(date.getDate() - date.getDay() + i);
                 const dateStr = dayDate.toISOString().split('T')[0];
-                
+                weekDayCount++;
                 skillsList.forEach(skill => {
                     const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
                     const entry = operationalData[entryKey];
-                    weekTotal++;
-                    if (entry) {
-                        weekSum += entry.percentage || 0;
+                    if (entry && entry.percentage !== undefined) {
+                        weekSum += entry.percentage;
                     }
                 });
             }
+            const weeklyAverage = (skillsList.length * weekDayCount) > 0 ? Math.round(weekSum / (skillsList.length * weekDayCount)) : 0;
+            
+            // Monthly and Yearly stats calculation
+            const monthlyKPIs = calculateMonthlyKPIs();
+            const yearlyKPIs = calculateYearlyKPIs();
 
-            const dailyCompletion = todayTotal > 0 ? Math.round(todaySum / todayTotal) : 0;
-            const weeklyAverage = weekTotal > 0 ? Math.round(weekSum / weekTotal) : 0;
-            const trend = dailyCompletion >= weeklyAverage ? '📈' : '📉';
-
-            document.getElementById('dailyCompletion').textContent = `${dailyCompletion}%`;
-            document.getElementById('weeklyAverage').textContent = `${weeklyAverage}%`;
-            document.getElementById('trendIndicator').textContent = trend;
+            // Update the new KPI elements in the daily view
+            document.getElementById('dailyTodayAvg').textContent = `${dailyCompletion}%`;
+            document.getElementById('dailyWeekAvg').textContent = `${weeklyAverage}%`;
+            document.getElementById('dailyMonthAvg').textContent = `${monthlyKPIs.overallAvg}%`;
+            document.getElementById('dailyYearAvg').textContent = `${yearlyKPIs.overallAvg}%`;
         }
+
 
         // ========================================
         // ENTRY MANAGEMENT (WITH ADMIN SUPPORT)
@@ -3624,25 +3634,16 @@
 
                  case 'kpiWithDaily':
                     // Capture KPI section + Daily table together
-                    const kpiSectionDaily = document.querySelector('#combinedKpiSection');
-                    // CORRECTED: The selector now correctly uses '#dailyGrid' to find the element.
-                    const dailyGrid = document.querySelector('#dailyGrid');
-                    if (kpiSectionDaily && dailyGrid) {
+                    const dailyContainer = document.querySelector('#dailyView .daily-container');
+                    if (dailyContainer) {
                         const tempContainerDaily = document.createElement('div');
                         tempContainerDaily.style.backgroundColor = '#ffffff';
                         tempContainerDaily.style.padding = '20px';
-
-                        // 1. Append the cloned KPI section
-                        tempContainerDaily.appendChild(kpiSectionDaily.cloneNode(true));
-
-                        // 2. CORRECTED: Appends a clone of the daily grid element itself.
-                        tempContainerDaily.appendChild(dailyGrid.cloneNode(true));
-
+                        tempContainerDaily.appendChild(dailyContainer.cloneNode(true));
                         document.body.appendChild(tempContainerDaily);
                         targetElement = tempContainerDaily;
                     } else {
-                        // Updated fallback
-                        targetElement = kpiSectionDaily || document.querySelector('#dailyGrid') || document.body;
+                        targetElement = document.body;
                     }
                     filename = 'hboard-kpi-daily-view';
                     break;
@@ -3718,7 +3719,7 @@
                 document.querySelectorAll('div').forEach(container => {
                     if (container.style.backgroundColor === 'rgb(255, 255, 255)' && 
                         container.style.padding === '20px' && 
-                        container.children.length >= 2) {
+                        container.children.length >= 1) { // Changed to >=1 to catch single clones
                         try { document.body.removeChild(container); } catch(e) {}
                     }
                 });
