@@ -304,7 +304,12 @@
         }
 
         /* KPI Dashboard Styles */
-        .kpi-dashboard {
+        .kpi-section {
+            margin-bottom: 25px;
+        }
+        
+        /* Weekly KPIs & Performance Stats */
+        .weekly-kpis, .performance-stats {
             background: white;
             padding: 25px;
             border-radius: 15px;
@@ -313,114 +318,64 @@
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.1);
         }
 
-        .kpi-dashboard h3 {
+        .weekly-kpis h4, .performance-stats h4 {
             color: #28a745;
             font-size: 1.6rem;
             margin-bottom: 20px;
             text-align: center;
         }
-
-        .kpi-section {
-            margin-bottom: 25px;
-        }
-
-        .kpi-section h4 {
-            color: #20c997;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 15px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .kpi-card {
-            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-            border: 2px solid #28a745;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
-        }
-
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #28a745;
-            margin-bottom: 8px;
-            line-height: 1;
-        }
-
-        .kpi-label {
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Weekly KPIs Above Table */
-        .weekly-kpis {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #20c997;
-            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.1);
-        }
-
-        .weekly-kpis h4 {
-            color: #20c997;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
+        
         .weekly-kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
         }
 
         .weekly-kpi-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid #20c997;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
             border-radius: 8px;
-            padding: 12px;
+            padding: 15px;
             text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .weekly-kpi-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.2);
         }
 
         .weekly-kpi-value {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #20c997;
             margin-bottom: 5px;
         }
 
         .weekly-kpi-label {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #666;
             font-weight: 600;
         }
+
+        .performance-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-card.total { background-color: #f8f9fa; }
+        .stat-card.green { background-color: #d4edda; }
+        .stat-card.amber { background-color: #fff3cd; }
+        .stat-card.red { background-color: #f8d7da; }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .stat-label {
+            font-weight: 600;
+        }
+
 
         /* Top Controls Panel */
         .top-controls {
@@ -666,55 +621,6 @@
         .dot-amber { background: #ffc107; }
         .dot-red { background: #dc3545; }
         .dot-none { background: #f8f9fa; border-style: dashed; }
-
-        /* Summary Cards */
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .summary-card {
-            background: white;
-            border: 3px solid #28a745;
-            color: #28a745;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
-            transition: transform 0.3s ease;
-        }
-
-        .summary-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .summary-card.green { 
-            background: linear-gradient(135deg, #28a745, #20c997); 
-            color: white;
-        }
-
-        .summary-card.amber { 
-            background: linear-gradient(135deg, #ffc107, #ffb300); 
-            color: white;
-        }
-
-        .summary-card.red { 
-            background: linear-gradient(135deg, #dc3545, #c82333); 
-            color: white;
-        }
-
-        .summary-card h3 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .summary-card p {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
 
         /* Skill Management */
         .skill-management {
@@ -1510,26 +1416,6 @@
                 </div>
             </section>
 
-            <!-- Summary Cards -->
-            <section class="summary-cards">
-                <div class="summary-card">
-                    <h3 id="totalCount">0</h3>
-                    <p>Total Entries</p>
-                </div>
-                <div class="summary-card green">
-                    <h3 id="greenCount">0</h3>
-                    <p>🟢 Optimal Performance</p>
-                </div>
-                <div class="summary-card amber">
-                    <h3 id="amberCount">0</h3>
-                    <p>🟡 Needs Attention</p>
-                </div>
-                <div class="summary-card red">
-                    <h3 id="redCount">0</h3>
-                    <p>🔴 Critical Issues</p>
-                </div>
-            </section>
-
             <!-- Skill Management -->
             <section class="skill-management">
                 <h4>🛠️ Skill Management</h4>
@@ -1548,117 +1434,87 @@
     
                 <!-- Monthly View Container -->
                 <div id="monthlyView">
-                    <div class="weekly-kpis" id="weeklyKPIs">
+                    <div class="weekly-kpis" id="monthly-weekly-kpis">
                         <!-- Content generated by JS -->
                     </div>
-                    <div class="combined-kpi-daily-section" id="combinedKpiSection" style="background: #f8f9fa; margin: 15px; padding: 20px; border-radius: 15px; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                        <!-- KPI Section -->
-                        <div class="kpi-section" style="margin-bottom: 30px;">
-                            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-                                <span>📈</span> Key Performance Indicators
-                            </h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
-                               <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
-                                 <h4 style="color: #28a745; margin-bottom: 15px; font-size: 1.2rem;">📊 Monthly Performance - 2025</h4>
-                                 <div style="font-size: 3rem; font-weight: 800; color: #28a745; margin: 15px 0;">0%</div>
-                                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
-                                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
-                                        📊 Monthly Trend
-                                    </div>
-                                </div>
-                
-                                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
-                                    <h4 style="color: #17a2b8; margin-bottom: 15px; font-size: 1.2rem;">
-                                        📊 Yearly Performance - 2025
-                                    </h4>
-                                    <div style="font-size: 3rem; font-weight: 800; color: #17a2b8; margin: 15px 0;">0%</div>
-                                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
-                                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
-                                        📊 Yearly Trend
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                <h4 style="color: #495057; margin-bottom: 15px;">📊 Performance Statistics</h4>
-                                <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
-                                    <strong>📌 Status Guide:</strong> Green - Optimal Performance (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
-                                </div>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
-                                    <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-top: 3px solid #6c757d;">
-                                        <div style="font-size: 2rem; font-weight: 700; color: #6c757d;">0</div>
-                                        <div style="font-size: 0.9rem; color: #6c757d; font-weight: 600;">Total Entries</div>
-                                    </div>
-                                    <div style="text-align: center; padding: 15px; background: #d4edda; border-radius: 8px; border-top: 3px solid #28a745;">
-                                        <div style="font-size: 2rem; font-weight: 700; color: #28a745;">0</div>
-                                        <div style="font-size: 0.9rem; color: #155724; font-weight: 600;">🟢 Optimal Performance</div>
-                                    </div>
-                                    <div style="text-align: center; padding: 15px; background: #fff3cd; border-radius: 8px; border-top: 3px solid #ffc107;">
-                                        <div style="font-size: 2rem; font-weight: 700; color: #ffc107;">0</div>
-                                        <div style="font-size: 0.9rem; color: #856404; font-weight: 600;">🟡 Needs Attention</div>
-                                    </div>
-                                    <div style="text-align: center; padding: 15px; background: #f8d7da; border-radius: 8px; border-top: 3px solid #dc3545;">
-                                        <div style="font-size: 2rem; font-weight: 700; color: #dc3545;">0</div>
-                                        <div style="font-size: 0.9rem; color: #721c24; font-weight: 600;">🔴 Critical Issues</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="daily-performance-section">
-                            <h3 style="color: #ffc107; margin-bottom: 20px; font-size: 1.5rem; font-weight: 700;">
-                                📊 Daily Performance Statistics
-                            </h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
-                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
-                                    <div style="font-size: 2rem; font-weight: 700; color: #28a745;">0%</div>
-                                    <div style="color: #155724; font-weight: 600;">Today's Average</div>
-                                </div>
-                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
-                                    <div style="font-size: 2rem; font-weight: 700; color: #17a2b8;">0%</div>
-                                    <div style="color: #0c5460; font-weight: 600;">Weekly Average</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="performance-stats" id="monthly-performance-stats">
+                        <!-- Content generated by JS -->
                     </div>
-                    <table class="grid-table" id="monthlyTable">
-                        <thead id="monthlyHeaders">
-                        </thead>
-                        <tbody id="monthlyBody">
-                        </tbody>
-                    </table>
+
+                    <div id="monthly-screenshot-target">
+                        <div class="kpi-section" style="padding: 25px;">
+                            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700;">Key Performance Indicators</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                                <!-- Today's Average -->
+                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                                    <div id="monthlyTodayAvg" style="font-size: 2.5rem; font-weight: 700; color: #28a745;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Today's Average</div>
+                                </div>
+                                <!-- Weekly Average -->
+                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                                    <div id="monthlyWeekAvg" style="font-size: 2.5rem; font-weight: 700; color: #17a2b8;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Weekly Average</div>
+                                </div>
+                                <!-- Monthly Performance -->
+                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #ffc107;">
+                                    <div id="monthlyMonthAvg" style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Monthly Performance</div>
+                                </div>
+                                <!-- Yearly Performance -->
+                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #dc3545;">
+                                    <div id="monthlyYearAvg" style="font-size: 2.5rem; font-weight: 700; color: #dc3545;">0%</div>
+                                    <div style="color: #666; font-weight: 600;">Yearly Performance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="grid-table" id="monthlyTable">
+                            <thead id="monthlyHeaders">
+                            </thead>
+                            <tbody id="monthlyBody">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Daily View -->
                 <div id="dailyView" style="display: none;">
                     <div class="daily-container">
-                        <!-- NEW Daily KPI Section -->
-                        <div class="kpi-section" style="margin-bottom: 25px;">
-                            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700;">Key Performance Indicators</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                                <!-- Today's Average -->
-                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
-                                    <div id="dailyTodayAvg" style="font-size: 2.5rem; font-weight: 700; color: #28a745;">0%</div>
-                                    <div style="color: #666; font-weight: 600;">Today's Average</div>
-                                </div>
-                                <!-- Weekly Average -->
-                                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
-                                    <div id="dailyWeekAvg" style="font-size: 2.5rem; font-weight: 700; color: #17a2b8;">0%</div>
-                                    <div style="color: #666; font-weight: 600;">Weekly Average</div>
-                                </div>
-                                <!-- Monthly Performance -->
-                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #ffc107;">
-                                    <div id="dailyMonthAvg" style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">0%</div>
-                                    <div style="color: #666; font-weight: 600;">Monthly Performance</div>
-                                </div>
-                                <!-- Yearly Performance -->
-                                 <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #dc3545;">
-                                    <div id="dailyYearAvg" style="font-size: 2.5rem; font-weight: 700; color: #dc3545;">0%</div>
-                                    <div style="color: #666; font-weight: 600;">Yearly Performance</div>
+                        <div class="weekly-kpis" id="daily-weekly-kpis">
+                            <!-- Content generated by JS -->
+                        </div>
+                        <div class="performance-stats" id="daily-performance-stats">
+                             <!-- Content generated by JS -->
+                        </div>
+                        <div id="daily-screenshot-target">
+                            <div class="kpi-section" style="margin-bottom: 25px;">
+                                <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700;">Key Performance Indicators</h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                                    <!-- Today's Average -->
+                                    <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                                        <div id="dailyTodayAvg" style="font-size: 2.5rem; font-weight: 700; color: #28a745;">0%</div>
+                                        <div style="color: #666; font-weight: 600;">Today's Average</div>
+                                    </div>
+                                    <!-- Weekly Average -->
+                                    <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                                        <div id="dailyWeekAvg" style="font-size: 2.5rem; font-weight: 700; color: #17a2b8;">0%</div>
+                                        <div style="color: #666; font-weight: 600;">Weekly Average</div>
+                                    </div>
+                                    <!-- Monthly Performance -->
+                                     <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #ffc107;">
+                                        <div id="dailyMonthAvg" style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">0%</div>
+                                        <div style="color: #666; font-weight: 600;">Monthly Performance</div>
+                                    </div>
+                                    <!-- Yearly Performance -->
+                                     <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #dc3545;">
+                                        <div id="dailyYearAvg" style="font-size: 2.5rem; font-weight: 700; color: #dc3545;">0%</div>
+                                        <div style="color: #666; font-weight: 600;">Yearly Performance</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Daily Grid Table -->
-                        <div class="daily-grid" id="dailyGrid">
-                            <!-- Daily grid generated dynamically by JavaScript -->
+                            <!-- Daily Grid Table -->
+                            <div class="daily-grid" id="dailyGrid">
+                                <!-- Daily grid generated dynamically by JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2214,7 +2070,6 @@
             document.getElementById('dateSelect').addEventListener('change', loadCurrentView);
             
             updateSkillList();
-            // updateKPIDisplays(); // This line caused the error, it's removed.
             loadCurrentView();
             
             // Load team data after initial UI setup (only if not admin mode)
@@ -2309,7 +2164,6 @@
                 
                 // Update UI
                 loadCurrentView();
-                // updateKPIDisplays();
                 
                 console.log('✅ Team data synchronized');
                 updateConnectionStatus('connected');
@@ -2349,7 +2203,6 @@
                     operationalData = { ...operationalData, ...teamData };
                     localStorage.setItem('operationalData', JSON.stringify(operationalData));
                     loadCurrentView();
-                    // updateKPIDisplays();
                     console.log('🔄 Real-time data updated');
                 }
                 
@@ -2428,17 +2281,7 @@
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
-            
-            // Trend calculation
-            let trendIndicator = '📊';
-            if (overallAvg >= 90) trendIndicator = '📈';
-            else if (overallAvg <= 60) trendIndicator = '📉';
-            
-            return {
-                overallAvg,
-                trendIndicator,
-                totalEntries
-            };
+            return { overallAvg };
         }
 
         function calculateYearlyKPIs() {
@@ -2465,81 +2308,9 @@
             }
             
             const overallAvg = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
-            
-            // Trend calculation
-            let trendIndicator = '📊';
-            if (overallAvg >= 90) trendIndicator = '📈';
-            else if (overallAvg <= 60) trendIndicator = '📉';
-            
-            return {
-                overallAvg,
-                trendIndicator,
-                totalEntries
-            };
+            return { overallAvg };
         }
-
-        function calculateWeeklyKPIs(weeks) {
-            const weeklyKPIs = [];
-            
-            weeks.forEach((week, index) => {
-                let totalEntries = 0;
-                let totalPercentage = 0;
-                
-                week.dates.forEach(dateStr => {
-                    skillsList.forEach(skill => {
-                        const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
-                        const entry = operationalData[entryKey];
-                        
-                        if (entry && entry.percentage !== undefined) {
-                            totalEntries++;
-                            totalPercentage += entry.percentage;
-                        }
-                    });
-                });
-                
-                const avgPercentage = totalEntries > 0 ? Math.round(totalPercentage / totalEntries) : 0;
-                const status = getStatusFromPercentage(avgPercentage);
-                
-                weeklyKPIs.push({
-                    week: week.label,
-                    percentage: avgPercentage,
-                    status: status,
-                    totalEntries: totalEntries
-                });
-            });
-            
-            return weeklyKPIs;
-        }
-
-        // This function is no longer called on init to prevent errors
-        function updateKPIDisplays() {
-            // Logic is now handled within generateWeeklyKPIs and updateDailyStats
-        }
-
-        function generateWeeklyKPIs(weeks) {
-            const weeklyKPIs = calculateWeeklyKPIs(weeks);
-            let kpiHTML = '<h4>📊 Weekly Skill Availability Overview</h4><div class="weekly-kpi-grid" id="weeklyKPIGrid">';
-            
-            weeklyKPIs.forEach(weekKPI => {
-                const statusClass = weekKPI.status;
-                
-                kpiHTML += `
-                    <div class="weekly-kpi-item">
-                        <div class="weekly-kpi-value" style="color: ${getStatusColor(statusClass)}">
-                            ${weekKPI.percentage}%
-                        </div>
-                        <div class="weekly-kpi-label">
-                            ${weekKPI.week} Availability
-                        </div>
-                    </div>
-                `;
-            });
-            kpiHTML += '</div>';
-            
-            document.getElementById('weeklyKPIs').innerHTML = kpiHTML;
-            weeklyKPICache = weeklyKPIs;
-        }
-
+        
         function getStatusColor(status) {
             switch(status) {
                 case 'green': return '#28a745';
@@ -2637,8 +2408,6 @@
                 currentDate = document.getElementById('dateSelect').value;
                 generateDailyView();
             }
-            
-            updateSummaryCards();
         }
 
         // ========================================
@@ -2672,9 +2441,58 @@
 
         function generateMonthlyView() {
             const weeks = generateWeeksForMonth();
-            generateWeeklyKPIs(weeks);
+            updateMonthlyKPIs(weeks);
             createMonthlyHeaders(weeks);
             createMonthlyBody(weeks);
+            updateSummaryCards(); // Also update performance stats
+        }
+
+        function updateMonthlyKPIs(weeks) {
+            // Today's Average (calculated for the actual current date if it's in the selected month)
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const [currentYear, currentMonthNum] = currentMonth.split('-').map(Number);
+            let todaySum = 0;
+            let todayAvg = 0;
+            if (now.getFullYear() === currentYear && (now.getMonth() + 1) === currentMonthNum) {
+                let todayEntries = 0;
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${todayStr}`;
+                    const entry = operationalData[entryKey];
+                    if (entry && entry.percentage !== undefined) {
+                        todaySum += entry.percentage;
+                        todayEntries++;
+                    }
+                });
+                todayAvg = todayEntries > 0 ? Math.round(todaySum / todayEntries) : 0;
+            }
+
+            // Weekly Average (for the first week of the month)
+            let weekSum = 0;
+            let weekEntries = 0;
+            if (weeks.length > 0) {
+                weeks[0].dates.forEach(dateStr => {
+                    skillsList.forEach(skill => {
+                        const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
+                        const entry = operationalData[entryKey];
+                        if (entry && entry.percentage !== undefined) {
+                            weekSum += entry.percentage;
+                            weekEntries++;
+                        }
+                    });
+                });
+            }
+            const weekAvg = weekEntries > 0 ? Math.round(weekSum / weekEntries) : 0;
+            
+            // Monthly and Yearly stats calculation
+            const monthlyKPIs = calculateMonthlyKPIs();
+            const yearlyKPIs = calculateYearlyKPIs();
+
+            // Update the new KPI elements in the monthly view
+            document.getElementById('monthlyTodayAvg').textContent = `${todayAvg}%`;
+            document.getElementById('monthlyWeekAvg').textContent = `${weekAvg}%`;
+            document.getElementById('monthlyMonthAvg').textContent = `${monthlyKPIs.overallAvg}%`;
+            document.getElementById('monthlyYearAvg').textContent = `${yearlyKPIs.overallAvg}%`;
         }
 
         function generateWeeksForMonth() {
@@ -2817,6 +2635,7 @@
         // ========================================
 
         function generateDailyView() {
+            updateDailyStats();
             const date = new Date(currentDate);
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             
@@ -2856,7 +2675,7 @@
             });
             
             document.getElementById('dailyGrid').innerHTML = gridHTML;
-            updateDailyStats();
+            
         }
 
         // CORRECTED: New function to update the new KPI section in the Daily View
@@ -2867,31 +2686,33 @@
 
             // Today's stats calculation
             const todayKey = currentDate;
+            let todayEntries = 0;
             skillsList.forEach(skill => {
                 const entryKey = `${currentLandscape}_${skill}_${todayKey}`;
                 const entry = operationalData[entryKey];
                 if (entry && entry.percentage !== undefined) {
                     todaySum += entry.percentage;
+                    todayEntries++;
                 }
             });
-            const dailyCompletion = skillsList.length > 0 ? Math.round(todaySum / skillsList.length) : 0;
+            const dailyCompletion = todayEntries > 0 ? Math.round(todaySum / todayEntries) : 0;
 
             // Week's stats calculation
-            let weekDayCount = 0;
+            let weekEntries = 0;
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(date);
                 dayDate.setDate(date.getDate() - date.getDay() + i);
                 const dateStr = dayDate.toISOString().split('T')[0];
-                weekDayCount++;
                 skillsList.forEach(skill => {
                     const entryKey = `${currentLandscape}_${skill}_${dateStr}`;
                     const entry = operationalData[entryKey];
                     if (entry && entry.percentage !== undefined) {
                         weekSum += entry.percentage;
+                        weekEntries++;
                     }
                 });
             }
-            const weeklyAverage = (skillsList.length * weekDayCount) > 0 ? Math.round(weekSum / (skillsList.length * weekDayCount)) : 0;
+            const weeklyAverage = weekEntries > 0 ? Math.round(weekSum / weekEntries) : 0;
             
             // Monthly and Yearly stats calculation
             const monthlyKPIs = calculateMonthlyKPIs();
@@ -3067,21 +2888,47 @@
         function updateSummaryCards() {
             let total = 0, green = 0, amber = 0, red = 0;
             
-            Object.values(operationalData).forEach(entry => {
-                if (entry.landscape === currentLandscape) {
-                    total++;
-                    switch(entry.status) {
-                        case 'green': green++; break;
-                        case 'amber': amber++; break;
-                        case 'red': red++; break;
-                    }
+            const scope = currentView === 'monthly' ? generateWeeksForMonth().flatMap(w => w.dates) : (() => {
+                const date = new Date(currentDate);
+                const weekDates = [];
+                for (let i = 0; i < 7; i++) {
+                    const dayDate = new Date(date);
+                    dayDate.setDate(date.getDate() - date.getDay() + i);
+                    weekDates.push(dayDate.toISOString().split('T')[0]);
                 }
+                return weekDates;
+            })();
+
+            scope.forEach(date => {
+                skillsList.forEach(skill => {
+                    const entryKey = `${currentLandscape}_${skill}_${date}`;
+                    const entry = operationalData[entryKey];
+                    if (entry) {
+                        total++;
+                        switch(entry.status) {
+                            case 'green': green++; break;
+                            case 'amber': amber++; break;
+                            case 'red': red++; break;
+                        }
+                    }
+                });
             });
+
+            const performanceHTML = `
+                <h4>📊 Performance Statistics</h4>
+                <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
+                    <strong>📌 Status Guide:</strong> Green - Optimal Performance (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
+                </div>
+                <div class="performance-stats-grid">
+                    <div class="stat-card total"><div class="stat-value">${total}</div><div class="stat-label">Total Entries</div></div>
+                    <div class="stat-card green"><div class="stat-value">${green}</div><div class="stat-label">🟢 Optimal</div></div>
+                    <div class="stat-card amber"><div class="stat-value">${amber}</div><div class="stat-label">🟡 Needs Attention</div></div>
+                    <div class="stat-card red"><div class="stat-value">${red}</div><div class="stat-label">🔴 Critical</div></div>
+                </div>
+            `;
             
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('greenCount').textContent = green;
-            document.getElementById('amberCount').textContent = amber;
-            document.getElementById('redCount').textContent = red;
+            document.getElementById('monthly-performance-stats').innerHTML = performanceHTML;
+            document.getElementById('daily-performance-stats').innerHTML = performanceHTML;
         }
 
         // ========================================
@@ -3105,7 +2952,6 @@
         function generateExcelTable(weeks, monthName) {
             const monthlyKPIs = calculateMonthlyKPIs();
             const yearlyKPIs = calculateYearlyKPIs();
-            const weeklyKPIs = calculateWeeklyKPIs(weeks);
             
             const reportTitle = window.isAdminMode ? 
                 `👑 Admin Operations Dashboard - ${monthName}` :
@@ -3149,18 +2995,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="kpi-cell">Monthly: ${monthlyKPIs.overallAvg}% ${monthlyKPIs.trendIndicator}</td>
-                            <td class="kpi-cell">Yearly: ${yearlyKPIs.overallAvg}% ${yearlyKPIs.trendIndicator}</td>
+                            <td class="kpi-cell">Monthly: ${monthlyKPIs.overallAvg}%</td>
+                            <td class="kpi-cell">Yearly: ${yearlyKPIs.overallAvg}%</td>
             `;
             
             // Add remaining KPI columns
             for (let i = 2; i < weeks.length + 1; i++) {
-                if (i - 2 < weeklyKPIs.length) {
-                    const weekKPI = weeklyKPIs[i - 2];
-                    htmlTable += `<td class="kpi-cell">${weekKPI.week}: ${weekKPI.percentage}%</td>`;
-                } else {
-                    htmlTable += '<td class="kpi-cell">-</td>';
-                }
+                htmlTable += '<td class="kpi-cell">-</td>';
             }
             htmlTable += '</tr>';
             
@@ -3608,43 +3449,13 @@
 
             // Get the target element
             switch (selectedScreenshotTarget) {
-                // THIS IS THE CORRECTED CODE BLOCK
                 case 'kpiWithMonthly':
-                    const kpiSection = document.querySelector('#combinedKpiSection');
-                    const monthlyTable = document.querySelector('#monthlyTable'); // Using the specific table ID
-                    if (kpiSection && monthlyTable) {
-                        const tempContainer = document.createElement('div');
-                        tempContainer.style.backgroundColor = '#ffffff';
-                        tempContainer.style.padding = '20px';
-
-                        // 1. Clone and append the KPI section
-                        tempContainer.appendChild(kpiSection.cloneNode(true));
-
-                        // 2. Clone and append ONLY the monthly table itself, preventing duplication
-                        tempContainer.appendChild(monthlyTable.cloneNode(true));
-
-                        document.body.appendChild(tempContainer);
-                        targetElement = tempContainer;
-                    } else {
-                        // Fallback if elements are not found
-                        targetElement = document.querySelector('#combinedKpiSection') || document.querySelector('#monthlyTable') || document.body;
-                    }
+                    targetElement = document.getElementById('monthly-screenshot-target');
                     filename = 'hboard-kpi-monthly-view';
                     break;
 
                  case 'kpiWithDaily':
-                    // Capture KPI section + Daily table together
-                    const dailyContainer = document.querySelector('#dailyView .daily-container');
-                    if (dailyContainer) {
-                        const tempContainerDaily = document.createElement('div');
-                        tempContainerDaily.style.backgroundColor = '#ffffff';
-                        tempContainerDaily.style.padding = '20px';
-                        tempContainerDaily.appendChild(dailyContainer.cloneNode(true));
-                        document.body.appendChild(tempContainerDaily);
-                        targetElement = tempContainerDaily;
-                    } else {
-                        targetElement = document.body;
-                    }
+                    targetElement = document.getElementById('daily-screenshot-target');
                     filename = 'hboard-kpi-daily-view';
                     break;
                 case 'skillManagement':
@@ -3714,16 +3525,6 @@
                 console.error('Screenshot error:', error);
                 alert('❌ Error generating screenshot. Please try again.');
             } finally {
-                
-                // Remove temporary containers created for screenshots
-                document.querySelectorAll('div').forEach(container => {
-                    if (container.style.backgroundColor === 'rgb(255, 255, 255)' && 
-                        container.style.padding === '20px' && 
-                        container.children.length >= 1) { // Changed to >=1 to catch single clones
-                        try { document.body.removeChild(container); } catch(e) {}
-                    }
-                });
-
                 // Reset button
                 const downloadBtn = document.getElementById('downloadSelectedBtn');
                 downloadBtn.innerHTML = originalText;
