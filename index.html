@@ -3675,24 +3675,26 @@ function formatDateToDDMMYY(dateInput) {
 
             // Get the target element
             switch (selectedScreenshotTarget) {
-                case 'kpiWithMonthly':
-    // Capture only the first KPI section + Monthly table
+                // THIS IS THE CORRECTED CODE BLOCK
+case 'kpiWithMonthly':
     const kpiSection = document.querySelector('#combinedKpiSection');
-    const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
+    const monthlyTable = document.querySelector('#monthlyTable'); // Using the specific table ID
     if (kpiSection && monthlyTable) {
         const tempContainer = document.createElement('div');
         tempContainer.style.backgroundColor = '#ffffff';
         tempContainer.style.padding = '20px';
-        // Clone only the first KPI section
-        const kpiClone = kpiSection.cloneNode(true);
-        tempContainer.appendChild(kpiClone);
-        // Clone the table container  
-        const tableContainer = monthlyTable.closest('.table-container') || monthlyTable.parentNode;
-        tempContainer.appendChild(tableContainer ? tableContainer.cloneNode(true) : monthlyTable.cloneNode(true));
+
+        // 1. Clone and append the KPI section
+        tempContainer.appendChild(kpiSection.cloneNode(true));
+
+        // 2. Clone and append ONLY the monthly table itself, preventing duplication
+        tempContainer.appendChild(monthlyTable.cloneNode(true));
+
         document.body.appendChild(tempContainer);
         targetElement = tempContainer;
     } else {
-        targetElement = kpiSection || monthlyTable || document.body;
+        // Fallback if elements are not found
+        targetElement = document.querySelector('#combinedKpiSection') || document.querySelector('#monthlyTable') || document.body;
     }
     filename = 'hboard-kpi-monthly-view';
     break;
@@ -3920,6 +3922,7 @@ function formatDateToDDMMYY(dateInput) {
     </div>
 </body>
 </html>
+
 
 
 
