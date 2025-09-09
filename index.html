@@ -3667,20 +3667,27 @@ case 'kpiWithMonthly':
     filename = 'hboard-kpi-monthly-view';
     break;
 
-                case 'kpiWithDaily':
-                    // Capture KPI section + Daily table together  
-                    const kpiSectionDaily = document.getElementById('combinedKpiSection');
-                    const dailyTable = document.querySelector('#daily-grid') || document.querySelectorAll('table')[1];
-                    if (kpiSectionDaily && dailyTable) {
+                 case 'kpiWithDaily':
+                    // Capture KPI section + Daily table together
+                    const kpiSectionDaily = document.querySelector('#combinedKpiSection');
+                    // CORRECTED: The selector now correctly uses '#dailyGrid' to find the element.
+                    const dailyGrid = document.querySelector('#dailyGrid');
+                    if (kpiSectionDaily && dailyGrid) {
                         const tempContainerDaily = document.createElement('div');
                         tempContainerDaily.style.backgroundColor = '#ffffff';
                         tempContainerDaily.style.padding = '20px';
+
+                        // 1. Append the cloned KPI section
                         tempContainerDaily.appendChild(kpiSectionDaily.cloneNode(true));
-                        tempContainerDaily.appendChild(dailyTable.parentNode ? dailyTable.parentNode.cloneNode(true) : dailyTable.cloneNode(true));
+
+                        // 2. CORRECTED: Appends a clone of the daily grid element itself.
+                        tempContainerDaily.appendChild(dailyGrid.cloneNode(true));
+
                         document.body.appendChild(tempContainerDaily);
                         targetElement = tempContainerDaily;
                     } else {
-                        targetElement = kpiSectionDaily || dailyTable || document.body;
+                        // Updated fallback
+                        targetElement = kpiSectionDaily || document.querySelector('#dailyGrid') || document.body;
                     }
                     filename = 'hboard-kpi-daily-view';
                     break;
@@ -3890,6 +3897,7 @@ case 'kpiWithMonthly':
     </div>
 </body>
 </html>
+
 
 
 
