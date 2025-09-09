@@ -929,11 +929,8 @@
         .daily-indicator.none { background: #f8f9fa; }
 
         /* Daily View Styles */
-       .daily-container {
-    padding: 25px;
-    max-width: 1400px; /* This prevents it from spreading out too wide */
-    margin: 0 auto;    /* This centers the container */
-
+        .daily-container {
+            padding: 25px;
         }
 
         .daily-stats {
@@ -1548,29 +1545,136 @@
 
             <!-- Main Dashboard Container -->
             <section class="view-container">
+                <!-- Monthly View -->
                 <div id="monthlyView">
-        <div class="weekly-kpis" id="weeklyKPIs">
-            </div>
-        
-        <div class="combined-kpi-daily-section" id="combinedKpiSection" style="background: #f8f9fa; margin: 15px; padding: 20px; border-radius: 15px; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <!-- Weekly Availability KPIs Above Table -->
+                    <div class="weekly-kpis" id="weeklyKPIs">
+                        <h4>📊 Weekly Skill Availability Overview</h4>
+                        <div class="weekly-kpi-grid" id="weeklyKPIGrid">
+                            <!-- Weekly KPIs will be generated dynamically -->
+                        </div>
+                    </div>
+                    
+                    
+    <!-- Combined KPI and Daily Performance Section for Screenshots -->
+    <div class="combined-kpi-daily-section" id="combinedKpiSection" style="background: #f8f9fa; margin: 15px; padding: 20px; border-radius: 15px; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <!-- KPI Section -->
+        <div class="kpi-section" style="margin-bottom: 30px;">
+            <h3 style="color: #28a745; margin-bottom: 25px; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                <span>📈</span> Key Performance Indicators
+            </h3>
+
+            <!-- Monthly and Yearly Performance -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+               <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                  
+                 <h4 style="color: #28a745; margin-bottom: 15px; font-size: 1.2rem;">📊 Monthly Performance - 2025</h4>
+
+                 <div style="font-size: 3rem; font-weight: 800; color: #28a745; margin: 15px 0;">0%</div>
+                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
+                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
+                        📊 Monthly Trend
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                    <h4 style="color: #17a2b8; margin-bottom: 15px; font-size: 1.2rem;">
+                        📊 Yearly Performance - 2025
+                    </h4>
+                    <div style="font-size: 3rem; font-weight: 800; color: #17a2b8; margin: 15px 0;">0%</div>
+                    <div style="color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall Availability</div>
+                    <div style="margin-top: 10px; padding: 8px; background: #e9ecef; color: #6c757d; border-radius: 6px; font-size: 0.9rem;">
+                        📊 Yearly Trend
+                    </div>
+                </div>
             </div>
 
-        <table class="grid-table" id="monthlyTable">
-            <thead id="monthlyHeaders">
-            </thead>
-            <tbody id="monthlyBody">
-            </tbody>
-        </table>
-    </div>
+            <!-- Performance Statistics -->
+            <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h4 style="color: #495057; margin-bottom: 15px;">📊 Performance Statistics</h4>
+                <div style="margin-bottom: 15px; padding: 12px; background: #e9ecef; border-radius: 8px; font-size: 0.9rem;">
+                    <strong>📌 Status Guide:</strong> Green - Optimal Performance (95-100%) | Amber - Needs Attention (45-95%) | Red - Critical Issues (0-45%) | No Data Available (0%)
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                    <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-top: 3px solid #6c757d;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #6c757d;">0</div>
+                        <div style="font-size: 0.9rem; color: #6c757d; font-weight: 600;">Total Entries</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #d4edda; border-radius: 8px; border-top: 3px solid #28a745;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #28a745;">0</div>
+                        <div style="font-size: 0.9rem; color: #155724; font-weight: 600;">🟢 Optimal Performance</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fff3cd; border-radius: 8px; border-top: 3px solid #ffc107;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #ffc107;">0</div>
+                        <div style="font-size: 0.9rem; color: #856404; font-weight: 600;">🟡 Needs Attention</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #f8d7da; border-radius: 8px; border-top: 3px solid #dc3545;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #dc3545;">0</div>
+                        <div style="font-size: 0.9rem; color: #721c24; font-weight: 600;">🔴 Critical Issues</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div id="dailyView" style="display: none;">
-        <div class="daily-container" style="padding: 25px; max-width: 1400px; margin: 0px auto;">
-            <div class="daily-stats">
+        <!-- Daily Performance Statistics -->
+        <div class="daily-performance-section">
+            <h3 style="color: #ffc107; margin-bottom: 20px; font-size: 1.5rem; font-weight: 700;">
+                📊 Daily Performance Statistics
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #28a745;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #28a745;">0%</div>
+                    <div style="color: #155724; font-weight: 600;">Today's Average</div>
                 </div>
-            <div class="daily-grid" id="dailyGrid">
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #17a2b8;">0%</div>
+                    <div style="color: #0c5460; font-weight: 600;">Weekly Average</div>
                 </div>
+               
+                </div>
+            </div>
         </div>
     </div>
+
+    <table class="grid-table" id="monthlyTable">
+                        <thead id="monthlyHeaders">
+                            <!-- Headers generated dynamically by JavaScript -->
+                        </thead>
+                        <tbody id="monthlyBody">
+                            <!-- Body generated dynamically by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Daily View -->
+                <div id="dailyView" style="display: none;">
+                    <div class="daily-container">
+                        <div class="daily-stats">
+                            <h3 style="color: #28a745; margin-bottom: 15px;">📊 Daily Performance Statistics</h3>
+                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="dailyCompletion">0%</div>
+                                    <div style="font-weight: 600;">Today's Average</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="weeklyAverage">0%</div>
+                                    <div style="font-weight: 600;">Weekly Average</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; color: #28a745; font-weight: bold;" id="trendIndicator">📈</div>
+                                    <div style="font-weight: 600;">Performance Trend</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; color: #20c997; font-weight: bold;" id="syncStatus">🔥</div>
+                                    <div style="font-weight: 600;">Team Sync</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="daily-grid" id="dailyGrid">
+                            <!-- Daily grid generated dynamically by JavaScript -->
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -2549,38 +2653,30 @@ function formatDateToDDMMYY(dateInput) {
         // VIEW MANAGEMENT & NAVIGATION
         // ========================================
 
-      function switchView(view) {
-    currentView = view;
-    const monthlyView = document.getElementById('monthlyView');
-    const dailyView = document.getElementById('dailyView');
-    const monthControl = document.getElementById('monthControl');
-    const dateControl = document.getElementById('dateControl');
-
-    // Update toggle buttons
-    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-    if (event && event.target) {
-        event.target.classList.add('active');
-    } else {
-        // Fallback for programmatic calls
-        const selector = view === 'daily' ? '.toggle-btn:last-child' : '.toggle-btn:first-child';
-        document.querySelector(selector).classList.add('active');
-    }
-    
-    // Show/hide controls and views
-    if (view === 'daily') {
-        monthControl.style.display = 'none';
-        dateControl.style.display = 'flex';
-        monthlyView.style.display = 'none';
-        dailyView.style.display = 'block';
-    } else { // 'monthly'
-        monthControl.style.display = 'flex';
-        dateControl.style.display = 'none';
-        monthlyView.style.display = 'block';
-        dailyView.style.display = 'none';
-    }
-    
-    loadCurrentView();
-}
+        function switchView(view) {
+            currentView = view;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide controls and views
+            if (view === 'daily') {
+                document.getElementById('monthControl').style.display = 'none';
+                document.getElementById('dateControl').style.display = 'flex';
+                document.getElementById('monthlyView').style.display = 'none';
+                document.getElementById('dailyView').style.display = 'block';
+            } else {
+                document.getElementById('monthControl').style.display = 'flex';
+                document.getElementById('dateControl').style.display = 'none';
+                document.getElementById('monthlyView').style.display = 'block';
+                document.getElementById('dailyView').style.display = 'none';
+            }
+            
+            loadCurrentView();
+        }
 
         function loadCurrentView() {
             currentLandscape = document.getElementById('landscapeSelect').value;
@@ -3801,8 +3897,6 @@ case 'kpiWithMonthly':
     </div>
 </body>
 </html>
-
-
 
 
 
