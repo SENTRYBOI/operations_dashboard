@@ -3648,12 +3648,21 @@ function formatDateToDDMMYY(dateInput) {
     const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
     if (kpiSection && monthlyTable) {
         const tempContainer = document.createElement('div');
+         
         tempContainer.style.backgroundColor = '#ffffff';
         tempContainer.style.padding = '20px';
-        // Clone only the first KPI section
-        const kpiClone = kpiSection.cloneNode(true);
-        tempContainer.appendChild(kpiClone);
-        // Clone the table container  
+            // Hide original KPI during screenshot
+    kpiSection.style.display = 'none';
+
+    // Clone exactly one KPI and the table
+    const kpiCopy   = kpiSection.cloneNode(true);
+    const tableCopy = monthlyTable.closest('.table-container').cloneNode(true);
+    tempContainer.appendChild(kpiCopy);
+    tempContainer.appendChild(tableCopy);
+
+    // Restore KPI visibility after screenshot
+    // (in finally block, add: kpiSection.style.display = '')
+
         const tableContainer = monthlyTable.closest('.table-container') || monthlyTable.parentNode;
         tempContainer.appendChild(tableContainer ? tableContainer.cloneNode(true) : monthlyTable.cloneNode(true));
         document.body.appendChild(tempContainer);
@@ -3748,7 +3757,14 @@ function formatDateToDDMMYY(dateInput) {
                 console.error('Screenshot error:', error);
                 alert('❌ Error generating screenshot. Please try again.');
             } finally {
-                
+                // <-- This is your finally block start
+    // Restore KPI visibility
+    kpiSection.style.display = '';
+document.getElementById('combinedKpiSection').style.display = '';
+    // Reset download button
+    downloadBtn.innerHTML = originalText;
+    downloadBtn.disabled = false;
+}
                 // Remove temporary containers created for screenshots
                 document.querySelectorAll('div').forEach(container => {
                     if (container.style.backgroundColor === 'rgb(255, 255, 255)' && 
@@ -3887,6 +3903,7 @@ function formatDateToDDMMYY(dateInput) {
     </div>
 </body>
 </html>
+
 
 
 
