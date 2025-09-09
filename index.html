@@ -1468,7 +1468,40 @@
                 </nav>
             </section>
 
-           
+            <!-- KPI Dashboard Section -->
+            <section class="kpi-dashboard">
+                <h3>📈 Key Performance Indicators</h3>
+                
+                <!-- Monthly KPIs -->
+                <div class="kpi-section">
+                    <h4>📅 Monthly Performance - <span id="currentMonthDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="monthlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Monthly Trend</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yearly KPIs -->
+                <div class="kpi-section">
+                    <h4>📊 Yearly Performance - <span id="currentYearDisplay"></span></h4>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyOverallAvailability">0%</div>
+                            <div class="kpi-label">Overall Availability</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="yearlyTrendIndicator">📊</div>
+                            <div class="kpi-label">Yearly Trend</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- Dynamic Percentage Information -->
             <section class="percentage-info">
@@ -3648,21 +3681,12 @@ function formatDateToDDMMYY(dateInput) {
     const monthlyTable = document.querySelector('#grid-table') || document.querySelector('table');
     if (kpiSection && monthlyTable) {
         const tempContainer = document.createElement('div');
-         
         tempContainer.style.backgroundColor = '#ffffff';
         tempContainer.style.padding = '20px';
-            // Hide original KPI during screenshot
-    kpiSection.style.display = 'none';
-
-    // Clone exactly one KPI and the table
-    const kpiCopy   = kpiSection.cloneNode(true);
-    const tableCopy = monthlyTable.closest('.table-container').cloneNode(true);
-    tempContainer.appendChild(kpiCopy);
-    tempContainer.appendChild(tableCopy);
-
-    // Restore KPI visibility after screenshot
-    // (in finally block, add: kpiSection.style.display = '')
-
+        // Clone only the first KPI section
+        const kpiClone = kpiSection.cloneNode(true);
+        tempContainer.appendChild(kpiClone);
+        // Clone the table container  
         const tableContainer = monthlyTable.closest('.table-container') || monthlyTable.parentNode;
         tempContainer.appendChild(tableContainer ? tableContainer.cloneNode(true) : monthlyTable.cloneNode(true));
         document.body.appendChild(tempContainer);
@@ -3757,14 +3781,7 @@ function formatDateToDDMMYY(dateInput) {
                 console.error('Screenshot error:', error);
                 alert('❌ Error generating screenshot. Please try again.');
             } finally {
-                // <-- This is your finally block start
-    // Restore KPI visibility
-    kpiSection.style.display = '';
-document.getElementById('combinedKpiSection').style.display = '';
-    // Reset download button
-    downloadBtn.innerHTML = originalText;
-    downloadBtn.disabled = false;
-}
+                
                 // Remove temporary containers created for screenshots
                 document.querySelectorAll('div').forEach(container => {
                     if (container.style.backgroundColor === 'rgb(255, 255, 255)' && 
@@ -3903,8 +3920,6 @@ document.getElementById('combinedKpiSection').style.display = '';
     </div>
 </body>
 </html>
-
-
 
 
 
